@@ -9,7 +9,6 @@ const config = {
   organizationName: 'sumit',
   projectName: 'javascript-mastery-book',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
   i18n: {
     defaultLocale: 'en',
     locales: ['en']
@@ -25,6 +24,7 @@ const config = {
           showLastUpdateTime: true
         },
         blog: false,
+        debug: false,
         theme: {
           customCss: './src/css/custom.css'
         }
@@ -37,13 +37,17 @@ const config = {
       {
         hashed: true,
         indexDocs: true,
+        indexBlog: false,
         indexPages: true,
         language: ['en']
       }
     ]
   ],
   markdown: {
-    mermaid: true
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn'
+    }
   },
   themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
@@ -75,4 +79,3 @@ const config = {
 };
 
 module.exports = config;
-
