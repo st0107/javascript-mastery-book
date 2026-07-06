@@ -61,7 +61,7 @@ const config = {
       items: [
         { to: '/', label: 'Book', position: 'left' },
         { to: '/table-of-contents', label: 'Contents', position: 'left' },
-        { href: 'https://github.com/', label: 'GitHub', position: 'right' }
+        { href: 'https://github.com/st0107/javascript-mastery-book', label: 'GitHub', position: 'right' }
       ]
     },
     docs: {
