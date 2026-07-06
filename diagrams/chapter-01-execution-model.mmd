@@ -1,0 +1,11 @@
+flowchart TD
+  Source[JavaScript Source] --> Parser[Parser]
+  Parser --> AST[Abstract Syntax Tree]
+  AST --> Scope[Scope Analysis]
+  Scope --> GlobalContext[Global Execution Context]
+  GlobalContext --> Call{Function Call}
+  Call --> FunctionContext[Function Execution Context]
+  FunctionContext --> Stack[Call Stack]
+  Stack --> Return[Return Value]
+  Return --> Pop[Pop Context]
+

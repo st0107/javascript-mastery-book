@@ -1,0 +1,55 @@
+site_name: JavaScript Mastery for FAANG Interviews
+site_description: A rigorous JavaScript book for FAANG interview preparation and production engineering mastery.
+site_author: Sumit
+repo_name: javascript-mastery-book
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - search.share
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+nav:
+  - Home: index.md
+  - Table of Contents: table-of-contents.md
+  - Production Standard: book-production-standard.md
+  - Volume 1:
+      - Overview: volume-1/index.md
+      - Chapter 1: volume-1/chapter-01-execution-model.md
+  - Volume 2: volume-2/index.md
+  - Volume 3: volume-3/index.md
+  - Volume 4: volume-4/index.md
+  - Volume 5: volume-5/index.md
+  - Volume 6: volume-6/index.md
+

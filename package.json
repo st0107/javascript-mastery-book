@@ -1,0 +1,31 @@
+{
+  "name": "javascript-mastery-book",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JavaScript Mastery for FAANG Interviews book repository.",
+  "license": "MIT",
+  "scripts": {
+    "docs:dev": "docusaurus start --host 0.0.0.0",
+    "docs:build": "docusaurus build --out-dir website",
+    "examples:test": "powershell -ExecutionPolicy Bypass -File scripts/validate-examples.ps1",
+    "pdf:build": "powershell -ExecutionPolicy Bypass -File scripts/build-pdf.ps1",
+    "epub:build": "powershell -ExecutionPolicy Bypass -File scripts/build-epub.ps1",
+    "build:all": "npm run examples:test && npm run docs:build && npm run pdf:build && npm run epub:build"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.5.2",
+    "@docusaurus/preset-classic": "3.5.2",
+    "@docusaurus/theme-mermaid": "3.5.2",
+    "@easyops-cn/docusaurus-search-local": "0.44.5",
+    "prism-react-renderer": "2.4.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remark-mermaidjs": "7.0.0"
+  },
+  "devDependencies": {
+    "eslint": "9.9.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

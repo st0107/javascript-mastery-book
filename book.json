@@ -1,0 +1,24 @@
+{
+  "title": "JavaScript Mastery for FAANG Interviews",
+  "author": "Sumit",
+  "description": "A rigorous six-volume JavaScript book for FAANG interview preparation and production engineering mastery.",
+  "language": "en",
+  "root": "./docs",
+  "structure": {
+    "readme": "index.md",
+    "summary": "table-of-contents.md"
+  },
+  "plugins": [
+    "search",
+    "copy-code-button",
+    "page-toc-button",
+    "prism",
+    "mermaid-gb3"
+  ],
+  "pluginsConfig": {
+    "theme-default": {
+      "showLevel": true
+    }
+  }
+}
+
