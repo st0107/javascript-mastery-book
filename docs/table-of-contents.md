@@ -2,18 +2,78 @@
 
 ## Volume 1: JavaScript Fundamentals
 
-1. JavaScript Execution Model
-2. Values, Types, and Type Conversion
-3. Variables, Bindings, and Temporal Dead Zone
-4. Operators and Expressions
-5. Control Flow
-6. Functions and Parameters
-7. Objects and Property Access
-8. Arrays and Iteration
-9. Strings, Numbers, BigInt, Symbols, and Dates
-10. Error Handling
-11. Modules
-12. Clean JavaScript Style for Interviews
+1. Introduction to JavaScript
+   - Introduction
+   - Theory
+   - Internal Working
+   - Production Examples
+   - Interview Perspective
+   - Exercises and Coding Challenges
+   - MCQs
+   - Revision Sheet and Chapter Summary
+   - Edge Cases, Debugging, and Failure Modes
+   - Performance and Security Notes
+   - Professional Field Guide
+2. Variables and Data Types
+   - Introduction
+   - Theory
+   - Internal Working
+   - Production Examples
+   - Interview Perspective
+   - Exercises and Coding Challenges
+   - MCQs
+   - Revision Sheet and Chapter Summary
+   - Edge Cases, Debugging, and Failure Modes
+   - Performance and Security Notes
+   - Professional Field Guide
+3. Operators and Expressions
+   - Introduction
+   - Theory
+   - Internal Working
+   - Production Examples
+   - Interview Perspective
+   - Exercises and Coding Challenges
+   - MCQs
+   - Revision Sheet and Chapter Summary
+   - Edge Cases, Debugging, and Failure Modes
+   - Performance and Security Notes
+   - Professional Field Guide
+4. Type Conversion and Coercion
+   - Introduction
+   - Theory
+   - Internal Working
+   - Production Examples
+   - Interview Perspective
+   - Exercises and Coding Challenges
+   - MCQs
+   - Revision Sheet and Chapter Summary
+   - Edge Cases, Debugging, and Failure Modes
+   - Performance and Security Notes
+   - Professional Field Guide
+5. Strings, Numbers, and Dates
+   - Introduction
+   - Theory
+   - Internal Working
+   - Production Examples
+   - Interview Perspective
+   - Exercises and Coding Challenges
+   - MCQs
+   - Revision Sheet and Chapter Summary
+   - Edge Cases, Debugging, and Failure Modes
+   - Performance and Security Notes
+   - Professional Field Guide
+6. Control Flow
+   - Introduction
+   - Theory
+   - Internal Working
+   - Production Examples
+   - Interview Perspective
+   - Exercises and Coding Challenges
+   - MCQs
+   - Revision Sheet and Chapter Summary
+   - Edge Cases, Debugging, and Failure Modes
+   - Performance and Security Notes
+   - Professional Field Guide
 
 ## Volume 2: Advanced JavaScript
 
@@ -83,4 +143,3 @@
 10. Realtime Notification System
 11. Testing, Deployment, and Observability
 12. Portfolio and Interview Presentation Strategy
-
