@@ -61,6 +61,7 @@ node code/volume-2/chapter-01/example-00-scope-model.js
 node code/volume-2/chapter-01/example-01-request-logger.js
 node code/volume-2/chapter-01/example-02-subscription-store.js
 node code/volume-2/chapter-01/example-03-closure-challenges.js
+node code/volume-2/chapter-01/example-04-edge-cases.js
 ```
 
 The scripts include assertions as well as expected console output. Use them to test a prediction, then change one binding or call order and predict again.
