@@ -1,5 +1,7 @@
 # Table of Contents
 
+Volume 1 has six chapter drafts. Volume 2, Chapter 1 is authored across all eleven sections; its remaining chapters and Volumes 3–6 are planned.
+
 ## Volume 1: JavaScript Fundamentals
 
 1. Introduction to JavaScript
@@ -77,7 +79,18 @@
 
 ## Volume 2: Advanced JavaScript
 
-1. Lexical Scope and Closures
+1. [Lexical Scope and Closures](volume-2/chapter-01/01-introduction.md)
+   - [Introduction](volume-2/chapter-01/01-introduction.md)
+   - [Theory](volume-2/chapter-01/02-theory.md)
+   - [Internal Working](volume-2/chapter-01/03-internal-working.md)
+   - [Production Examples](volume-2/chapter-01/04-production-examples.md)
+   - [Interview Perspective](volume-2/chapter-01/05-interview-perspective.md)
+   - [Exercises and Coding Challenges](volume-2/chapter-01/06-exercises-coding-challenges.md)
+   - [MCQs](volume-2/chapter-01/07-mcqs.md)
+   - [Revision Sheet and Chapter Summary](volume-2/chapter-01/08-revision-summary.md)
+   - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-01/09-edge-cases-debugging.md)
+   - [Performance and Security Notes](volume-2/chapter-01/10-performance-security.md)
+   - [Professional Field Guide](volume-2/chapter-01/11-professional-field-guide.md)
 2. `this`, Call, Apply, and Bind
 3. Prototypes and Inheritance
 4. Classes and Object Creation Patterns

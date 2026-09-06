@@ -113,7 +113,31 @@ const sidebars = {
         }
       ]
     },
-    'volume-2/index',
+    {
+      type: 'category',
+      label: 'Volume 2: Advanced JavaScript',
+      items: [
+        'volume-2/index',
+        'volume-2/SUMMARY',
+        {
+          type: 'category',
+          label: 'Chapter 01: Lexical Scope and Closures',
+          items: [
+            'volume-2/chapter-01/introduction',
+            'volume-2/chapter-01/theory',
+            'volume-2/chapter-01/internal-working',
+            'volume-2/chapter-01/production-examples',
+            'volume-2/chapter-01/interview-perspective',
+            'volume-2/chapter-01/exercises-coding-challenges',
+            'volume-2/chapter-01/mcqs',
+            'volume-2/chapter-01/revision-summary',
+            'volume-2/chapter-01/edge-cases-debugging',
+            'volume-2/chapter-01/performance-security',
+            'volume-2/chapter-01/professional-field-guide'
+          ]
+        }
+      ]
+    },
     'volume-3/index',
     'volume-4/index',
     'volume-5/index',

@@ -13,7 +13,7 @@ This repository is designed as a real book project, not a notes dump. The source
 
 ## Current Writing Status
 
-The book is intentionally produced one complete section at a time. Volume 1, Chapter 1 is complete and acts as the quality model for future chapters.
+The book is produced chapter by chapter. Volume 1 contains six chapter drafts, through Control Flow. The latest authored chapter is [Volume 2, Chapter 1: Lexical Scope and Closures](docs/volume-2/chapter-01/01-introduction.md), with all eleven sections. The next planned chapter is **`this`, Call, Apply, and Bind**.
 
 | Area | Status |
 | --- | --- |
@@ -21,9 +21,11 @@ The book is intentionally produced one complete section at a time. Volume 1, Cha
 | Build configuration | Complete |
 | Book production standard | Complete |
 | Six-volume table of contents | Complete |
-| Volume 1, Chapter 1 | Complete |
-| Executable Chapter 1 examples | Complete |
-| Chapter 1 diagrams | Complete |
+| Volume 1, Chapters 1–6 | Drafts available |
+| Volume 2, Chapter 1: Lexical Scope and Closures | All eleven sections authored |
+| Volume 2, Chapter 2: `this`, Call, Apply, and Bind | Next planned chapter |
+| Remaining Volume 2 chapters and Volumes 3–6 | Planned |
+| Executable examples and Mermaid diagrams | Available alongside authored material |
 | PDF/EPUB/website scripts | Ready |
 
 ## Volumes
@@ -85,4 +87,3 @@ npm run build:all
 Every chapter must include introduction, objectives, prerequisites, theory, internals, memory diagrams, flowcharts, execution steps, production examples, interview explanation, mistakes, edge cases, performance notes, security notes, best practices, exercises, solutions, MCQs, revision sheet, summary, references, and further reading.
 
 Nothing should be merged as a placeholder. A planned chapter is listed in the table of contents; a chapter file is created only when the chapter is ready to be written properly.
-

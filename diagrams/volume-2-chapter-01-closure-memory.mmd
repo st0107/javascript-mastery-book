@@ -1,0 +1,6 @@
+flowchart LR
+  Owner["Caller binding: addToBatch"] --> Fn["Function object: add"]
+  Fn -->|"saved environment"| Batch["Factory environment: total = 100"]
+  Batch -->|"outer"| Outer["Enclosing environment"]
+  Active["Active caller execution"] -.-> Owner
+  Finished["createBatchTotal call has finished"]

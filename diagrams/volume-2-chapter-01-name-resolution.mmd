@@ -1,0 +1,10 @@
+flowchart TD
+  Start["Read an identifier"] --> Current["Start at current lexical environment"]
+  Current --> Has{"Binding with this name?"}
+  Has -->|"Yes"| Ready{"Initialized?"}
+  Ready -->|"Yes"| Read["Read current binding value"]
+  Ready -->|"No"| TDZ["Throw ReferenceError"]
+  Has -->|"No"| Parent{"Outer environment exists?"}
+  Parent -->|"Yes"| Next["Move to outer environment"]
+  Next --> Has
+  Parent -->|"No"| Missing["Unresolvable ordinary read: ReferenceError"]

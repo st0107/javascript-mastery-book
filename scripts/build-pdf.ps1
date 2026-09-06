@@ -10,14 +10,22 @@ $fixedSources = @(
   "docs/volume-1/preface.md"
 )
 
-$volumeOneSources = Get-ChildItem -Path "docs/volume-1/chapter-*" -Filter "*.md" -Recurse |
-  Where-Object { $_.FullName -notlike "*chapter-01-execution-model.md" } |
+$volumeOneSources = Get-ChildItem -LiteralPath "docs/volume-1" -Directory -Filter "chapter-*" |
+  ForEach-Object { Get-ChildItem -LiteralPath $_.FullName -File -Filter "*.md" } |
+  Sort-Object FullName |
+  ForEach-Object { $_.FullName }
+
+$volumeTwoSources = Get-ChildItem -LiteralPath "docs/volume-2" -Directory -Filter "chapter-*" |
+  ForEach-Object { Get-ChildItem -LiteralPath $_.FullName -File -Filter "*.md" } |
   Sort-Object FullName |
   ForEach-Object { $_.FullName }
 
 $sources = @(
   $fixedSources
   $volumeOneSources
+  "docs/volume-2/index.md",
+  "docs/volume-2/SUMMARY.md"
+  $volumeTwoSources
   "appendix/glossary.md",
   "appendix/references.md"
 )
