@@ -1,0 +1,7 @@
+flowchart LR
+  Registry["Long-lived listener registry"] --> Bound["Bound callback: label"]
+  Bound -->|"target"| Fn["Function: format"]
+  Bound -->|"receiver"| Owner["Shipment object: id = shipment-17"]
+  Bound -->|"leading arguments"| Args["Argument list: Dispatch prefix"]
+  Fn -->|"lexical environment"| Env["Enclosing bindings used by format"]
+  Owner --> Data["Other state reachable from shipment"]

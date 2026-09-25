@@ -135,6 +135,23 @@ const sidebars = {
             'volume-2/chapter-01/performance-security',
             'volume-2/chapter-01/professional-field-guide'
           ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 02: this, Call, Apply, and Bind',
+          items: [
+            'volume-2/chapter-02/introduction',
+            'volume-2/chapter-02/theory',
+            'volume-2/chapter-02/internal-working',
+            'volume-2/chapter-02/production-examples',
+            'volume-2/chapter-02/interview-perspective',
+            'volume-2/chapter-02/exercises-coding-challenges',
+            'volume-2/chapter-02/mcqs',
+            'volume-2/chapter-02/revision-summary',
+            'volume-2/chapter-02/edge-cases-debugging',
+            'volume-2/chapter-02/performance-security',
+            'volume-2/chapter-02/professional-field-guide'
+          ]
         }
       ]
     },

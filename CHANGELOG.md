@@ -2,7 +2,14 @@
 
 All notable changes to this book repository are documented here.
 
-## Unreleased - 2026-09-06
+## Unreleased - 2026-09-25
+
+- Added Volume 2, Chapter 2: `this`, Call, Apply, and Bind across eleven sections, including receiver selection, lexical arrows, explicit calls, partial application, bound construction, production patterns, interviews, exercises with solutions, and MCQs.
+- Added five runnable chapter scripts with assertions for receiver behavior, listener lifecycle, method forwarding, coding challenges, and edge cases.
+- Added receiver-selection and bound-function memory diagrams and integrated the chapter into both site navigation systems, the volume summary, and the book table of contents. Existing PDF/EPUB source discovery includes the new chapter automatically.
+- Updated writing status and the next planned chapter to Prototypes and Inheritance.
+
+## 2026-09-06
 
 - Added Volume 2, Chapter 1: Lexical Scope and Closures across eleven sections, including internals, production patterns, interview preparation, exercises with solutions, MCQs, debugging, and performance and security notes.
 - Added runnable closure examples and supporting chapter diagrams.

@@ -13,7 +13,7 @@ This repository is designed as a real book project, not a notes dump. The source
 
 ## Current Writing Status
 
-The book is produced chapter by chapter. Volume 1 contains six chapter drafts, through Control Flow. The latest authored chapter is [Volume 2, Chapter 1: Lexical Scope and Closures](docs/volume-2/chapter-01/01-introduction.md), with all eleven sections. The next planned chapter is **`this`, Call, Apply, and Bind**.
+The book is produced chapter by chapter. Volume 1 contains six chapter drafts, through Control Flow. Volume 2 now has two chapters with all eleven sections. The latest is [Chapter 2: `this`, Call, Apply, and Bind](docs/volume-2/chapter-02/01-introduction.md). The next planned chapter is **Prototypes and Inheritance**.
 
 | Area | Status |
 | --- | --- |
@@ -23,7 +23,8 @@ The book is produced chapter by chapter. Volume 1 contains six chapter drafts, t
 | Six-volume table of contents | Complete |
 | Volume 1, Chapters 1–6 | Drafts available |
 | Volume 2, Chapter 1: Lexical Scope and Closures | All eleven sections authored |
-| Volume 2, Chapter 2: `this`, Call, Apply, and Bind | Next planned chapter |
+| Volume 2, Chapter 2: `this`, Call, Apply, and Bind | All eleven sections authored |
+| Volume 2, Chapter 3: Prototypes and Inheritance | Next planned chapter |
 | Remaining Volume 2 chapters and Volumes 3–6 | Planned |
 | Executable examples and Mermaid diagrams | Available alongside authored material |
 | PDF/EPUB/website scripts | Ready |

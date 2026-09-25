@@ -1,0 +1,12 @@
+flowchart TD
+  Start["Inspect target and invocation"] --> New{"Construction with new?"}
+  New -->|"Yes"| Construct["Use construction rules; target must be constructible"]
+  New -->|"No"| Bound{"Bound function?"}
+  Bound -->|"Yes"| Forward["Prepend saved args; forward saved receiver to target"]
+  Forward --> Bound
+  Bound -->|"No"| Arrow{"Arrow function?"}
+  Arrow -->|"Yes"| Lexical["Resolve this in surrounding environment"]
+  Arrow -->|"No"| Supplied["Find supplied receiver from property call, explicit call, or API contract"]
+  Supplied --> Mode{"Ordinary target strict?"}
+  Mode -->|"Yes"| Exact["Use supplied value unchanged"]
+  Mode -->|"No"| Convert["Nullish becomes global this; primitives become objects"]

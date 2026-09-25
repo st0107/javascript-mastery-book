@@ -6,7 +6,7 @@ The goal is simple: when an interviewer asks what happens when JavaScript runs a
 
 ## Reading Path
 
-Start with [Volume 1: JavaScript Fundamentals](volume-1/README.md) for the foundation, then continue with [Volume 2, Chapter 1: Lexical Scope and Closures](volume-2/chapter-01/01-introduction.md). Each authored chapter includes interview material; Volume 5 is planned as a dedicated interview preparation volume.
+Start with [Volume 1: JavaScript Fundamentals](volume-1/README.md) for the foundation, then continue with [Lexical Scope and Closures](volume-2/chapter-01/01-introduction.md) and [`this`, Call, Apply, and Bind](volume-2/chapter-02/01-introduction.md) in Volume 2. Each authored chapter includes interview material; Volume 5 is planned as a dedicated interview preparation volume.
 
 ## What Makes This Book Different
 
@@ -18,6 +18,6 @@ Start with [Volume 1: JavaScript Fundamentals](volume-1/README.md) for the found
 
 ## Current Writing Status
 
-Volume 1 contains six chapter drafts, ending with Control Flow. Volume 2, Chapter 1: **Lexical Scope and Closures** now has all eleven sections, from lexical environments and captured bindings to production patterns, debugging, exercises, and revision.
+Volume 1 contains six chapter drafts, ending with Control Flow. Volume 2 has two chapters with all eleven sections: **Lexical Scope and Closures** and **`this`, Call, Apply, and Bind**, including internals, production patterns, debugging, exercises, and revision.
 
-Continue with the [new chapter](volume-2/chapter-01/01-introduction.md), or choose a section from its [summary](volume-2/SUMMARY.md). The next planned chapter is **`this`, Call, Apply, and Bind**.
+Continue with the [latest chapter](volume-2/chapter-02/01-introduction.md), or choose a section from the [volume summary](volume-2/SUMMARY.md). The next planned chapter is **Prototypes and Inheritance**.

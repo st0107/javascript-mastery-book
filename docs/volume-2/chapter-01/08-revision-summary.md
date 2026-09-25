@@ -48,4 +48,4 @@ The production decisions are ownership decisions. Choose what is captured, wheth
 
 Use the [Professional Field Guide](11-professional-field-guide.md) for a design review or interview rehearsal. For a memory investigation, consult [Chrome DevTools heap snapshots](https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots) alongside the [performance notes](10-performance-security.md).
 
-The next planned chapter is **Volume 2, Chapter 2: `this`, Call, Apply, and Bind**. It will distinguish ordinary identifier lookup from receiver selection during a call. Later chapters on memory management and asynchronous JavaScript will revisit retention and callbacks; the synchronous closure rules established here remain the foundation.
+Continue with [Volume 2, Chapter 2: `this`, Call, Apply, and Bind](../chapter-02/01-introduction.md) to distinguish ordinary identifier lookup from receiver selection during a call. Later chapters on memory management and asynchronous JavaScript will revisit retention and callbacks; the synchronous closure rules established here remain the foundation.
