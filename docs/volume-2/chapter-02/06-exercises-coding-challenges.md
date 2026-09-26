@@ -2,7 +2,7 @@
 
 Work through these six exercises in order. For every invocation, identify the target function, the supplied receiver, and the arguments before predicting the result. All JavaScript blocks are independently runnable in Node.js 20 or later. They use strict mode and catch intentional failures.
 
-The companion assertion program is [`example-03-binding-challenges.js`](../../../code/volume-2/chapter-02/example-03-binding-challenges.js). Run it from the repository root with `node code/volume-2/chapter-02/example-03-binding-challenges.js`.
+The companion assertion program lives in `code/volume-2/chapter-02/example-03-binding-challenges.js`. Run it from the repository root with `node code/volume-2/chapter-02/example-03-binding-challenges.js`.
 
 ## Exercise 1: Predict the Receiver at Each Call
 
