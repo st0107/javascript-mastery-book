@@ -2,7 +2,14 @@
 
 All notable changes to this book repository are documented here.
 
-## Unreleased - 2026-09-25
+## Unreleased - 2026-09-26
+
+- Added Volume 2, Chapter 3: Prototypes and Inheritance across eleven sections, including property lookup, descriptors and receivers, constructor links, shared-state ownership, class inheritance, interview preparation, exercises with solutions, and MCQs.
+- Added five runnable chapter scripts covering the prototype model, shared inventory records, safe option parsing, coding challenges, and edge cases.
+- Added property-lookup and prototype-memory diagrams and integrated the chapter into the sidebar, MkDocs navigation, volume summary, and book table of contents. Existing PDF/EPUB source discovery includes the chapter automatically.
+- Updated writing status and the next planned chapter to Classes and Object Creation Patterns.
+
+## 2026-09-25
 
 - Added Volume 2, Chapter 2: `this`, Call, Apply, and Bind across eleven sections, including receiver selection, lexical arrows, explicit calls, partial application, bound construction, production patterns, interviews, exercises with solutions, and MCQs.
 - Added five runnable chapter scripts with assertions for receiver behavior, listener lifecycle, method forwarding, coding challenges, and edge cases.

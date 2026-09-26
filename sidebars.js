@@ -152,6 +152,23 @@ const sidebars = {
             'volume-2/chapter-02/performance-security',
             'volume-2/chapter-02/professional-field-guide'
           ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 03: Prototypes and Inheritance',
+          items: [
+            'volume-2/chapter-03/introduction',
+            'volume-2/chapter-03/theory',
+            'volume-2/chapter-03/internal-working',
+            'volume-2/chapter-03/production-examples',
+            'volume-2/chapter-03/interview-perspective',
+            'volume-2/chapter-03/exercises-coding-challenges',
+            'volume-2/chapter-03/mcqs',
+            'volume-2/chapter-03/revision-summary',
+            'volume-2/chapter-03/edge-cases-debugging',
+            'volume-2/chapter-03/performance-security',
+            'volume-2/chapter-03/professional-field-guide'
+          ]
         }
       ]
     },

@@ -75,6 +75,18 @@ nav:
           - Edge Cases, Debugging, and Failure Modes: volume-2/chapter-02/09-edge-cases-debugging.md
           - Performance and Security Notes: volume-2/chapter-02/10-performance-security.md
           - Professional Field Guide: volume-2/chapter-02/11-professional-field-guide.md
+      - "Chapter 3: Prototypes and Inheritance":
+          - Introduction: volume-2/chapter-03/01-introduction.md
+          - Theory: volume-2/chapter-03/02-theory.md
+          - Internal Working: volume-2/chapter-03/03-internal-working.md
+          - Production Examples: volume-2/chapter-03/04-production-examples.md
+          - Interview Perspective: volume-2/chapter-03/05-interview-perspective.md
+          - Exercises and Coding Challenges: volume-2/chapter-03/06-exercises-coding-challenges.md
+          - MCQs: volume-2/chapter-03/07-mcqs.md
+          - Revision Sheet and Chapter Summary: volume-2/chapter-03/08-revision-summary.md
+          - Edge Cases, Debugging, and Failure Modes: volume-2/chapter-03/09-edge-cases-debugging.md
+          - Performance and Security Notes: volume-2/chapter-03/10-performance-security.md
+          - Professional Field Guide: volume-2/chapter-03/11-professional-field-guide.md
   - Volume 3: volume-3/index.md
   - Volume 4: volume-4/index.md
   - Volume 5: volume-5/index.md

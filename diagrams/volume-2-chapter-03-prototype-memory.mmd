@@ -1,0 +1,9 @@
+flowchart LR
+  Ctor["Constructor function: Job"] -->|".prototype property"| Proto["Job.prototype: describe function reference"]
+  Proto -.->|".constructor property"| Ctor
+  First["First job: own id and jobs reference"] -->|"internal prototype"| Proto
+  Second["Second job: own id and jobs reference"] -->|"internal prototype"| Proto
+  First -->|"own jobs"| ArrayA["Array A"]
+  Second -->|"own jobs"| ArrayB["Array B"]
+  Proto -->|"internal prototype"| ObjectProto["Object.prototype"]
+  ObjectProto -->|"internal prototype"| End["null: chain ends"]

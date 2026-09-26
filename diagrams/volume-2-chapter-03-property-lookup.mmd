@@ -1,0 +1,12 @@
+flowchart TD
+  Start["Read property key; save original receiver"] --> Current["Inspect current object's own descriptor"]
+  Current --> Found{"Own descriptor exists?"}
+  Found -->|"No"| Parent{"Prototype is null?"}
+  Parent -->|"Yes"| Missing["Return undefined"]
+  Parent -->|"No"| Next["Search prototype; keep receiver unchanged"]
+  Next --> Current
+  Found -->|"Yes"| Data{"Data descriptor?"}
+  Data -->|"Yes"| Value["Return stored value, including undefined"]
+  Data -->|"No"| Getter{"Getter exists?"}
+  Getter -->|"No"| Missing
+  Getter -->|"Yes"| Call["Call getter with original receiver; return result or propagate error"]

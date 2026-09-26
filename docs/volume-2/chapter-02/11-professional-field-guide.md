@@ -89,4 +89,4 @@ Adapt the explanation to the actual contract. If method replacement should be vi
 
 You are ready for the next chapter when you can predict the difference between extracting a method, binding it, wrapping its property call, and creating an arrow inside it. You should also explain why listener identity survives neither repeated binding nor repeated wrapper creation, and why construction ignores a bound receiver.
 
-Use the [interview perspective](05-interview-perspective.md) to rehearse the language rules and the [revision sheet](08-revision-summary.md) to check them. The next planned chapter, **Prototypes and Inheritance**, develops where methods are found before a call supplies their receiver.
+Use the [interview perspective](05-interview-perspective.md) to rehearse the language rules and the [revision sheet](08-revision-summary.md) to check them. Continue with [Prototypes and Inheritance](../chapter-03/01-introduction.md) to learn where methods are found before a call supplies their receiver.

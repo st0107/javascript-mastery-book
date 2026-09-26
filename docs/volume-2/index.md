@@ -8,12 +8,13 @@ This volume covers closures, `this`, prototypes, classes, descriptors, generator
 
 1. [Lexical Scope and Closures](chapter-01/01-introduction.md) — all eleven sections are authored, including production examples, exercises with solutions, interview questions, and a revision sheet.
 2. [`this`, Call, Apply, and Bind](chapter-02/01-introduction.md) — all eleven sections are authored, covering receivers, arrows, explicit invocation, bound functions, callback lifecycle, and forwarding contracts.
+3. [Prototypes and Inheritance](chapter-03/01-introduction.md) — all eleven sections are authored, covering property lookup, shared behavior, state ownership, constructor relationships, and safe data handling.
 
-Use the [section-by-section summary](SUMMARY.md) to navigate both chapters. Runnable examples live in `code/volume-2/chapter-01` and `code/volume-2/chapter-02`.
+Use the [section-by-section summary](SUMMARY.md) to navigate the chapters. Runnable examples live in `code/volume-2/chapter-01`, `code/volume-2/chapter-02`, and `code/volume-2/chapter-03`.
 
 ## Next Chapter
 
-Chapter 3: **Prototypes and Inheritance** is next in the writing sequence. The remaining chapters are planned in the [book table of contents](../table-of-contents.md).
+Chapter 4: **Classes and Object Creation Patterns** is next in the writing sequence. The remaining chapters are planned in the [book table of contents](../table-of-contents.md).
 
 ## Prerequisites
 

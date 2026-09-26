@@ -68,4 +68,4 @@ Production correctness includes the rest of the call contract: argument order, r
 - [Node.js: EventEmitter receiver behavior](https://nodejs.org/api/events.html#passing-arguments-and-this-to-listeners) for the production listener example.
 - [V8 function object definitions](https://github.com/v8/v8/blob/main/src/objects/js-function.tq) for an implementation view of stored bound-function state.
 
-Next planned chapter: **Prototypes and Inheritance**. That chapter will explain how a property lookup finds a shared method; the receiver rules learned here explain what happens when the found method is called.
+Continue with [Prototypes and Inheritance](../chapter-03/01-introduction.md) to learn how a property lookup finds a shared method; the receiver rules learned here explain what happens when the found method is called.

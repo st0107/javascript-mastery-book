@@ -30,8 +30,22 @@
 - [Performance and Security Notes](chapter-02/10-performance-security.md)
 - [Professional Field Guide](chapter-02/11-professional-field-guide.md)
 
+### Chapter 3: Prototypes and Inheritance
+
+- [Introduction](chapter-03/01-introduction.md)
+- [Theory](chapter-03/02-theory.md)
+- [Internal Working](chapter-03/03-internal-working.md)
+- [Production Examples](chapter-03/04-production-examples.md)
+- [Interview Perspective](chapter-03/05-interview-perspective.md)
+- [Exercises and Coding Challenges](chapter-03/06-exercises-coding-challenges.md)
+- [MCQs](chapter-03/07-mcqs.md)
+- [Revision Sheet and Chapter Summary](chapter-03/08-revision-summary.md)
+- [Edge Cases, Debugging, and Failure Modes](chapter-03/09-edge-cases-debugging.md)
+- [Performance and Security Notes](chapter-03/10-performance-security.md)
+- [Professional Field Guide](chapter-03/11-professional-field-guide.md)
+
 ### Next Planned Chapter
 
-Chapter 3: Prototypes and Inheritance.
+Chapter 4: Classes and Object Creation Patterns.
 
 See the [volume overview](index.md) for prerequisites and the [book table of contents](../table-of-contents.md) for the remaining planned chapters.

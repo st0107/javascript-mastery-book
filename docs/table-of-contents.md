@@ -1,6 +1,6 @@
 # Table of Contents
 
-Volume 1 has six chapter drafts. Volume 2, Chapters 1 and 2 are each authored across all eleven sections; its remaining chapters and Volumes 3–6 are planned.
+Volume 1 has six chapter drafts. Volume 2, Chapters 1–3 are each authored across all eleven sections; its remaining chapters and Volumes 3–6 are planned.
 
 ## Volume 1: JavaScript Fundamentals
 
@@ -103,7 +103,18 @@ Volume 1 has six chapter drafts. Volume 2, Chapters 1 and 2 are each authored ac
    - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-02/09-edge-cases-debugging.md)
    - [Performance and Security Notes](volume-2/chapter-02/10-performance-security.md)
    - [Professional Field Guide](volume-2/chapter-02/11-professional-field-guide.md)
-3. Prototypes and Inheritance
+3. [Prototypes and Inheritance](volume-2/chapter-03/01-introduction.md)
+   - [Introduction](volume-2/chapter-03/01-introduction.md)
+   - [Theory](volume-2/chapter-03/02-theory.md)
+   - [Internal Working](volume-2/chapter-03/03-internal-working.md)
+   - [Production Examples](volume-2/chapter-03/04-production-examples.md)
+   - [Interview Perspective](volume-2/chapter-03/05-interview-perspective.md)
+   - [Exercises and Coding Challenges](volume-2/chapter-03/06-exercises-coding-challenges.md)
+   - [MCQs](volume-2/chapter-03/07-mcqs.md)
+   - [Revision Sheet and Chapter Summary](volume-2/chapter-03/08-revision-summary.md)
+   - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-03/09-edge-cases-debugging.md)
+   - [Performance and Security Notes](volume-2/chapter-03/10-performance-security.md)
+   - [Professional Field Guide](volume-2/chapter-03/11-professional-field-guide.md)
 4. Classes and Object Creation Patterns
 5. Descriptors, Immutability, and Proxies
 6. Iterators and Generators
