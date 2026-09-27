@@ -169,6 +169,23 @@ const sidebars = {
             'volume-2/chapter-03/performance-security',
             'volume-2/chapter-03/professional-field-guide'
           ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 04: Classes and Object Creation Patterns',
+          items: [
+            'volume-2/chapter-04/introduction',
+            'volume-2/chapter-04/theory',
+            'volume-2/chapter-04/internal-working',
+            'volume-2/chapter-04/production-examples',
+            'volume-2/chapter-04/interview-perspective',
+            'volume-2/chapter-04/exercises-coding-challenges',
+            'volume-2/chapter-04/mcqs',
+            'volume-2/chapter-04/revision-summary',
+            'volume-2/chapter-04/edge-cases-debugging',
+            'volume-2/chapter-04/performance-security',
+            'volume-2/chapter-04/professional-field-guide'
+          ]
         }
       ]
     },

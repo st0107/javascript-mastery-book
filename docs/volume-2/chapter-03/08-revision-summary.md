@@ -73,4 +73,4 @@ Use prototypes to express deliberate shared behavior. At external data boundarie
 - [V8: Fast properties](https://v8.dev/blog/fast-properties) for an implementation view of object layouts.
 - [OWASP: Prototype Pollution Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Prototype_Pollution_Prevention_Cheat_Sheet.html) for defensive data handling.
 
-Next planned chapter: **Classes and Object Creation Patterns**. It will build on these prototype relationships to explain initialization, public and private state, class fields, inheritance contracts, and alternatives based on factories and composition.
+Continue with [Classes and Object Creation Patterns](../chapter-04/01-introduction.md) to build on these prototype relationships with initialization, public and private state, class fields, inheritance contracts, and alternatives based on factories and composition.

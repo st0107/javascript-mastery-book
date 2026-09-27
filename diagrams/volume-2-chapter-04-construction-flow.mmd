@@ -1,0 +1,10 @@
+flowchart TD
+  Start["new Child(args)"] --> Before["Enter derived body: this is uninitialized"]
+  Before --> Super["super(args) constructs Base with Child as new.target"]
+  Super --> Allocate["Allocate instance linked to Child.prototype"]
+  Allocate --> BaseElements["Install Base private methods and initialize Base fields"]
+  BaseElements --> BaseBody["Execute Base constructor body"]
+  BaseBody --> Bind["Bind derived this to returned instance"]
+  Bind --> ChildElements["Install Child private methods and initialize Child fields"]
+  ChildElements --> After["Resume derived body after super()"]
+  After --> Return["Return completed instance"]

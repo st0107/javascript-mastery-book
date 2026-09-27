@@ -1,0 +1,12 @@
+flowchart LR
+  Type["WorkList constructor: static kind"] -->|"prototype property"| Proto["WorkList.prototype: add and size methods"]
+  A["Instance A: own id and callback"] -->|"internal prototype"| Proto
+  B["Instance B: own id and callback"] -->|"internal prototype"| Proto
+  A -.->|"private #items association"| ArrayA["Array A: export"]
+  B -.->|"private #items association"| ArrayB["Array B: empty"]
+  A -->|"callback property"| ArrowA["Arrow function A"]
+  B -->|"callback property"| ArrowB["Arrow function B"]
+  ArrowA -.->|"lexical this"| A
+  ArrowB -.->|"lexical this"| B
+  Proto -->|"internal prototype"| ObjectProto["Object.prototype"]
+  ObjectProto --> Null["null"]

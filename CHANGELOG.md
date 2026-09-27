@@ -2,7 +2,14 @@
 
 All notable changes to this book repository are documented here.
 
-## Unreleased - 2026-09-26
+## Unreleased - 2026-09-27
+
+- Added Volume 2, Chapter 4: Classes and Object Creation Patterns across eleven sections, including initialization order, fields and private state, invariants, factories, composition, interviews, six exercises with solutions, and sixteen MCQs.
+- Added five runnable assertion programs covering the class model, reservation state, injected notification behavior, creation challenges, and edge cases.
+- Added construction-flow and class-memory diagrams and integrated the chapter into both navigation systems, the volume summary, and the table of contents. Existing PDF/EPUB source discovery includes the chapter automatically.
+- Updated writing status and the next planned chapter to Descriptors, Immutability, and Proxies.
+
+## 2026-09-26
 
 - Added Volume 2, Chapter 3: Prototypes and Inheritance across eleven sections, including property lookup, descriptors and receivers, constructor links, shared-state ownership, class inheritance, interview preparation, exercises with solutions, and MCQs.
 - Added five runnable chapter scripts covering the prototype model, shared inventory records, safe option parsing, coding challenges, and edge cases.

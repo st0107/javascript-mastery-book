@@ -86,4 +86,4 @@ For `super`, mark the method's home object separately. For lexical identifiers, 
 
 You are ready to continue when you can explain shared method identity alongside separate instance state, predict assignment under inherited descriptors, and distinguish prototype membership from successful initialization. You should also be able to explain why own-field validation and a deliberate dictionary representation matter at a data boundary.
 
-Use the [interview questions](05-interview-perspective.md) to rehearse those distinctions and the [revision sheet](08-revision-summary.md) to review the lookup rules. The next planned chapter, **Classes and Object Creation Patterns**, builds on these relationships with class construction, initialization, and explicit object-creation designs.
+Use the [interview questions](05-interview-perspective.md) to rehearse those distinctions and the [revision sheet](08-revision-summary.md) to review the lookup rules. The next chapter, [Classes and Object Creation Patterns](../chapter-04/01-introduction.md), builds on these relationships with class construction, initialization, and explicit object-creation designs.

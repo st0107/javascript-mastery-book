@@ -13,7 +13,7 @@ This repository is designed as a real book project, not a notes dump. The source
 
 ## Current Writing Status
 
-The book is produced chapter by chapter. Volume 1 contains six chapter drafts, through Control Flow. Volume 2 now has three chapters with all eleven sections. The latest is [Chapter 3: Prototypes and Inheritance](docs/volume-2/chapter-03/01-introduction.md). The next planned chapter is **Classes and Object Creation Patterns**.
+The book is produced chapter by chapter. Volume 1 contains six chapter drafts, through Control Flow. Volume 2 now has four chapters with all eleven sections. The latest is [Chapter 4: Classes and Object Creation Patterns](docs/volume-2/chapter-04/01-introduction.md). The next planned chapter is **Descriptors, Immutability, and Proxies**.
 
 | Area | Status |
 | --- | --- |
@@ -25,7 +25,8 @@ The book is produced chapter by chapter. Volume 1 contains six chapter drafts, t
 | Volume 2, Chapter 1: Lexical Scope and Closures | All eleven sections authored |
 | Volume 2, Chapter 2: `this`, Call, Apply, and Bind | All eleven sections authored |
 | Volume 2, Chapter 3: Prototypes and Inheritance | All eleven sections authored |
-| Volume 2, Chapter 4: Classes and Object Creation Patterns | Next planned chapter |
+| Volume 2, Chapter 4: Classes and Object Creation Patterns | All eleven sections authored |
+| Volume 2, Chapter 5: Descriptors, Immutability, and Proxies | Next planned chapter |
 | Remaining Volume 2 chapters and Volumes 3–6 | Planned |
 | Executable examples and Mermaid diagrams | Available alongside authored material |
 | PDF/EPUB/website scripts | Ready |
