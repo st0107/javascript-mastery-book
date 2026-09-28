@@ -1,169 +1,147 @@
-# MCQs
+# Multiple-Choice Questions
 
-1. What does `const` prevent?
-   - A. Rebinding the variable identifier to a different value.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+Choose one answer for each question. Predict the binding state and value type before reading the explanation.
 
-   Answer: A. Explanation: Rebinding the variable identifier to a different value. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 1. What does const prevent after initialization?
 
-2. What does `const` not prevent?
-   - A. Mutation of an object referenced by the binding.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Passing its value to a function
+- B. Aliases from referring to its value
+- C. Assignment of another value to its binding
+- D. Property writes to any object it holds
 
-   Answer: A. Explanation: Mutation of an object referenced by the binding. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: C.** The binding cannot be reassigned. Object mutability and aliasing are separate properties.
 
-3. Which declarations are block-scoped?
-   - A. `let` and `const` are block-scoped.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 2. What does an ordinary var binding contain before its initializer executes?
 
-   Answer: A. Explanation: `let` and `const` are block-scoped. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. undefined
+- B. The initializer result
+- C. null
+- D. It always throws ReferenceError
 
-4. Which declaration is function-scoped?
-   - A. `var` is scoped to the nearest function or script context.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: A.** Ordinary var bindings are initialized to undefined before body statement evaluation.
 
-   Answer: A. Explanation: `var` is scoped to the nearest function or script context. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 3. What happens when reading an inner lexical binding before initialization?
 
-5. What is the temporal dead zone?
-   - A. The period where a `let` or `const` binding exists but cannot be accessed before initialization.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. It returns null
+- B. It throws ReferenceError
+- C. Lookup uses an outer name instead
+- D. It copies the outer value
 
-   Answer: A. Explanation: The period where a `let` or `const` binding exists but cannot be accessed before initialization. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Shadowing selects the inner binding throughout its scope; its TDZ does not trigger an outer fallback.
 
-6. What does `typeof null` return?
-   - A. It returns `"object"`, a historical JavaScript quirk.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 4. Which value has primitive Null type?
 
-   Answer: A. Explanation: It returns `"object"`, a historical JavaScript quirk. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. null
+- B. {}
+- C. []
+- D. undefined
 
-7. Which values are primitive?
-   - A. String, number, boolean, bigint, symbol, undefined, and null.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: A.** Null is a primitive type even though typeof null returns object.
 
-   Answer: A. Explanation: String, number, boolean, bigint, symbol, undefined, and null. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 5. What does typeof NaN return?
 
-8. Why are objects called reference values in teaching models?
-   - A. Variables hold references to heap-allocated objects rather than copying the whole object.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. undefined
+- B. nan
+- C. object
+- D. number
 
-   Answer: A. Explanation: Variables hold references to heap-allocated objects rather than copying the whole object. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: D.** NaN is a special Number value. Number.isNaN distinguishes it from other numeric values.
 
-9. What does dynamic typing mean?
-   - A. A variable binding can hold values of different types over time unless constrained by code discipline.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 6. Which test specifically detects arrays?
 
-   Answer: A. Explanation: A variable binding can hold values of different types over time unless constrained by code discipline. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. typeof value === object
+- B. Number.isFinite(value)
+- C. value !== null
+- D. Array.isArray(value)
 
-10. What is an accidental global?
-   - A. A variable created unintentionally outside the intended scope, usually from missing declaration in sloppy mode.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Arrays are objects, so the broad object test does not distinguish them.
 
-   Answer: A. Explanation: A variable created unintentionally outside the intended scope, usually from missing declaration in sloppy mode. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 7. What does assigning an object value to a second variable do?
 
-11. Why prefer `const` by default?
-   - A. It communicates that the binding itself should not be reassigned.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Freezes the object
+- B. Shares the same object identity
+- C. Links the variable bindings so later reassignment affects both
+- D. Recursively copies all properties
 
-   Answer: A. Explanation: It communicates that the binding itself should not be reassigned. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** The bindings are independent, but initially designate the same object. Rebinding one does not rebind the other.
 
-12. When is `let` appropriate?
-   - A. When the binding must be reassigned, such as loop counters or staged normalization.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 8. A function reassigns its object parameter without mutating the object. What happens to the caller binding?
 
-   Answer: A. Explanation: When the binding must be reassigned, such as loop counters or staged normalization. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. It receives the new object
+- B. It remains unchanged
+- C. It becomes immutable
+- D. It becomes undefined
 
-13. Why should `var` be avoided in modern code?
-   - A. Its function scope and hoisting behavior make code harder to reason about.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: B.** The parameter is a separate binding initialized with the argument value.
 
-   Answer: A. Explanation: Its function scope and hoisting behavior make code harder to reason about. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 9. What happens at an executed let result; declaration?
 
-14. What makes a value eligible for garbage collection?
-   - A. It is no longer reachable from active roots.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. result remains forever in the TDZ
+- B. The declaration throws without an initializer
+- C. result initializes to null
+- D. result initializes to undefined
 
-   Answer: A. Explanation: It is no longer reachable from active roots. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: D.** An ordinary let declaration permits omission of the initializer; reaching it initializes the binding.
 
-15. Why can closures keep memory alive?
-   - A. A closure can preserve references to outer lexical environments and the objects they reference.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 10. Which list contains only primitive types?
 
-   Answer: A. Explanation: A closure can preserve references to outer lexical environments and the objects they reference. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. String, Symbol, BigInt
+- B. String, Array, Number
+- C. Function, Boolean, Null
+- D. Object, Symbol, BigInt
 
-16. What should you validate before storing external JSON?
-   - A. Shape, type, required fields, and allowed value ranges.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: A.** Arrays and functions are objects. String, Symbol, and BigInt are primitive types.
 
-   Answer: A. Explanation: Shape, type, required fields, and allowed value ranges. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 11. What can typeof do for an existing uninitialized lexical binding?
 
-17. Why can destructuring still need validation?
-   - A. Destructuring extracts values but does not prove their types.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Return the string uninitialized
+- B. Throw ReferenceError
+- C. Always return undefined
+- D. Skip to an outer binding
 
-   Answer: A. Explanation: Destructuring extracts values but does not prove their types. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** The undeclared-identifier exception does not bypass a lexical binding's TDZ.
 
-18. What is the difference between `undefined` and undeclared?
-   - A. `undefined` is a value; undeclared means no binding exists in accessible scope.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 12. What does dynamic typing permit?
 
-   Answer: A. Explanation: `undefined` is a value; undeclared means no binding exists in accessible scope. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. Mutating a primitive string in place
+- B. Ignoring value types during operations
+- C. A const binding to be reassigned
+- D. A mutable binding to hold values of different types over time
 
-19. Why is `typeof` useful for guards?
-   - A. It safely checks many primitive types without evaluating constructors.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Operations still depend on types; mutable bindings are not permanently restricted to one runtime type.
 
-   Answer: A. Explanation: It safely checks many primitive types without evaluating constructors. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+## 13. Why is Number.isSafeInteger alone insufficient for a positive stock count?
 
-20. What is a stable object shape?
-   - A. An object with predictable properties that engines can optimize more easily.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. It also accepts zero and negative safe integers
+- B. It accepts numeric strings
+- C. It only works for BigInt
+- D. It rejects every integer greater than one
 
-   Answer: A. Explanation: An object with predictable properties that engines can optimize more easily. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Safe representation and integrality are separate from business range restrictions.
 
-21. Why do memory diagrams matter?
-   - A. They clarify the difference between binding names, primitive values, and object references.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 14. Which statement about collection is accurate?
 
-   Answer: A. Explanation: They clarify the difference between binding names, primitive values, and object references. This is directly relevant to Variables and Data Types because the topic is about predictable behavior, not memorized trivia.
+- A. Unreachable data is eligible for collection without a guaranteed immediate time
+- B. A cycle is necessarily a leak
+- C. Every local object is collected when its function returns
+- D. const objects cannot be collected
+
+**Answer: A.** Reachability, not the declaration keyword or scope exit alone, determines whether data can still be used.
+
+## 15. What is true of Symbol("id") === Symbol("id")?
+
+- A. It is false because each direct call creates a distinct symbol
+- B. It depends on the enclosing binding keyword
+- C. It throws because symbols cannot be compared
+- D. It is true because the descriptions match
+
+**Answer: A.** Symbol descriptions help diagnostics; they do not merge distinct directly created symbols.
+
+## 16. Why construct a new {id, email} record from validated strings?
+
+- A. To guarantee that the input has no getters in every possible JavaScript object
+- B. To authorize the user automatically
+- C. To define a narrow output shape with independent property slots
+- D. To make all possible input graphs deeply immutable
+
+**Answer: C.** A schema-specific result establishes the promised ownership for those primitive fields without making broader claims.

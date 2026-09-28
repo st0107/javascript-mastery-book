@@ -6,6 +6,8 @@ Attempt each contract before reading its solution. Each solution is independent.
 
 Accept a primitive string, normalize canonical Unicode spelling to NFC, trim its edges, and reject an empty result. Preserve internal spacing and case. Return the label; do not turn a non-string into text. Target O(n) work and output space for n code units.
 
+**Hint:** Transform only after checking the primitive type; reject the empty transformed result.
+
 ### Solution
 
 ```js
@@ -32,6 +34,8 @@ Normalization and trimming create a new string. The contract does not collapse i
 
 Return at most limit user-visible clusters without adding an ellipsis. Require a nonnegative safe integer limit and a primitive string. Do not split a combining sequence or emoji sequence. A zero limit returns an empty string.
 
+**Hint:** Segment before slicing; a code-point array still does not preserve every grapheme.
+
 ### Solution
 
 ```js
@@ -54,6 +58,8 @@ This straightforward solution segments the entire input before slicing: O(n) tex
 ## 3. Parse a Restricted Price
 
 Accept unsigned ASCII decimal text with no leading zeros except zero itself, exactly two decimal places, and at most six whole digits. Return integer cents. Reject whitespace, signs, exponent notation, booleans, and excess fractional digits. This parser intentionally handles one two-decimal amount syntax.
+
+**Hint:** Validate the complete decimal grammar, then combine whole and fractional digits as integers.
 
 ### Solution
 
@@ -84,6 +90,8 @@ The grammar bounds the result at 99,999,999 cents. Parsing whole and fractional 
 
 Accept two nonnegative safe-integer Numbers. Return their sum only if it is also safe. Reject strings and reject an overflow even when both inputs separately satisfy the contract.
 
+**Hint:** Validate both operands and the calculated total.
+
 ### Solution
 
 ```js
@@ -110,7 +118,9 @@ The result check is essential: validating only inputs leaves overflow possible. 
 
 ## 5. Increment an External Integer ID
 
-Accept 1?30 ASCII decimal digits in canonical unsigned form, with zero allowed and no leading zeros otherwise. Increment using BigInt and return a string for JSON transport. The output can have 31 digits when the input is thirty nines.
+Accept 1 through 30 ASCII decimal digits in canonical unsigned form, with zero allowed and no leading zeros otherwise. Increment using BigInt and return a string for JSON transport. The output can have 31 digits when the input is thirty nines.
+
+**Hint:** Build BigInt directly from accepted text and serialize the result as text.
 
 ### Solution
 
@@ -133,6 +143,8 @@ Constructing BigInt directly from accepted text preserves digits. Returning a st
 ## 6. Measure Elapsed Whole Seconds
 
 Accept two integer millisecond timestamps within the Date range, with end at or after start. Return the number of complete elapsed seconds. Reject an interval whose millisecond difference is outside safe-integer range. Treat this as elapsed time, not a local calendar duration.
+
+**Hint:** Validate the direction and the subtraction result before dividing.
 
 ### Solution
 

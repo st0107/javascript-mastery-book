@@ -1,0 +1,10 @@
+flowchart TD
+    A["Enter try"] --> B{"Operation throws?"}
+    B -- No --> C["Normal result or pending return"]
+    B -- Yes --> D["Nearest active catch, if present"]
+    D --> E["Catch completes or rethrows"]
+    C --> F["Run finally"]
+    E --> F
+    F --> G{"Finally completes normally?"}
+    G -- Yes --> H["Preserve pending result or error"]
+    G -- No --> I["Finally control transfer replaces pending one"]

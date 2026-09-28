@@ -46,7 +46,7 @@ By the end of this chapter, you should be able to:
 
 ## Prerequisites
 
-You should be comfortable with `let`, `const`, `var`, functions, object properties, arrays, and loops. Review [Variables and Data Types](../../volume-1/chapter-02/01-introduction.md) if the distinction between reassignment and object mutation is unfamiliar. The earlier [JavaScript Execution Model](../../volume-1/chapter-01-execution-model.md) introduces function calls and the call stack.
+You should be comfortable with `let`, `const`, `var`, functions, object properties, arrays, and loops. Review [Variables and Data Types](../../volume-1/chapter-02/01-introduction.md), [Functions and Callbacks](../../volume-1/chapter-07/01-introduction.md), [Objects and Data Ownership](../../volume-1/chapter-08/01-introduction.md), and [Arrays and Collections](../../volume-1/chapter-09/01-introduction.md) as needed. The [JavaScript Execution Model companion](../../volume-1/chapter-01-execution-model.md) connects function calls, the call stack, and retained bindings. [Modules and Execution Modes](../../volume-1/chapter-11/01-introduction.md) establishes the execution context used by the examples.
 
 A function is a value: you can assign it, pass it as an argument, and return it. A callback is simply a function passed to another operation for that operation to invoke. A callback can run immediately; neither callbacks nor closures require timers or promises.
 

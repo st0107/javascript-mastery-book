@@ -5,56 +5,56 @@ Choose one answer and identify the execution rule that supports it.
 ## 1. When an if condition is false, which branch executes?
 
 A. Both branches, with the result discarded
-B. Only the selected else branch, if present
-C. Neither branch even if else exists
+B. Neither branch even if else exists
+C. Only the selected else branch, if present
 D. The branch with fewer statements
 
-**Answer: B.** Only the chosen branch executes; an absent else means no branch body runs.
+**Answer: C.** Only the chosen branch executes; an absent else means no branch body runs.
 
 ## 2. Which construct naturally selects a short expression value?
 
-A. A labeled block
+A. The conditional operator
 B. A for...in loop
 C. A switch case label
-D. The conditional operator
+D. A labeled block
 
-**Answer: D.** The conditional operator yields one of two expression results. A branch statement is better for a multi-step action.
+**Answer: A.** The conditional operator yields one of two expression results. A branch statement is better for a multi-step action.
 
 ## 3. How does switch compare its discriminant with a case value?
 
-A. Strict-equality matching
+A. Object.is matching
 B. Loose equality with coercion
 C. String conversion for every case
-D. Object.is matching
+D. Strict-equality matching
 
-**Answer: A.** A Number 1 does not match string "1"; NaN also does not match NaN as a case value.
+**Answer: D.** A Number 1 does not match string "1"; NaN also does not match NaN as a case value.
 
 ## 4. What happens after a matched case body without break, return, or throw?
 
 A. The switch restarts
-B. Only matching later cases execute
-C. Execution continues through following statements
+B. Execution continues through following statements
+C. Only matching later cases execute
 D. The engine inserts an implicit break
 
-**Answer: C.** Fallthrough follows statements regardless of later labels.
+**Answer: B.** Fallthrough follows statements regardless of later labels.
 
 ## 5. How often can a do...while body run if its condition is initially false?
 
 A. Zero times
-B. Once
+B. It throws before running
 C. Until the condition becomes true
-D. It throws before running
+D. Once
 
-**Answer: B.** The first test follows the first body execution.
+**Answer: D.** The first test follows the first body execution.
 
 ## 6. In a classic for loop, where does continue transfer control?
 
 A. Immediately after the loop
 B. Back to initialization
-C. To the start of the body without a test
-D. To the update expression and then the test
+C. To the update expression and then the test
+D. To the start of the body without a test
 
-**Answer: D.** The update still runs; initialization happens only once.
+**Answer: C.** The update still runs; initialization happens only once.
 
 ## 7. What does continue do in a while loop?
 
@@ -68,11 +68,11 @@ D. Exit the function
 ## 8. What does for...of over an ordinary array provide?
 
 A. Enumerable property names
-B. Only own non-index properties
-C. Element values through its iterator
+B. Element values through its iterator
+C. Only own non-index properties
 D. Every inherited value
 
-**Answer: C.** Array value iteration follows the iterator, not property enumeration.
+**Answer: B.** Array value iteration follows the iterator, not property enumeration.
 
 ## 9. Which keys does for...in include?
 
@@ -94,39 +94,39 @@ D. It yields undefined
 
 ## 11. A break inside a switch inside a loop exits what?
 
-A. The switch
+A. The function
 B. The outer loop
-C. The function
+C. The switch
 D. Both switch and loop
 
-**Answer: A.** Unlabeled break targets the nearest enclosing switch or loop.
+**Answer: C.** Unlabeled break targets the nearest enclosing switch or loop.
 
 ## 12. What can continue label target?
 
-A. Any earlier source line
+A. An enclosing labeled loop
 B. Any enclosing function
-C. An enclosing labeled loop
+C. Any earlier source line
 D. Any labeled block
 
-**Answer: C.** Continue must select an iteration target; it is not a general goto.
+**Answer: A.** Continue must select an iteration target; it is not a general goto.
 
 ## 13. Does const job in for...of freeze each job object?
 
 A. Yes, including nested data
-B. No; it prevents binding reassignment within that iteration
-C. Only when the input array is const
+B. Only when the input array is const
+C. No; it prevents binding reassignment within that iteration
 D. Only if the loop has no continue
 
-**Answer: B.** Binding immutability and object mutability are separate.
+**Answer: C.** Binding immutability and object mutability are separate.
 
 ## 14. Why test a record that is both valid-fatal and cancelled?
 
 A. To prove it is an array
-B. To test numeric overflow
+B. To verify which policy has precedence
 C. To ensure all branches execute twice
-D. To verify which policy has precedence
+D. To test numeric overflow
 
-**Answer: D.** Separate cancellation and fatal tests do not expose an ordering bug when both conditions hold.
+**Answer: B.** Separate cancellation and fatal tests do not expose an ordering bug when both conditions hold.
 
 ## 15. Which is a loop invariant for the validated job batch?
 
@@ -141,7 +141,7 @@ D. The output shares every input object
 
 A. Using const for the array binding
 B. Writing the loop in a single line
-C. A bounded index advances toward length on each continuing path
-D. Adding a console log inside the loop
+C. Adding a console log inside the loop
+D. A bounded index advances toward length on each continuing path
 
-**Answer: C.** Progress and a bound form the argument. Syntax style alone does not ensure termination.
+**Answer: D.** Progress and a bound form the argument. Syntax style alone does not ensure termination.

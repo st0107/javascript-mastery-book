@@ -46,7 +46,7 @@ Normalization can make canonically equivalent spellings compare equally. It is a
 
 ## Regular Expressions Match a Language
 
-A regular expression describes accepted text patterns. Anchors constrain the whole string, character classes constrain characters, and quantifiers constrain counts. This identifier accepts 1?12 ASCII letters, digits, or hyphens; it intentionally rejects international names and spaces.
+A regular expression describes accepted text patterns. Anchors constrain the whole string, character classes constrain characters, and quantifiers constrain counts. This identifier accepts 1 through 12 ASCII letters, digits, or hyphens; it intentionally rejects international names and spaces.
 
 ```js
 const idPattern = /^[A-Z0-9-]{1,12}$/;
@@ -135,7 +135,7 @@ console.log(Number.isNaN(new Date('invalid').getTime()));
 // true
 ```
 
-Months returned by `getUTCMonth` are zero-based. A duration of 86,400,000 milliseconds means 24 elapsed hours; ?same local time tomorrow? is a calendar operation and can cross a daylight-saving offset change.
+Months returned by `getUTCMonth` are zero-based. A duration of 86,400,000 milliseconds means 24 elapsed hours; "same local time tomorrow" is a calendar operation and can cross a daylight-saving offset change.
 
 ## Parsing and Formatting Are Separate Contracts
 

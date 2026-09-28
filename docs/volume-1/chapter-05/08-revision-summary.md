@@ -9,7 +9,7 @@
 | Do string methods mutate? | They return values; strings are immutable |
 | How do I count display clusters? | Segment with `Intl.Segmenter` and a defined policy |
 | Why can regex validation alternate? | `g`/`y` tests maintain `lastIndex` |
-| Does ?integer? mean ?safe integer?? | No; use `Number.isSafeInteger` and domain bounds |
+| Does "integer" mean "safe integer"? | No; use `Number.isSafeInteger` and domain bounds |
 | Does `toFixed` fix arithmetic? | No; it produces a string |
 | Is `Number.EPSILON` a universal tolerance? | No; tolerance depends on scale and units |
 | What does BigInt solve? | Exact integer precision beyond the safe Number range |
@@ -21,7 +21,7 @@
 
 ## Explain It in One Minute
 
-?JavaScript text is indexed by UTF-16 code units, so I define whether a limit counts storage units, code points, or user-visible clusters. Numbers use binary floating-point semantics; I validate finiteness, integer safety, and business bounds separately. I keep bounded money in integer minor units and define rounding before calculations. A Date represents an instant; I use explicit UTC input for elapsed-time checks and an explicit zone for presentation.?
+"JavaScript text is indexed by UTF-16 code units, so I define whether a limit counts storage units, code points, or user-visible clusters. Numbers use binary floating-point semantics; I validate finiteness, integer safety, and business bounds separately. I keep bounded money in integer minor units and define rounding before calculations. A Date represents an instant; I use explicit UTC input for elapsed-time checks and an explicit zone for presentation."
 
 ## Review the Boundary Matrix
 

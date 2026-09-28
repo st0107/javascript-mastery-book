@@ -1,0 +1,7 @@
+flowchart LR
+    A["loadImport call"] --> B["parseImport call"]
+    B --> C["JSON.parse call"]
+    C -- "throws syntax error" --> E["Original Error object"]
+    B -- "catches and wraps" --> W["Context Error object"]
+    W -- "cause reference" --> E
+    A -- "receives thrown wrapper" --> W

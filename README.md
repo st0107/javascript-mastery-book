@@ -13,7 +13,7 @@ This repository is designed as a real book project, not a notes dump. The source
 
 ## Current Writing Status
 
-The book is produced chapter by chapter. Volume 1 contains six chapter drafts, through Control Flow. Volume 2 now has four chapters with all eleven sections. The latest is [Chapter 4: Classes and Object Creation Patterns](docs/volume-2/chapter-04/01-introduction.md). The next planned chapter is **Descriptors, Immutability, and Proxies**.
+The book is produced chapter by chapter. Volume 1 has eleven chapters with all eleven sections, through Modules and Execution Modes. Volume 2 now has four chapters with all eleven sections. The latest is [Chapter 4: Classes and Object Creation Patterns](docs/volume-2/chapter-04/01-introduction.md). The next planned chapter is **Descriptors, Immutability, and Proxies**.
 
 | Area | Status |
 | --- | --- |
@@ -21,7 +21,7 @@ The book is produced chapter by chapter. Volume 1 contains six chapter drafts, t
 | Build configuration | Complete |
 | Book production standard | Complete |
 | Six-volume table of contents | Complete |
-| Volume 1, Chapters 1–6 | Drafts available |
+| Volume 1, Chapters 1–11 | All eleven sections authored per chapter |
 | Volume 2, Chapter 1: Lexical Scope and Closures | All eleven sections authored |
 | Volume 2, Chapter 2: `this`, Call, Apply, and Bind | All eleven sections authored |
 | Volume 2, Chapter 3: Prototypes and Inheritance | All eleven sections authored |
@@ -77,6 +77,8 @@ Validate JavaScript examples:
 
 ```bash
 npm run examples:test
+npm run examples:validator:test
+npm run docs:examples:test
 ```
 
 Build all publishable formats:

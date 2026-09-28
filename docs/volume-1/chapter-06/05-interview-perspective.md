@@ -40,7 +40,7 @@ The break exits the switch, so code after the switch still runs. If the intended
 
 For an array of jobs, use `for...of` for values. For a dictionary, use `Object.keys` or `Object.entries` for own enumerable properties. `for...in` also considers inherited enumerable string keys, which can be surprising for data processing.
 
-Follow-up: ?Does const inside for...of make a job immutable?? No. Each iteration has a binding whose object can still be mutated. Show whether the output should retain the original object or create a separate result.
+Follow-up: "Does const inside for...of make a job immutable?" No. Each iteration has a binding whose object can still be mutated. Show whether the output should retain the original object or create a separate result.
 
 ## Senior: Review a Batch Policy
 
@@ -52,7 +52,7 @@ A useful test contains a cancelled fatal record followed by a normal record. If 
 
 A loop appends to the same array it is traversing. Ask whether newly appended items are part of the work set. Without a fixed snapshot or explicit count budget, an iterator can observe continuing growth and fail to finish.
 
-For a fixed batch, forbid mutation during traversal or process a snapshot according to a documented shallow-copy policy. For a queue, design an explicit stopping condition, maximum work budget, and scheduling boundary. Calling a growing queue ?just an array loop? hides those requirements.
+For a fixed batch, forbid mutation during traversal or process a snapshot according to a documented shallow-copy policy. For a queue, design an explicit stopping condition, maximum work budget, and scheduling boundary. Calling a growing queue "just an array loop" hides those requirements.
 
 ## How to Explain Complexity
 

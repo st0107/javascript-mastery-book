@@ -13,13 +13,13 @@ console.log(Array.from(new Intl.Segmenter('en', { granularity: 'grapheme' }).seg
 // 1
 ```
 
-Follow-up: ?Would NFC normalization always make length a user-visible count?? No. It can combine some canonically equivalent sequences, but it does not turn all grapheme clusters into single code units.
+Follow-up: "Would NFC normalization always make length a user-visible count?" No. It can combine some canonically equivalent sequences, but it does not turn all grapheme clusters into single code units.
 
 ## Intermediate: Why Are Integer Cents Useful?
 
 They make the unit explicit and allow exact integer addition inside a checked range. They do not automatically solve percentage rounding, unsafe totals, currencies with different minor-unit scales, or fractional-cent allocation.
 
-A strong design answer names the accepted bound, validates the calculated total, and defines where rounding occurs. ?Use toFixed everywhere? only changes presentation. ?Use BigInt? still needs a scale and rounding policy.
+A strong design answer names the accepted bound, validates the calculated total, and defines where rounding occurs. "Use toFixed everywhere" only changes presentation. "Use BigInt" still needs a scale and rounding policy.
 
 ## Output Prediction: A Date Alias
 

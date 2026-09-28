@@ -23,6 +23,7 @@ $volumeTwoSources = Get-ChildItem -LiteralPath "docs/volume-2" -Directory -Filte
 $sources = @(
   $fixedSources
   $volumeOneSources
+  "docs/volume-1/chapter-01-execution-model.md"
   "docs/volume-2/index.md",
   "docs/volume-2/SUMMARY.md"
   $volumeTwoSources
@@ -35,5 +36,8 @@ if (-not (Get-Command pandoc -ErrorAction SilentlyContinue)) {
 }
 
 pandoc $sources -o $output --toc --metadata title="JavaScript Mastery for FAANG Interviews"
+if ($LASTEXITCODE -ne 0) {
+  throw "Pandoc EPUB generation failed with exit code $LASTEXITCODE."
+}
 
 Write-Host "EPUB generated at $output"

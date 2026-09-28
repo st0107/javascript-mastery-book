@@ -1,0 +1,7 @@
+flowchart LR
+  Original["original binding"] --> A["Root A: id U-1"]
+  Shallow["shallow binding"] --> B["Root B: id U-1"]
+  Owned["owned binding"] --> C["Root C: id U-1"]
+  A -->|preferences| P["Preferences P: theme dark"]
+  B -->|preferences| P
+  C -->|preferences| Q["Preferences Q: theme light"]

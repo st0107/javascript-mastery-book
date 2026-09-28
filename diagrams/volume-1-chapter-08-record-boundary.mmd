@@ -1,0 +1,10 @@
+flowchart TD
+  Text["Bounded JSON text"] --> Parse["Parse JSON"]
+  Parse --> Shape{"Expected record shape?"}
+  Shape -->|No| Reject["Reject with defined error"]
+  Shape -->|Yes| Keys{"Only allowed own keys?"}
+  Keys -->|No| Reject
+  Keys -->|Yes| Fields{"Field types and domain values valid?"}
+  Fields -->|No| Reject
+  Fields -->|Yes| Build["Construct new records from approved values"]
+  Build --> Return["Return owned application value"]

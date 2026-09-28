@@ -1,0 +1,10 @@
+flowchart LR
+  A["source binding"] --> B["Array A"]
+  C["copy binding"] --> D["Array B"]
+  B -->|"index 0"| E["Record: count = 2"]
+  D -->|"index 0"| E
+  B -->|"index 1"| F["Record: count = 5"]
+  D -->|"index 1"| F
+  G["projected binding"] --> H["Array C"]
+  H --> I["New record: count = 2"]
+  H --> J["New record: count = 5"]

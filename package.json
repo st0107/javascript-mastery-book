@@ -9,6 +9,7 @@
     "docs:build": "docusaurus build --out-dir website",
     "examples:test": "powershell -ExecutionPolicy Bypass -File scripts/validate-examples.ps1",
     "examples:validator:test": "node scripts/test-example-validator.cjs",
+    "docs:examples:test": "node scripts/validate-volume-one.cjs",
     "pdf:build": "powershell -ExecutionPolicy Bypass -File scripts/build-pdf.ps1",
     "epub:build": "powershell -ExecutionPolicy Bypass -File scripts/build-epub.ps1",
     "build:all": "npm run examples:test && npm run docs:build && npm run pdf:build && npm run epub:build"

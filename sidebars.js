@@ -9,10 +9,11 @@ const sidebars = {
       items: [
         'volume-1/README',
         'volume-1/SUMMARY',
+        'volume-1/preface',
         {
           type: 'category',
-            label: 'Chapter 01: Introduction to JavaScript',
-            items: [
+          label: 'Chapter 01: Introduction to JavaScript',
+          items: [
             'volume-1/chapter-01/introduction',
             'volume-1/chapter-01/theory',
             'volume-1/chapter-01/internal-working',
@@ -28,8 +29,8 @@ const sidebars = {
         },
         {
           type: 'category',
-            label: 'Chapter 02: Variables and Data Types',
-            items: [
+          label: 'Chapter 02: Variables and Data Types',
+          items: [
             'volume-1/chapter-02/introduction',
             'volume-1/chapter-02/theory',
             'volume-1/chapter-02/internal-working',
@@ -45,8 +46,8 @@ const sidebars = {
         },
         {
           type: 'category',
-            label: 'Chapter 03: Operators and Expressions',
-            items: [
+          label: 'Chapter 03: Operators and Expressions',
+          items: [
             'volume-1/chapter-03/introduction',
             'volume-1/chapter-03/theory',
             'volume-1/chapter-03/internal-working',
@@ -62,8 +63,8 @@ const sidebars = {
         },
         {
           type: 'category',
-            label: 'Chapter 04: Type Conversion and Coercion',
-            items: [
+          label: 'Chapter 04: Type Conversion and Coercion',
+          items: [
             'volume-1/chapter-04/introduction',
             'volume-1/chapter-04/theory',
             'volume-1/chapter-04/internal-working',
@@ -79,8 +80,8 @@ const sidebars = {
         },
         {
           type: 'category',
-            label: 'Chapter 05: Strings, Numbers, and Dates',
-            items: [
+          label: 'Chapter 05: Strings, Numbers, and Dates',
+          items: [
             'volume-1/chapter-05/introduction',
             'volume-1/chapter-05/theory',
             'volume-1/chapter-05/internal-working',
@@ -96,8 +97,8 @@ const sidebars = {
         },
         {
           type: 'category',
-            label: 'Chapter 06: Control Flow',
-            items: [
+          label: 'Chapter 06: Control Flow',
+          items: [
             'volume-1/chapter-06/introduction',
             'volume-1/chapter-06/theory',
             'volume-1/chapter-06/internal-working',
@@ -110,7 +111,93 @@ const sidebars = {
             'volume-1/chapter-06/performance-security',
             'volume-1/chapter-06/professional-field-guide'
           ]
-        }
+        },
+        {
+          type: 'category',
+          label: 'Chapter 07: Functions and Callbacks',
+          items: [
+            'volume-1/chapter-07/introduction',
+            'volume-1/chapter-07/theory',
+            'volume-1/chapter-07/internal-working',
+            'volume-1/chapter-07/production-examples',
+            'volume-1/chapter-07/interview-perspective',
+            'volume-1/chapter-07/exercises-coding-challenges',
+            'volume-1/chapter-07/mcqs',
+            'volume-1/chapter-07/revision-summary',
+            'volume-1/chapter-07/edge-cases-debugging',
+            'volume-1/chapter-07/performance-security',
+            'volume-1/chapter-07/professional-field-guide'
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 08: Objects and Data Ownership',
+          items: [
+            'volume-1/chapter-08/introduction',
+            'volume-1/chapter-08/theory',
+            'volume-1/chapter-08/internal-working',
+            'volume-1/chapter-08/production-examples',
+            'volume-1/chapter-08/interview-perspective',
+            'volume-1/chapter-08/exercises-coding-challenges',
+            'volume-1/chapter-08/mcqs',
+            'volume-1/chapter-08/revision-summary',
+            'volume-1/chapter-08/edge-cases-debugging',
+            'volume-1/chapter-08/performance-security',
+            'volume-1/chapter-08/professional-field-guide'
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 09: Arrays and Collections',
+          items: [
+            'volume-1/chapter-09/introduction',
+            'volume-1/chapter-09/theory',
+            'volume-1/chapter-09/internal-working',
+            'volume-1/chapter-09/production-examples',
+            'volume-1/chapter-09/interview-perspective',
+            'volume-1/chapter-09/exercises-coding-challenges',
+            'volume-1/chapter-09/mcqs',
+            'volume-1/chapter-09/revision-summary',
+            'volume-1/chapter-09/edge-cases-debugging',
+            'volume-1/chapter-09/performance-security',
+            'volume-1/chapter-09/professional-field-guide'
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 10: Errors and Debugging',
+          items: [
+            'volume-1/chapter-10/introduction',
+            'volume-1/chapter-10/theory',
+            'volume-1/chapter-10/internal-working',
+            'volume-1/chapter-10/production-examples',
+            'volume-1/chapter-10/interview-perspective',
+            'volume-1/chapter-10/exercises-coding-challenges',
+            'volume-1/chapter-10/mcqs',
+            'volume-1/chapter-10/revision-summary',
+            'volume-1/chapter-10/edge-cases-debugging',
+            'volume-1/chapter-10/performance-security',
+            'volume-1/chapter-10/professional-field-guide'
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 11: Modules and Execution Modes',
+          items: [
+            'volume-1/chapter-11/introduction',
+            'volume-1/chapter-11/theory',
+            'volume-1/chapter-11/internal-working',
+            'volume-1/chapter-11/production-examples',
+            'volume-1/chapter-11/interview-perspective',
+            'volume-1/chapter-11/exercises-coding-challenges',
+            'volume-1/chapter-11/mcqs',
+            'volume-1/chapter-11/revision-summary',
+            'volume-1/chapter-11/edge-cases-debugging',
+            'volume-1/chapter-11/performance-security',
+            'volume-1/chapter-11/professional-field-guide'
+          ]
+        },
+        'volume-1/chapter-01-execution-model'
       ]
     },
     {

@@ -23,7 +23,7 @@
 
 ## One-Minute Explanation
 
-?I choose a branch structure that makes the policy order visible. I validate a record before reading fields, distinguish skip from stop, and state which condition has precedence. For loops, I identify the visited unit, the progress step, the exit, and the ownership of output records. I use values iteration for arrays and deliberate own-key enumeration for records.?
+"I choose a branch structure that makes the policy order visible. I validate a record before reading fields, distinguish skip from stop, and state which condition has precedence. For loops, I identify the visited unit, the progress step, the exit, and the ownership of output records. I use values iteration for arrays and deliberate own-key enumeration for records."
 
 ## Trace Checklist
 

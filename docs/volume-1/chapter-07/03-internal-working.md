@@ -81,7 +81,7 @@ The inner invocation completes before `outer` continues. Returning from a functi
 
 ## Engine Internals and Observable Semantics
 
-ECMAScript describes function execution through abstract operations and execution contexts, including parameter initialization and completion records. An engine can inline calls or optimize away temporary storage while preserving observable results, receiver behavior, errors, and effects. [ECMAScript: function declaration instantiation](https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-functiondeclarationinstantiation).
+ECMAScript describes function execution through abstract operations and execution contexts, including parameter initialization and completion records. An engine can inline calls or optimize away temporary storage while preserving observable results, receiver behavior, errors, and effects. [ECMAScript: function declaration instantiation](https://tc39.es/ecma262/#sec-functiondeclarationinstantiation).
 
 Do not claim that arrows always run faster, or count diagram boxes as allocated bytes. Measure the actual workload. Function creation inside a loop can produce distinct function identities; calling a previously created function many times is a different operation. Recursion adds active invocation depth unless the runtime optimizes it, which portable code cannot assume.
 

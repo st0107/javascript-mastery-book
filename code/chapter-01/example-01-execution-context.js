@@ -1,34 +1,27 @@
 'use strict';
-
-function createInvoiceCalculator({ taxRate, discountRate }) {
-  return function calculateInvoiceTotal(items) {
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const discount = subtotal * discountRate;
-    const taxableAmount = subtotal - discount;
-    const tax = taxableAmount * taxRate;
-
-    return {
-      subtotal,
-      discount,
-      tax,
-      total: taxableAmount + tax
-    };
-  };
+const assert = require('node:assert/strict');
+const centsPerCopy = 1200;
+function quote(copies) {
+  const totalCents = copies * centsPerCopy;
+  return totalCents;
 }
-
-const calculateInvoiceTotal = createInvoiceCalculator({
-  taxRate: 0.18,
-  discountRate: 0.1
-});
-
-const invoice = calculateInvoiceTotal([
-  { sku: 'BOOK-JS-001', price: 1200, quantity: 1 },
-  { sku: 'COURSE-JS-ADV', price: 2400, quantity: 2 }
-]);
-
-console.log(invoice);
-
+// Trusted small integer inputs: this lesson isolates call and binding behavior.
+assert.equal(quote(2), 2400);
+assert.equal(quote(0), 0);
+assert.equal(centsPerCopy, 1200);
+function readTooSoon() {
+  return total;
+  const total = 42;
+}
+function readAfterInitialization() {
+  function read() { return total; }
+  const total = 42;
+  return read();
+}
+assert.throws(readTooSoon, ReferenceError);
+assert.equal(readAfterInitialization(), 42);
+console.log('execution context assertions passed');
 // Expected output:
-// { subtotal: 6000, discount: 600, tax: 972, total: 6372 }
-// Complexity: O(n) time, O(1) additional space excluding input and output.
+// execution context assertions passed
 
+// Time O(1); additional space O(1).

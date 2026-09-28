@@ -2,6 +2,8 @@
 
 This companion revisits the introduction after [Variables and Data Types](chapter-02/01-introduction.md) and [Functions and Callbacks](chapter-07/01-introduction.md). Its stable URL also serves readers entering Volume 2. It develops execution contexts and lexical environments; it does not replace the main Chapter 1 reading sequence.
 
+The assertion programs in `code/chapter-01` exercise call initialization, call-stack order, lexical lookup, and the owned audit recorder. Run them with the repository's `npm run examples:test` command.
+
 ## Objectives and Prerequisites
 
 Know declarations, function calls, parameters, return values, and basic object/array syntax. Run the independent examples in Node.js 20 or later. By the end, distinguish a binding from a call frame, resolve an identifier from its definition environment, trace initialization order, and explain why a returned array copy may still expose internal records.

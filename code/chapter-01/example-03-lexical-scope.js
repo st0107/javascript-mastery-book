@@ -1,21 +1,16 @@
 'use strict';
+const assert = require('node:assert/strict');
 
-function createCurrencyFormatter(locale, currency) {
-  const formatter = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency
-  });
-
-  return function formatAmount(amount) {
-    return formatter.format(amount);
-  };
+const region = 'APAC';
+function label(id) {
+  return `${region}:${id}`;
 }
-
-const formatUsd = createCurrencyFormatter('en-US', 'USD');
-
-console.log(formatUsd(1299.5));
+function runInAnotherScope() {
+  const region = 'EU';
+  return label('A-7');
+}
+assert.equal(runInAnotherScope(), 'APAC:A-7');
+console.log(runInAnotherScope());
 
 // Expected output:
-// $1,299.50
-// The returned function resolves formatter from its outer lexical environment.
-
+// APAC:A-7

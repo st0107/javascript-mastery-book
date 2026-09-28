@@ -1,26 +1,41 @@
 # Volume I: JavaScript Fundamentals
 
-Volume I builds the foundation required for every later volume in *JavaScript Mastery for FAANG Interviews*. It teaches JavaScript as a professional language with specification rules, engine behavior, host environments, production constraints, and interview expectations.
-
-This volume is organized as multi-file chapters so each section can be read independently and maintained cleanly.
+Volume I builds the language foundation used in the later volumes: values and bindings, expressions, validation, control flow, functions, ownership, collections, errors, and modules. Eleven chapters each contain eleven authored sections, including worked exercises, MCQs, production examples, debugging notes, and references.
 
 ## Chapters
 
-- [Introduction to JavaScript](chapter-01/01-introduction.md)
-- [Variables and Data Types](chapter-02/01-introduction.md)
-- [Operators and Expressions](chapter-03/01-introduction.md)
-- [Type Conversion and Coercion](chapter-04/01-introduction.md)
-- [Strings, Numbers, and Dates](chapter-05/01-introduction.md)
-- [Control Flow](chapter-06/01-introduction.md)
+1. [Introduction to JavaScript](chapter-01/01-introduction.md)
+2. [Variables and Data Types](chapter-02/01-introduction.md)
+3. [Operators and Expressions](chapter-03/01-introduction.md)
+4. [Type Conversion and Coercion](chapter-04/01-introduction.md)
+5. [Strings, Numbers, and Dates](chapter-05/01-introduction.md)
+6. [Control Flow](chapter-06/01-introduction.md)
+7. [Functions and Callbacks](chapter-07/01-introduction.md)
+8. [Objects and Data Ownership](chapter-08/01-introduction.md)
+9. [Arrays and Collections](chapter-09/01-introduction.md)
+10. [Errors and Debugging](chapter-10/01-introduction.md)
+11. [Modules and Execution Modes](chapter-11/01-introduction.md)
 
-## How To Use This Volume
+## Reading Path
 
-Read each chapter in order if you are new to JavaScript internals. If you are preparing for interviews, read the theory and internals first, then use the interview, exercises, MCQs, and revision sections as active recall material.
+Read the [preface](preface.md), then follow the chapters in order. Chapters 1–6 introduce the language and common data boundaries. Chapter 7 establishes function and callback contracts; Chapters 8–9 explain the objects and collections those functions exchange. Chapters 10–11 make failure handling and execution mode explicit.
 
-## Code Examples
+The [execution-model companion](chapter-01-execution-model.md) can be read after Chapter 7, then revisited after object ownership. It connects calls, bindings, retained state, and defensive snapshots. After Chapter 11, continue with [Lexical Scope and Closures](../volume-2/chapter-01/01-introduction.md) in Volume 2.
 
-Runnable examples live in `code/volume-1`. Each chapter has independent scripts that can be executed with Node.js.
+Use the [complete section summary](SUMMARY.md) for targeted review. Attempt each exercise before reading its solution and explain an MCQ result before checking the answer.
 
-## Build Integration
+## Running and Checking Examples
 
-The Docusaurus sidebar points at these Markdown files. The repository scripts can validate examples, build the website, and generate PDF or EPUB artifacts when the local toolchain is installed.
+Use Node.js 20 or later for the documented language baseline. Choose a currently supported runtime for deployment. Standalone assertion programs live in `code/volume-1`; the execution-model companion uses `code/chapter-01`. Chapter 11 uses explicit ES module and CommonJS files and keeps its library dependencies in the same directory.
+
+```bash
+npm run examples:test
+npm run examples:validator:test
+npm run docs:examples:test
+```
+
+The first command runs every companion, the second checks the validator's failure handling, and the third executes Volume 1's documented JavaScript blocks in fresh processes and verifies their output, local link targets, and embedded diagram sources. Expected-output comments use `(none)` for a library that intentionally prints nothing.
+
+## Publishing
+
+All chapter sections, the preface, and the execution-model companion are included in both site navigation systems and the PDF/EPUB source lists. Build the website with `npm run docs:build`. PDF and EPUB generation additionally require Pandoc; PDF generation also requires a suitable LaTeX engine.

@@ -6,6 +6,8 @@ Each solution runs independently in Node.js 20 or later. `assert` is Node's asse
 
 **Requirements:** For three reports costing 250 cents each, compute a label without reading any host state. Print the label separately. Identify which line actually performs output.
 
+**Hint:** Separate the returned text from the statement that prints it.
+
 **Solution:** Multiplication and string interpolation are language operations; the final console call requests host output.
 
 ```js
@@ -28,6 +30,8 @@ Inputs in this trace are trusted small positive integers. The later tasks establ
 ## Exercise 2: Check the Required Capability
 
 **Requirements:** Given a trusted ordinary adapter, return whether it has a callable `writeText`. Missing, boolean, and null values must report false. The adapter itself may be null or undefined. Do not infer permission or identify a runtime.
+
+**Hint:** Guard absent containers before reading a property.
 
 **Solution:** Guard the container before reading the operation, then inspect its type.
 
@@ -54,6 +58,8 @@ The check is constant-sized for ordinary data properties. A true result means an
 ## Exercise 3: Define the Checkout Boundary
 
 **Requirements:** Accept a Number of cents from 1 through 100,000,000 inclusive. Reject fractional, unsafe, or nonnumeric input with `TypeError`; reject a safe integer outside the domain with `RangeError`. Return the accepted amount without converting it.
+
+**Hint:** Check safe integer representation before the domain limits.
 
 **Solution:** Validate representation before the business range.
 
@@ -86,6 +92,8 @@ Time and auxiliary space are constant-sized. Do not silently widen this function
 
 **Requirements:** `formatStatus(text, formatter)` accepts a string and an optional synchronous function. When the formatter is undefined, return `Status: ` followed by the text. Reject an explicitly supplied nonfunction. A formatter's thrown error must reach the caller unchanged.
 
+**Hint:** Use undefined to distinguish an omitted dependency from an invalid supplied value.
+
 **Solution:** Distinguish an absent dependency from a failing dependency.
 
 ```js
@@ -114,6 +122,8 @@ The fallback produces text proportional to the input length. An injected formatt
 ## Exercise 5: Make a Host Effect Testable
 
 **Requirements:** `exportTitle(title, writeText)` trims a nonempty string, calls an injected synchronous writer exactly once, and returns the written text length. Invalid text must cause no write. A writer error must propagate. Use an array as the test writer's private log.
+
+**Hint:** Make all validation happen before the writer call.
 
 **Solution:** Complete validation before performing the effect.
 
@@ -146,6 +156,8 @@ Normalization is linear in text length; the writer adds its own work. The contra
 ## Exercise 6: Summarize Rejected Inputs
 
 **Requirements:** For an array of unknown amounts, count valid checkout amounts and rejected inputs using the range from Exercise 3. Return only counts, with no host I/O and no mutation. Missing or non-array input must throw. The caller decides where to display the summary.
+
+**Hint:** Keep two counters and classify each entry once.
 
 **Solution:** Classification stays inside the calculation; console output stays outside it.
 

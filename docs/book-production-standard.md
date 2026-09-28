@@ -60,7 +60,10 @@ Every code example must:
 - Include time and space complexity when algorithmic behavior matters.
 - Prefer realistic domain examples over isolated toy snippets.
 
+Module lessons may use a self-contained group of files when the boundary between files is the concept being taught. Name the required files and runtime mode, keep the dependencies in the chapter's code directory, and provide an executable entry that imports and tests the actual library. Library-only examples must explicitly mark their expected output as `(none)`.
+
+Volume 1's `js` fences are checked by `npm run docs:examples:test` in fresh Node processes. ES module fences carry the comment `// Runtime: Node.js ES module`. Each expected-output block ends before a blank line; complexity and explanatory comments follow that blank line. Mermaid sources are checked against the embedded blocks by the same command.
+
 ## Diagram Contract
 
 Mermaid diagrams must be stored in `diagrams/` and embedded or linked from chapters. Diagrams should be used for execution flow, memory, scheduling, inheritance, browser architecture, rendering, module loading, and engine pipelines.
-

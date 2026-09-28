@@ -38,7 +38,7 @@ Use the [batch planner and label builder](04-production-examples.md) to practice
 - [MDN: default parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters).
 - [MDN: rest parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters).
 - [MDN: arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions).
-- [ECMAScript: function declaration instantiation](https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-functiondeclarationinstantiation).
+- [ECMAScript: function declaration instantiation](https://tc39.es/ecma262/#sec-functiondeclarationinstantiation).
 
 ## Further Reading
 

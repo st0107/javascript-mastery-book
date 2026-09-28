@@ -1,0 +1,7 @@
+flowchart TD
+  A["Validate array type and length bound"] --> B["Check every required index is present"]
+  B --> C["Validate records and project owned values"]
+  C --> D["Filter paid records"]
+  D --> E["Copy and sort selected records"]
+  E --> F["Map output items and reduce total"]
+  F --> G["Return detached summary"]

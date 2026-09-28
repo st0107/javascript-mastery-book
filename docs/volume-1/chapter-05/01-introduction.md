@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A shipping label, a price, and an expiry time all look simple in a UI. Their storage contracts are different. A label needs a definition of ?character?; a price needs units and a rounding policy; an expiry needs a time zone and boundary policy. This chapter connects those choices to the JavaScript values that implement them.
+A shipping label, a price, and an expiry time all look simple in a UI. Their storage contracts are different. A label needs a definition of "character"; a price needs units and a rounding policy; an expiry needs a time zone and boundary policy. This chapter connects those choices to the JavaScript values that implement them.
 
 The running examples format bounded integer cents and check a UTC access window. They reject unsupported input instead of relying on convenient coercion. The examples are deliberately small enough to inspect line by line.
 
