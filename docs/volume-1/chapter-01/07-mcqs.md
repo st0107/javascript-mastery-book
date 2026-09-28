@@ -1,169 +1,147 @@
-# MCQs
+# Multiple-Choice Questions
 
-1. Who standardizes the JavaScript language?
-   - A. TC39 standardizes ECMAScript, which defines the core JavaScript language.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+Choose one answer per question. Each explanation names the rule; the distractors represent common boundary mistakes.
 
-   Answer: A. Explanation: TC39 standardizes ECMAScript, which defines the core JavaScript language. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 1. Which operation is a language built-in?
 
-2. Which part is supplied by the browser rather than ECMAScript?
-   - A. The DOM is a browser host API, not a core language feature.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Reading document.title
+- B. Calling Array.isArray(value)
+- C. Opening a local file through a Node API
+- D. Writing to the developer console
 
-   Answer: A. Explanation: The DOM is a browser host API, not a core language feature. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Array.isArray is specified by ECMAScript. The other operations rely on host facilities.
 
-3. Why does Node.js not expose `document` by default?
-   - A. Node.js is not a browser host and does not include a DOM tree.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 2. A worker cannot read the page document. What follows?
 
-   Answer: A. Explanation: Node.js is not a browser host and does not include a DOM tree. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. The worker uses a different Number multiplication rule
+- B. The engine cannot parse property access
+- C. A transpiler must insert the entire page DOM
+- D. The worker needs a message or adapter boundary for page-owned data
 
-4. What is a JavaScript engine responsible for?
-   - A. Parsing, compiling, optimizing, and executing ECMAScript code.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Hosts can expose different capabilities while sharing the same core language rules.
 
-   Answer: A. Explanation: Parsing, compiling, optimizing, and executing ECMAScript code. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 3. What does a callable writeText property establish?
 
-5. Why did JavaScript become strategically important?
-   - A. It became the native programmable language of the web and later expanded to servers and tooling.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. The operation can be attempted, but it can still fail
+- B. The target path is writable
+- C. The call will finish asynchronously
+- D. The host is Node
 
-   Answer: A. Explanation: It became the native programmable language of the web and later expanded to servers and tooling. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Callability alone proves neither permission, completion mode, nor host identity.
 
-6. What is the relationship between JavaScript and ECMAScript?
-   - A. JavaScript is the common language implementation; ECMAScript is the standardized language specification.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 4. What does TC39 proposal maturity describe?
 
-   Answer: A. Explanation: JavaScript is the common language implementation; ECMAScript is the standardized language specification. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. Installed browser market share
+- B. The speed of an engine
+- C. Progress through standardization
+- D. Whether npm can install a package
 
-7. What does a runtime add to an engine?
-   - A. Host APIs such as timers, I/O, networking, storage, or DOM access.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** A stage describes proposal progress. Deployment support must be checked separately.
 
-   Answer: A. Explanation: Host APIs such as timers, I/O, networking, storage, or DOM access. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 5. Why can a polyfill fail to solve unsupported syntax in the same file?
 
-8. Why are browser and Node.js interview answers often mixed up?
-   - A. Candidates confuse language features with host-provided APIs.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Polyfills require a DOM
+- B. Parsing can fail before any fallback code executes
+- C. Polyfills can change values but cannot define functions
+- D. Only server code can use polyfills
 
-   Answer: A. Explanation: Candidates confuse language features with host-provided APIs. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** A runtime fallback cannot execute in a source unit the engine cannot parse.
 
-9. Which environment commonly provides `process`?
-   - A. Node.js provides `process` for runtime and operating-system interaction.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 6. Which boundary belongs on the server for a payment?
 
-   Answer: A. Explanation: Node.js provides `process` for runtime and operating-system interaction. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. Trust a client valid flag
+- B. Trust the client runtime label
+- C. Trust the displayed amount alone
+- D. Validate the request and verify the authoritative price
 
-10. Which environment commonly provides `window`?
-   - A. Browsers provide `window` in page contexts.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Client checks improve feedback but can be bypassed by the caller.
 
-   Answer: A. Explanation: Browsers provide `window` in page contexts. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 7. Why use Number.isSafeInteger for Number cents?
 
-11. What is the value of learning engine internals?
-   - A. It improves explanations of parsing, execution, memory, and optimization behavior.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. It checks integral values within the reliably distinguishable integer range
+- B. It accepts any decimal string
+- C. It proves the amount is positive
+- D. It applies the product price limit automatically
 
-   Answer: A. Explanation: It improves explanations of parsing, execution, memory, and optimization behavior. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Safe range and integrality are representation checks. Positivity and business maximum are additional checks.
 
-12. Why should feature detection be preferred over user-agent assumptions?
-   - A. Capabilities are more reliable than guessing behavior from environment labels.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 8. A file parses, prints a line, then reads an undeclared identifier. What can happen?
 
-   Answer: A. Explanation: Capabilities are more reliable than guessing behavior from environment labels. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. All prior output is automatically rolled back
+- B. The parser repairs the name
+- C. Evaluation throws ReferenceError after the earlier effect
+- D. The identifier becomes a zero-valued local
 
-13. What does the parser produce conceptually?
-   - A. An abstract syntax tree plus scope information used by later execution stages.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Runtime failures can follow already completed effects; parsing success does not imply successful evaluation.
 
-   Answer: A. Explanation: An abstract syntax tree plus scope information used by later execution stages. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 9. Which description of an engine is accurate?
 
-14. Why can JavaScript run on edge platforms?
-   - A. The language is portable and can be embedded in runtimes beyond browsers and servers.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. It is the browser document
+- B. It implements the language semantics
+- C. It decides every application authorization rule
+- D. It is a package repository
 
-   Answer: A. Explanation: The language is portable and can be embedded in runtimes beyond browsers and servers. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** An engine evaluates language operations. Host APIs and application policies are separate responsibilities.
 
-15. What is the safest way to describe browser APIs?
-   - A. They are host capabilities exposed to JavaScript, not part of the core language.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 10. What does a successful bundler build guarantee?
 
-   Answer: A. Explanation: They are host capabilities exposed to JavaScript, not part of the core language. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. Every deployed host API exists
+- B. Every input is valid
+- C. Every network request will succeed
+- D. The build step completed under its configured rules
 
-16. Why does the ecosystem matter for interviews?
-   - A. Tooling, packages, transpilers, and runtimes shape real-world JavaScript work.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Build success alone cannot establish runtime compatibility, valid application data, or external service availability.
 
-   Answer: A. Explanation: Tooling, packages, transpilers, and runtimes shape real-world JavaScript work. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 11. What is the cleanest way to test a report calculation that must save text?
 
-17. What should a good runtime explanation separate?
-   - A. Language rules, engine implementation, and host APIs.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Inject a writer and assert its calls and failure behavior
+- B. Hard-code a user filesystem path
+- C. Infer write permission from process
+- D. Catch every error and return saved
 
-   Answer: A. Explanation: Language rules, engine implementation, and host APIs. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Injection makes effects observable and failures testable without assuming a particular host or destination.
 
-18. Why is JavaScript single-threaded a partial truth?
-   - A. The main execution thread is single for JS code, but hosts can use workers and background threads.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 12. Which statement about JavaScript execution is portable?
 
-   Answer: A. Explanation: The main execution thread is single for JS code, but hosts can use workers and background threads. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. Every function first runs exactly once in an interpreter
+- B. Every object must occupy one physical heap allocation
+- C. Implementations must preserve observable language behavior
+- D. All engines have the same optimization tiers
 
-19. What is JIT optimization?
-   - A. Runtime compilation that optimizes hot code paths using observed feedback.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** The specification constrains semantics, while representation and compilation strategy are implementation choices.
 
-   Answer: A. Explanation: Runtime compilation that optimizes hot code paths using observed feedback. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+## 13. Why does a long synchronous calculation delay unrelated callbacks on its thread?
 
-20. Why can engine optimizations be invalidated?
-   - A. Runtime values can violate assumptions collected during earlier execution.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+- A. Callbacks stop being functions
+- B. The thread is occupied until the calculation yields or completes
+- C. Numbers disable the event loop
+- D. The host always copies the calculation to another thread
 
-   Answer: A. Explanation: Runtime values can violate assumptions collected during earlier execution. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Synchronous work occupies the thread. A wrapper function does not make CPU work asynchronous.
 
-21. What is the interview-safe way to explain engine pipelines?
-   - A. Describe the conceptual parse, compile, execute, optimize path without claiming all engines are identical.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 14. What does typeof aMissingName return when there is no binding for that name?
 
-   Answer: A. Explanation: Describe the conceptual parse, compile, execute, optimize path without claiming all engines are identical. This is directly relevant to Introduction to JavaScript because the topic is about predictable behavior, not memorized trivia.
+- A. null
+- B. It always throws TypeError
+- C. The value undefined rather than a string
+- D. The string undefined
+
+**Answer: D.** typeof has a special rule for unresolvable identifiers. An existing uninitialized lexical binding is a different case.
+
+## 15. A trusted writer throws quota exceeded. Which result is honest for a caller?
+
+- A. Propagate or explicitly report the operation failure
+- B. Return saved because the writer was callable
+- C. Repeat forever immediately
+- D. Relabel the host as unknown
+
+**Answer: A.** Capability presence does not establish outcome. Recovery needs a defined policy.
+
+## 16. What belongs in a shared checkout validator?
+
+- A. DOM selection and user prompting
+- B. Filesystem path discovery
+- C. Representation and domain checks independent of host I/O
+- D. The assumption that all client values are trusted
+
+**Answer: C.** Keeping the rule independent of host effects makes it reusable; authorization remains a distinct responsibility.

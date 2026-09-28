@@ -1,0 +1,11 @@
+flowchart TD
+    A["Validate batch shape and limit"] --> B{"Next job?"}
+    B -- No --> R["Return processed records"]
+    B -- Yes --> C{"Valid record?"}
+    C -- No --> B
+    C -- Yes --> D{"Fatal priority?"}
+    D -- Yes --> R
+    D -- No --> E{"Cancelled?"}
+    E -- Yes --> B
+    E -- No --> F["Append fresh processed record"]
+    F --> B

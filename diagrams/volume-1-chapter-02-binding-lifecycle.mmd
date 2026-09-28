@@ -1,0 +1,10 @@
+flowchart TD
+  Declaration["Prepare declaration binding"] --> Kind{"Declaration form"}
+  Kind -->|var| VarReady["Initialize to undefined before body statements"]
+  Kind -->|let or const| TDZ["Created but uninitialized"]
+  TDZ -->|read before initialization| Error["ReferenceError"]
+  TDZ -->|declaration executes| Ready["Initialize with value"]
+  VarReady -->|initializer executes| Mutable["Assign initializer value"]
+  Ready --> Assignment{"Later identifier assignment"}
+  Assignment -->|let| Mutable
+  Assignment -->|const| TypeError["TypeError"]

@@ -1,99 +1,98 @@
-# Edge Cases, Debugging, and Failure Modes
+# Edge Cases and Debugging
 
-## Why Edge Cases Matter
+## Start With the Skipped Operation
 
-Edge cases are compressed lessons. They expose the exact point where a casual mental model stops working and the real JavaScript rule takes over. For Operators and Expressions, the important habit is to slow down and ask three questions: what value is actually present, which rule is being applied, and which environment is supplying the surrounding behavior.
-
-In production, edge cases often arrive through data rather than syntax. A form sends an empty string. A URL parameter is missing. A backend sends `null` where an object was expected. A feature flag service omits a nested key. A loop receives a sparse array or a record with inherited properties. The bug is rarely that JavaScript is unpredictable; the bug is usually that the program accepted unclear input and waited too long to clarify it.
-
-## Debugging Playbook
-
-1. Reproduce the behavior with the smallest possible input.
-2. Log both the value and its type at the boundary.
-3. Separate ECMAScript behavior from browser or Node.js behavior.
-4. Identify whether a primitive value, object reference, binding, or host API is involved.
-5. Replace implicit assumptions with explicit guards.
-6. Add a regression test that names the edge case.
-
-This playbook prevents the most common debugging mistake: explaining the symptom instead of the rule. In an interview, the same discipline makes your answer sound calm and senior. You are not guessing; you are narrowing the execution path.
-
-## Topic-Specific Edge Cases
-
-### Arithmetic, assignment, comparison, logical, and bitwise operators
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Arithmetic, assignment, comparison, logical, and bitwise operators, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Conditional expressions
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Conditional expressions, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Optional chaining
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Optional chaining, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Nullish coalescing
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Nullish coalescing, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Short-circuit evaluation
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Short-circuit evaluation, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Operator precedence and associativity
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Operator precedence and associativity, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Expression design for readable production code
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Expression design for readable production code, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-## Common Failure Modes
-
-- Boundary drift: parsing is delayed until many functions have already handled the value.
-- Silent defaults: missing values are converted into defaults that hide upstream contract breaks.
-- Shared mutation: a helper changes caller-owned data and creates action-at-a-distance bugs.
-- Host confusion: code assumes a browser API exists in Node.js or a Node.js API exists in the browser.
-- Over-compression: clever syntax hides a branch, conversion, or allocation that should be visible.
-
-## Debugging Example
+When a fallback unexpectedly runs, inspect the left value and its type. Zero retries, a false flag, and an empty label are all falsy but may be valid settings. Defaulting is a domain decision, not a repair for every suspicious value.
 
 ```js
-function debugBoundaryValue(label, value) {
-  return {
-    label,
-    value,
-    type: typeof value,
-    isArray: Array.isArray(value),
-    isNull: value === null,
-    truthy: Boolean(value)
-  };
+for (const value of [0, false, '', null, undefined]) {
+  console.log(JSON.stringify([typeof value, value || 'default', value ?? 'default']));
 }
+
+// Expected output:
+// ["number","default",0]
+// ["boolean","default",false]
+// ["string","default",""]
+// ["object","default","default"]
+// ["undefined","default","default"]
 ```
 
-This helper is intentionally boring. When debugging fundamentals, boring is a feature. It tells you what the runtime sees before your assumptions reshape the story.
+JSON makes an empty string visible here. It does not preserve undefined values in every position, so include typeof when that distinction matters.
 
-## Interview Drill
+## Optional Chains Do Not Catch Exceptions
 
-Take one topic from this chapter and prepare a two-minute explanation:
+```js
+const broken = { get profile() { throw new Error('profile unavailable'); } };
+try { console.log(broken?.profile?.name); }
+catch (error) { console.log(error.message); }
+const partial = {};
+try { console.log(partial?.profile.name); }
+catch (error) { console.log(error.name); }
+console.log(partial?.profile?.name);
 
-1. Define it.
-2. Show one production example.
-3. Show one edge case.
-4. Explain the internal reason.
-5. Name the safest professional default.
+// Expected output:
+// profile unavailable
+// TypeError
+// undefined
+```
 
-If your explanation skips the edge case, it sounds memorized. If it skips the production implication, it sounds academic. The strongest answers connect both.
+In the first case the root exists, so the getter runs and throws. In the second only the root is guarded; the missing profile reaches an ordinary property access. The third explicitly permits both absences. Decide whether missing profile data is actually acceptable before adding another optional boundary.
+
+## Compound Assignment Is Not Text Substitution
+
+```js
+const trace = [];
+let stored = 5;
+const record = {
+  get count() { trace.push('read'); return stored; },
+  set count(value) { trace.push('write'); stored = value; }
+};
+record.count ??= 9;
+console.log(trace.join(','));
+trace.length = 0;
+record.count = record.count ?? 9;
+console.log(trace.join(','));
+
+// Expected output:
+// read
+// read,write
+```
+
+The second form writes even when no fallback was needed. A setter may persist data, invalidate a cache, or reject a change. Likewise, expanding `record[key()] += 1` by repeating `key()` may choose a different property or repeat work.
+
+## Range Tests and Numeric Shortcuts
+
+```js
+const count = 25;
+console.log(0 < count < 10);
+console.log(count > 0 && count < 10);
+console.log(2147483648 | 0);
+console.log(Math.trunc(2147483648.75));
+console.log(-5 % 3);
+
+// Expected output:
+// true
+// false
+// -2147483648
+// 2147483648
+// -2
+```
+
+The chained comparison becomes `true < 10`. The bitwise expression wraps to signed 32-bit range; Math.trunc discards a fraction without that wrapping. Neither validates an application's maximum count. Remainder may be negative; a nonnegative-modulo formula is a separate domain choice.
+
+## Syntax Errors Need a Parsing Diagnosis
+
+An unparenthesized mixture such as `a ?? b || c` is invalid syntax. Choose `(a ?? b) || c` or `a ?? (b || c)` according to the intended policy; they can differ when a is falsy but present. Likewise, write `-(2 ** 2)` or `(-2) ** 2` rather than an unparenthesized unary minus to the left of exponentiation. A same-file try statement cannot execute when that file fails to parse.
+
+## A Reproducible Debugging Procedure
+
+1. Preserve the original inputs; inspecting a later mutated object can mislead.
+2. Parenthesize grouping without changing operand order.
+3. Annotate each operand's value and type.
+4. Record getter, function, and setter calls in a local trace array.
+5. Stop at the first throw and mark skipped operands.
+6. Assert the smallest failing case and its neighboring valid case.
+
+For the [feature gate](04-production-examples.md), test an enabled member with a missing list and with one matching ID. Both must return booleans and neither may throw. The companion is `code/volume-1/chapter-03/example-04-edge-cases.js`.
+
+The [optional-chaining reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) documents continuous-chain boundaries; the [precedence reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_precedence) separates grouping from evaluation.

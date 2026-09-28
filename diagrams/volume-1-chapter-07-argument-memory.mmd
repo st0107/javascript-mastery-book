@@ -1,0 +1,5 @@
+flowchart LR
+  Caller["Caller binding: original"] --> Record["Object: status = draft"]
+  Parameter["Callee binding: record"] --> Record
+  Local["Callee binding: copy"] --> Copy["New object: status = reviewed"]
+  Value["Callee primitive parameter: limit = 3"]

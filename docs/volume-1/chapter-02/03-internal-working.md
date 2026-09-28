@@ -1,63 +1,91 @@
 # Internal Working
 
-## Engine-Level View
+## Trace the Binding Lifecycle
 
-When JavaScript source reaches an engine, it is parsed into tokens and then into an abstract syntax tree. The engine records scope information, creates internal representations for declarations, and emits bytecode or optimized machine code depending on execution history. The exact pipeline differs between engines, but the observable language rules remain defined by ECMAScript.
+Consider a function containing `var legacy = 1`, `let current = 2`, and `const fixed = 3`. Before evaluating those body statements, the ordinary `var` binding is initialized to `undefined`. The lexical declarations are present but uninitialized. Evaluating their declarations initializes them in statement order. A later assignment can change `legacy` or `current`; changing `fixed` throws.
 
-Modern engines optimize common paths aggressively. They prefer stable shapes, predictable types, clear control flow, and code that does not force the engine to abandon assumptions. This does not mean you should write unnatural code for the optimizer. It means you should avoid patterns that make correctness and optimization harder at the same time.
-
-## Memory Diagram
-
-```mermaid
-flowchart TB
-  subgraph Stack["Execution context / stack-like records"]
-    orderId["orderId -> 'A-42'"]
-    cartRef["cart -> #obj1"]
-  end
-  subgraph Heap["Heap"]
-    obj1["#obj1 { items, total }"]
-    arr1["items -> #arr1"]
-  end
-  cartRef --> obj1
-  obj1 --> arr1
-```
-
-## Flowchart
+The lexical environment determines which binding an identifier denotes. The declaration form and lifecycle determine which operations are allowed on that binding. A value of `undefined` is an initialized state, not a synonym for "no binding."
 
 ```mermaid
 flowchart TD
-  A[Declaration is parsed] --> B[Binding is created]
-  B --> C{Declaration kind}
-  C -->|var| D[Initialized to undefined]
-  C -->|let / const| E[Uninitialized TDZ]
-  D --> F[Execution reaches assignment]
-  E --> F
-  F --> G[Value stored or reference assigned]
+  Declaration["Prepare declaration binding"] --> Kind{"Declaration form"}
+  Kind -->|var| VarReady["Initialize to undefined before body statements"]
+  Kind -->|let or const| TDZ["Created but uninitialized"]
+  TDZ -->|read before initialization| Error["ReferenceError"]
+  TDZ -->|declaration executes| Ready["Initialize with value"]
+  VarReady -->|initializer executes| Mutable["Assign initializer value"]
+  Ready --> Assignment{"Later identifier assignment"}
+  Assignment -->|let| Mutable
+  Assignment -->|const| TypeError["TypeError"]
 ```
 
-## Execution Steps
+Source: `diagrams/volume-1-chapter-02-binding-lifecycle.mmd`. This diagram describes ordinary declarations; imports and loop declarations have additional rules.
 
-1. The host loads a script or module.
-2. The engine parses the source and builds scope information.
-3. Declarations are registered according to their kind.
-4. Top-level code begins executing.
-5. Expressions and statements create values, references, and control-flow decisions.
-6. Functions create new execution contexts when called.
-7. Objects and closures remain reachable while references to them exist.
-8. Values with no reachable references become eligible for garbage collection.
+## Trace a Shared Record
 
-## Browser Perspective
+```js
+'use strict';
 
-Browser code tends to hold references to DOM nodes, event objects, cached data, and component state. Long-lived references can accidentally prevent garbage collection, especially when closures keep detached nodes reachable.
+const original = { status: 'queued' };
+let selected = original;
+function mark(record) {
+  record.status = 'ready';
+  record = { status: 'local' };
+  return record.status;
+}
+console.log(mark(selected));
+console.log(original.status, selected === original);
+selected = { status: 'replacement' };
+console.log(original.status, selected.status);
 
-## Node.js Perspective
+// Expected output:
+// local
+// ready true
+// ready replacement
+```
 
-Node.js services often keep module-level configuration and connection pools alive for the lifetime of the process. Per-request data should stay request-local so one user request cannot leak into another.
+1. Evaluate the first object literal, creating object A; initialize `original` with its identity.
+2. Read `original` and initialize `selected` with the same identity. No object clone occurs.
+3. Call `mark` with that value; initialize parameter `record` with object A.
+4. Assign `record.status`, changing object A to contain `ready`.
+5. Create object B and reassign the parameter to B. The caller's bindings still designate A.
+6. Return B's `status` value, `local`. The parameter's reassignment does not escape as a binding change.
+7. Create object C and reassign `selected`. `original` still designates A.
 
-## Performance
+## Semantic Memory Diagram
 
-Most fundamental operations are fast enough for ordinary application code. Performance problems appear when a simple operation is placed inside a hot loop, repeated across large data, or combined with allocation-heavy patterns. Analyze complexity first, then profile. Optimize only the path that measurements identify.
+The snapshot is taken inside `mark`, after step 5 and before the return:
 
-## Security Notes
+```mermaid
+flowchart LR
+  Original["const original"] --> A["Object A: status ready"]
+  Selected["let selected"] --> A
+  Parameter["parameter record"] --> B["Object B: status local"]
+  Note["Rebinding record did not change either caller binding"]
+```
 
-Security begins at boundaries. Parse and validate external input. Avoid dynamic code execution. Keep secrets out of browser JavaScript. Treat serialization and deserialization as security-sensitive operations. Make failure modes explicit so unsafe values do not drift through the program as if they were trusted.
+Source: `diagrams/volume-1-chapter-02-object-aliases.mmd`. An arrow means that a binding designates an object identity; it does not promise an exposed memory address. After the final replacement, `selected` would point to a third object.
+
+## Primitive Assignment Has No Mutable Object to Share
+
+```js
+'use strict';
+
+let pending = 4;
+const snapshot = pending;
+pending = 5;
+console.log(snapshot, pending);
+
+// Expected output:
+// 4 5
+```
+
+The second binding receives the Number value 4. Assigning 5 to `pending` does not change that earlier primitive value. No distinction between "deep" and "shallow" copying is necessary for these immutable Number values.
+
+## Engine Internals: Semantics Before Storage
+
+Environment records are specification machinery for resolving and updating bindings. Engines may represent locals in registers, stack slots, retained environment structures, or optimized forms. A compiler can remove a binding that has no observable role. Neither `const` nor `let` forces a specific physical storage location.
+
+Likewise, the diagram's object B may become unreachable once the call finishes, but the language does not require an immediate collection. The retained reference from `original` keeps A available independently of whether `selected` changes. For a leak investigation, follow the retaining path rather than counting how many functions have returned.
+
+Read [ECMAScript environment records](https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-environment-records) for the formal binding model. The [execution-model companion](../chapter-01-execution-model.md) extends this trace to returned functions after the function fundamentals chapter.

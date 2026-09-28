@@ -1,169 +1,147 @@
-# MCQs
+# Control Flow: MCQs
 
-1. When is an `if` statement best?
-   - A. When branches express business rules with clear conditions.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+Choose one answer and identify the execution rule that supports it.
 
-   Answer: A. Explanation: When branches express business rules with clear conditions. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 1. When an if condition is false, which branch executes?
 
-2. When is `switch` useful?
-   - A. When dispatching among discrete known cases.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Both branches, with the result discarded
+B. Only the selected else branch, if present
+C. Neither branch even if else exists
+D. The branch with fewer statements
 
-   Answer: A. Explanation: When dispatching among discrete known cases. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Only the chosen branch executes; an absent else means no branch body runs.
 
-3. Why should `switch` usually have a default?
-   - A. It makes unsupported cases explicit.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 2. Which construct naturally selects a short expression value?
 
-   Answer: A. Explanation: It makes unsupported cases explicit. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. A labeled block
+B. A for...in loop
+C. A switch case label
+D. The conditional operator
 
-4. What is fallthrough?
-   - A. Execution continuing into the next case when `break` or return is absent.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** The conditional operator yields one of two expression results. A branch statement is better for a multi-step action.
 
-   Answer: A. Explanation: Execution continuing into the next case when `break` or return is absent. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 3. How does switch compare its discriminant with a case value?
 
-5. When is a ternary appropriate?
-   - A. For a simple expression-level choice.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Strict-equality matching
+B. Loose equality with coercion
+C. String conversion for every case
+D. Object.is matching
 
-   Answer: A. Explanation: For a simple expression-level choice. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** A Number 1 does not match string "1"; NaN also does not match NaN as a case value.
 
-6. When is a ternary harmful?
-   - A. When nesting or side effects make branches hard to read.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 4. What happens after a matched case body without break, return, or throw?
 
-   Answer: A. Explanation: When nesting or side effects make branches hard to read. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. The switch restarts
+B. Only matching later cases execute
+C. Execution continues through following statements
+D. The engine inserts an implicit break
 
-7. What is `for...of` for?
-   - A. Iterating over iterable values such as arrays, strings, maps, and sets.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Fallthrough follows statements regardless of later labels.
 
-   Answer: A. Explanation: Iterating over iterable values such as arrays, strings, maps, and sets. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 5. How often can a do...while body run if its condition is initially false?
 
-8. What is `for...in` for?
-   - A. Iterating enumerable property names, usually on objects.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Zero times
+B. Once
+C. Until the condition becomes true
+D. It throws before running
 
-   Answer: A. Explanation: Iterating enumerable property names, usually on objects. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** The first test follows the first body execution.
 
-9. Why avoid `for...in` for arrays?
-   - A. It iterates keys, including enumerable inherited names, not values.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 6. In a classic for loop, where does continue transfer control?
 
-   Answer: A. Explanation: It iterates keys, including enumerable inherited names, not values. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. Immediately after the loop
+B. Back to initialization
+C. To the start of the body without a test
+D. To the update expression and then the test
 
-10. What does `break` do?
-   - A. It exits the nearest enclosing loop or switch unless a label changes the target.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** The update still runs; initialization happens only once.
 
-   Answer: A. Explanation: It exits the nearest enclosing loop or switch unless a label changes the target. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 7. What does continue do in a while loop?
 
-11. What does `continue` do?
-   - A. It skips to the next loop iteration.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Proceed to the next condition test
+B. Run every skipped statement first
+C. Increment every numeric variable
+D. Exit the function
 
-   Answer: A. Explanation: It skips to the next loop iteration. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** An update skipped in the body is not automatic, which can prevent progress.
 
-12. Why can labels reduce readability?
-   - A. They create non-local jumps that many developers rarely expect.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 8. What does for...of over an ordinary array provide?
 
-   Answer: A. Explanation: They create non-local jumps that many developers rarely expect. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. Enumerable property names
+B. Only own non-index properties
+C. Element values through its iterator
+D. Every inherited value
 
-13. When are labels defensible?
-   - A. Exiting nested loops deliberately when a simpler extraction is not clearer.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Array value iteration follows the iterator, not property enumeration.
 
-   Answer: A. Explanation: Exiting nested loops deliberately when a simpler extraction is not clearer. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 9. Which keys does for...in include?
 
-14. Why should long browser loops be avoided?
-   - A. They block rendering and input on the main thread.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Only own symbol keys
+B. Enumerable string keys, including inherited ones
+C. Only numeric indices as Numbers
+D. All properties, including non-enumerable ones
 
-   Answer: A. Explanation: They block rendering and input on the main thread. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Use Object.keys when own enumerable string keys are intended.
 
-15. Why can CPU-heavy Node.js loops be dangerous?
-   - A. They block the event loop and delay unrelated requests.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 10. What is the ordinary array value iterator result for a hole?
 
-   Answer: A. Explanation: They block the event loop and delay unrelated requests. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. It stops the loop
+B. It throws ReferenceError
+C. It skips the index without yielding
+D. It yields undefined
 
-16. What is a guard clause?
-   - A. An early exit for invalid or completed conditions.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** A hole differs from an absent iteration step for ordinary array value iteration.
 
-   Answer: A. Explanation: An early exit for invalid or completed conditions. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 11. A break inside a switch inside a loop exits what?
 
-17. Why do guard clauses help?
-   - A. They reduce nesting and make failure paths visible.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. The switch
+B. The outer loop
+C. The function
+D. Both switch and loop
 
-   Answer: A. Explanation: They reduce nesting and make failure paths visible. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Unlabeled break targets the nearest enclosing switch or loop.
 
-18. What is loop invariant work?
-   - A. Work inside a loop that could be computed once outside it.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 12. What can continue label target?
 
-   Answer: A. Explanation: Work inside a loop that could be computed once outside it. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. Any earlier source line
+B. Any enclosing function
+C. An enclosing labeled loop
+D. Any labeled block
 
-19. Why is early termination an optimization?
-   - A. It avoids processing data after the answer is already known.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Continue must select an iteration target; it is not a general goto.
 
-   Answer: A. Explanation: It avoids processing data after the answer is already known. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+## 13. Does const job in for...of freeze each job object?
 
-20. What should a control-flow interview answer include?
-   - A. Condition evaluation, branch taken, loop state, and exit condition.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Yes, including nested data
+B. No; it prevents binding reassignment within that iteration
+C. Only when the input array is const
+D. Only if the loop has no continue
 
-   Answer: A. Explanation: Condition evaluation, branch taken, loop state, and exit condition. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Binding immutability and object mutability are separate.
 
-21. What is the safest default for unknown event types?
-   - A. Throw or explicitly reject instead of silently ignoring a corrupt state transition.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 14. Why test a record that is both valid-fatal and cancelled?
 
-   Answer: A. Explanation: Throw or explicitly reject instead of silently ignoring a corrupt state transition. This is directly relevant to Control Flow because the topic is about predictable behavior, not memorized trivia.
+A. To prove it is an array
+B. To test numeric overflow
+C. To ensure all branches execute twice
+D. To verify which policy has precedence
+
+**Answer: D.** Separate cancellation and fatal tests do not expose an ordering bug when both conditions hold.
+
+## 15. Which is a loop invariant for the validated job batch?
+
+A. Output contains only accepted records from the visited prefix
+B. The loop will always visit every input
+C. The current job can never be invalid
+D. The output shares every input object
+
+**Answer: A.** The invariant remains true after append, skip, and exit paths; fatal records can shorten traversal.
+
+## 16. What establishes termination for an unchanged finite indexed scan?
+
+A. Using const for the array binding
+B. Writing the loop in a single line
+C. A bounded index advances toward length on each continuing path
+D. Adding a console log inside the loop
+
+**Answer: C.** Progress and a bound form the argument. Syntax style alone does not ensure termination.

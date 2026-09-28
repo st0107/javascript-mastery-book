@@ -1,75 +1,97 @@
 # Production Examples
 
-## Scenario
+## Make Mutation Ownership Visible
 
-A payment service normalizes incoming JSON into stable, explicit bindings before calculating risk scores and writing audit records.
-
-The important lesson is not the size of the code. The lesson is that fundamental JavaScript rules decide whether this system is explainable under incident pressure.
-
-## Runnable Examples
-
-### Example 1: const binding versus object mutation
-
-File: `code/volume-1/chapter-02/example-01-const-object-mutation.js`
+A trusted in-memory account record can be updated in place when the caller deliberately owns that state. A `const` declaration communicates that the binding stays attached to this account, not that its properties are immutable.
 
 ```js
 'use strict';
 
-const account = {
-  id: 'acct_100',
-  status: 'active'
-};
-
+const account = { id: 'acct_100', status: 'active' };
+const observer = account;
 account.status = 'suspended';
+console.log(account.status, observer.status, observer === account);
+try {
+  account = { id: 'acct_200', status: 'active' };
+} catch (error) {
+  console.log(error.name);
+}
 
-console.log(account);
+// Expected output:
+// suspended suspended true
+// TypeError
 ```
 
-Expected output: the script logs a validated, normalized, or computed result without relying on global mutable state. Complexity is `O(1)` unless the code iterates through input collections; in that case the time complexity is `O(n)` and space depends on the returned structure.
+An observer holding the same identity sees the change. Use this design when sharing live state is intentional. When a caller needs a prior snapshot, create a record with the required owned values instead of assuming `const` protects the old state. The assertions in `code/volume-1/chapter-02/example-01-const-object-mutation.js` cover both mutation and binding replacement.
 
-### Example 2: production type guards
+## Normalize a User Display Record
 
-File: `code/volume-1/chapter-02/example-02-type-guards.js`
+A boundary accepts an ordinary parsed JSON object containing `id` and `email` strings. The application's display policy trims both fields and lowercases email text; this is not a general mailbox identity or deliverability validator. The output contains only those two fields. It excludes arbitrary input properties such as `role`.
 
 ```js
 'use strict';
 
 function normalizeUser(input) {
-  if (input === null || typeof input !== 'object') {
-    throw new TypeError('Expected a user object.');
+  if (input === null || typeof input !== 'object' || Array.isArray(input)) {
+    throw new TypeError('user object required');
   }
-
   const { id, email } = input;
-
   if (typeof id !== 'string' || typeof email !== 'string') {
-    throw new TypeError('User id and email must be strings.');
+    throw new TypeError('id and email must be strings');
   }
-
-  return { id, email: email.toLowerCase() };
+  const cleanId = id.trim();
+  const cleanEmail = email.trim().toLowerCase();
+  if (cleanId === '' || cleanEmail === '') throw new RangeError('fields must be nonempty');
+  return { id: cleanId, email: cleanEmail };
+}
+const raw = { id: ' U-1 ', email: ' LEA@EXAMPLE.COM ', role: 'admin' };
+const normalized = normalizeUser(raw);
+console.log(JSON.stringify(normalized));
+console.log(raw.id === ' U-1 ', normalized === raw);
+for (const input of [null, [], { id: 'U-2', email: 3 }, { id: ' ', email: 'a@b.test' }]) {
+  try { normalizeUser(input); } catch (error) { console.log(error.name); }
 }
 
-console.log(normalizeUser({ id: 'U-1', email: 'LEA@EXAMPLE.COM' }));
+// Expected output:
+// {"id":"U-1","email":"lea@example.com"}
+// true false
+// TypeError
+// TypeError
+// TypeError
+// RangeError
 ```
 
-Expected output: the script logs a validated, normalized, or computed result without relying on global mutable state. Complexity is `O(1)` unless the code iterates through input collections; in that case the time complexity is `O(n)` and space depends on the returned structure.
+The outer type check rejects null and arrays before property access. String checks precede string methods. Domain checks reject empty normalized text. The new output record stores immutable string values, so changing either record's field later does not mutate the other record.
 
-## Best Practices
+This is a contract for parsed data, not arbitrary objects that can execute getters or proxy traps. Schema validation and application authorization are separate responsibilities. `code/volume-1/chapter-02/example-02-type-guards.js` tests these accepted and rejected values plus output ownership. If total field length is `L`, normalization costs O(L) time and creates output text proportional to the normalized length.
 
-- Make important assumptions visible in names, guards, and return values.
-- Validate data at system boundaries.
-- Prefer explicit conversion over accidental coercion.
-- Keep functions focused enough to test directly.
-- Use immutable updates when shared state would create hidden coupling.
-- Write code that a teammate can debug without knowing the original author.
+## Use a New Binding for Each Representation
 
-## Common Mistakes
+```js
+'use strict';
 
-- Trusting external input before parsing it.
-- Compressing control flow until failure paths disappear.
-- Depending on host-specific APIs inside shared language utilities.
-- Mutating objects passed by callers without documenting ownership.
-- Hiding performance costs inside innocent-looking helper functions.
+function validateStockCount(value) {
+  if (!Number.isSafeInteger(value)) throw new TypeError('safe integer count required');
+  if (value < 0 || value > 10_000) throw new RangeError('stock count outside range');
+  return value;
+}
+const incoming = { count: 12 };
+const stockCount = validateStockCount(incoming.count);
+const message = `${stockCount} units available`;
+console.log(message);
+try {
+  validateStockCount('12');
+} catch (error) {
+  console.log(error.name);
+}
 
-## Edge Cases
+// Expected output:
+// 12 units available
+// TypeError
+```
 
-Edge cases are not interview decorations. They are compressed lessons about the language. When you encounter surprising behavior, ask which specification rule is being applied, which host API is involved, and whether the value came from a trusted or untrusted boundary.
+`incoming`, `stockCount`, and `message` describe distinct roles. Reusing a mutable `value` binding for the parsed object, then a number, then text would be legal, but makes subsequent operations harder to inspect. Representation changes deserve names and explicit boundaries. Numeric guards are constant-sized; formatting adds the cost of producing the message.
+
+## Production Review
+
+State whether a function mutates its argument, returns a new record, or intentionally retains a shared reference. Validate language type and domain separately. Do not treat a `typeof` result, a `const` declaration, or a freshly allocated outer object as proof of a deeper ownership or authorization claim.

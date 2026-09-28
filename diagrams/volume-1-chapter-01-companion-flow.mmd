@@ -1,0 +1,8 @@
+flowchart TD
+  Caller["Evaluate callee and argument expressions"] --> Enter["Enter function evaluation"]
+  Enter --> Bind["Initialize parameters and prepare body declarations"]
+  Bind --> Body["Evaluate body statements"]
+  Body --> Outcome{"Completion"}
+  Outcome -->|return value| Resume["Resume caller with value"]
+  Outcome -->|uncaught throw| Propagate["Propagate error to caller"]
+  Outcome -->|end of ordinary function body| Undefined["Resume caller with undefined"]

@@ -1,169 +1,147 @@
-# MCQs
+# Strings, Numbers, and Dates: MCQs
 
-1. Why can `length` be misleading for strings?
-   - A. It counts UTF-16 code units, not necessarily user-perceived characters.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+Choose one answer per question, then explain the rule before checking the answer.
 
-   Answer: A. Explanation: It counts UTF-16 code units, not necessarily user-perceived characters. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 1. What does `"A\u{1F680}".length` return?
 
-2. What are template literals useful for?
-   - A. Interpolation and multi-line strings with clearer formatting.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. 2, because there are two code points
+B. 3, because the rocket uses a surrogate pair
+C. 1, because both symbols form a string
+D. 4, because each visible symbol requires two units
 
-   Answer: A. Explanation: Interpolation and multi-line strings with clearer formatting. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** String length counts UTF-16 code units: A uses one and the rocket uses two.
 
-3. Why normalize user text?
-   - A. Different Unicode representations can look identical but compare differently.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 2. Which operation can preserve a base letter plus combining accent when truncating visible text?
 
-   Answer: A. Explanation: Different Unicode representations can look identical but compare differently. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. `slice(0, 1)`
+B. `split("")`
+C. `charAt(0)`
+D. Grapheme segmentation before selecting clusters
 
-4. What is a regular expression best used for?
-   - A. Pattern matching with clear boundaries and tested complexity.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Code-unit and code-point operations can separate a combining sequence. Grapheme segmentation matches the stated UI unit.
 
-   Answer: A. Explanation: Pattern matching with clear boundaries and tested complexity. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 3. After `const a = " x "; const b = a.trim();`, what is `a`?
 
-5. Why can regex be a security concern?
-   - A. Poor patterns can cause catastrophic backtracking on attacker-controlled input.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. `" x "`
+B. `"x"`
+C. A String wrapper
+D. `undefined`
 
-   Answer: A. Explanation: Poor patterns can cause catastrophic backtracking on attacker-controlled input. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** trim returns a value. It does not mutate the original string.
 
-6. What numeric format does JavaScript `number` use?
-   - A. IEEE 754 double-precision floating point.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 4. Why might repeated `/A/g.test("A")` alternate results?
 
-   Answer: A. Explanation: IEEE 754 double-precision floating point. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. The input changes case
+B. The regex consumes the source string
+C. Global testing advances lastIndex
+D. The parser recompiles the expression differently
 
-7. Why can `0.1 + 0.2` surprise developers?
-   - A. Binary floating point cannot represent many decimal fractions exactly.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** The regex object holds search position. The original string stays unchanged.
 
-   Answer: A. Explanation: Binary floating point cannot represent many decimal fractions exactly. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 5. Which value satisfies `Number.isSafeInteger`?
 
-8. How should money often be stored?
-   - A. As integer minor units such as cents.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. `"42"`
+B. `42`
+C. `Infinity`
+D. `2 ** 53`
 
-   Answer: A. Explanation: As integer minor units such as cents. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** The method requires a Number that is an integer within the safe range; it does not coerce.
 
-9. When is `BigInt` useful?
-   - A. For integers larger than the safe integer range of `number`.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 6. Why is `0.1 + 0.2 === 0.3` false?
 
-   Answer: A. Explanation: For integers larger than the safe integer range of `number`. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. Addition converts to text
+B. The equality operator rounds decimals
+C. All decimal literals are invalid
+D. Binary representations and arithmetic rounding differ
 
-10. Can `BigInt` and `number` be mixed in arithmetic?
-   - A. No, arithmetic mixing throws unless you convert intentionally.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** The decimal literals map to binary floating-point values; the sum is not the same represented value as 0.3.
 
-   Answer: A. Explanation: No, arithmetic mixing throws unless you convert intentionally. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 7. What does `(2.5).toFixed(2)` return?
 
-11. What does `Number.isSafeInteger` check?
-   - A. Whether an integer can be represented precisely as a JavaScript number.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. The string `"2.50"`
+B. The Number `2.50` with stored scale
+C. The integer `250`
+D. A BigInt
 
-   Answer: A. Explanation: Whether an integer can be represented precisely as a JavaScript number. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** toFixed formats text; Number does not retain a decimal display scale.
 
-12. What is `Math.random` not suitable for?
-   - A. Cryptographic security.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 8. Which constructs the exact integer 9007199254740993?
 
-   Answer: A. Explanation: Cryptographic security. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. `BigInt(9007199254740993)`
+B. `Number("9007199254740993")`
+C. `BigInt("9007199254740993")`
+D. `parseInt("9007199254740993", 10)`
 
-13. What does a Date store internally?
-   - A. A timestamp value representing milliseconds since the Unix epoch.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** The string reaches BigInt without first being rounded as a Number.
 
-   Answer: A. Explanation: A timestamp value representing milliseconds since the Unix epoch. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 9. What is `7n / 2n`?
 
-14. Why prefer ISO timestamps for logs?
-   - A. They are unambiguous and portable across systems.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. `3.5`
+B. `3n`
+C. `4n`
+D. A TypeError
 
-   Answer: A. Explanation: They are unambiguous and portable across systems. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** BigInt division truncates the fractional part toward zero.
 
-15. Why is timezone policy important?
-   - A. Local-time assumptions can corrupt scheduling and reporting behavior.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 10. What happens to `JSON.stringify({ id: 1n })` without customization?
 
-   Answer: A. Explanation: Local-time assumptions can corrupt scheduling and reporting behavior. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. It emits `{"id":1}`
+B. It emits `{"id":"1"}`
+C. It silently removes id
+D. It throws TypeError
 
-16. What does `Intl.NumberFormat` provide?
-   - A. Locale-aware number and currency formatting.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** BigInt needs an explicit transport representation such as a decimal string.
 
-   Answer: A. Explanation: Locale-aware number and currency formatting. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 11. Which statement describes a Date created with an explicit offset?
 
-17. What does `Intl.DateTimeFormat` provide?
-   - A. Locale-aware date and time formatting.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. It stores an instant; the original offset is not retained
+B. It stores the original string permanently
+C. Every local getter returns the input zone fields
+D. It is immutable
 
-   Answer: A. Explanation: Locale-aware date and time formatting. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** The Date time value identifies an instant; getters apply UTC or the host local zone.
 
-18. Why validate `Date.parse` output?
-   - A. Invalid dates produce `NaN`, which can poison comparisons.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 12. Why use a parse-and-ISO round-trip after a strict timestamp regex?
 
-   Answer: A. Explanation: Invalid dates produce `NaN`, which can poison comparisons. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. To change local time to the user locale
+B. To accept more human date forms
+C. To reject impossible or normalized calendar values
+D. To restore a missing time zone
 
-19. What is a timestamp good for?
-   - A. Ordering and duration math when timezone display is separate.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Syntax checks the shape. Round-trip identity checks whether the accepted text denotes that exact canonical calendar instant.
 
-   Answer: A. Explanation: Ordering and duration math when timezone display is separate. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+## 13. At the exact end of `[start, end)`, is now inside?
 
-20. Why should display formatting happen late?
-   - A. Business logic should use canonical values, not localized strings.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Yes, both boundaries are inclusive
+B. No, the end boundary is exclusive
+C. Only when the duration is an integer
+D. Only in UTC
 
-   Answer: A. Explanation: Business logic should use canonical values, not localized strings. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** The interval explicitly excludes its end; a zero-duration interval is empty.
 
-21. What should string, number, and date utilities document?
-   - A. Input type, timezone assumptions, precision expectations, and failure behavior.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 14. What is the best default policy for a duration argument in this chapter?
 
-   Answer: A. Explanation: Input type, timezone assumptions, precision expectations, and failure behavior. This is directly relevant to Strings, Numbers, and Dates because the topic is about predictable behavior, not memorized trivia.
+A. Coerce any truthy input
+B. Accept strings because Date.parse accepts strings
+C. Use parseInt and ignore trailing text
+D. Require a bounded nonnegative integer Number
+
+**Answer: D.** A numeric domain contract prevents concatenation and rejects fractional or unbounded durations.
+
+## 15. What is `Math.floor(-1.2)`?
+
+A. `-2`
+B. `-1`
+C. `1`
+D. `-1.2`
+
+**Answer: A.** Floor moves toward negative infinity; truncation would produce -1.
+
+## 16. Which claim about Number.EPSILON is accurate?
+
+A. It makes every decimal sum exact
+B. It is the largest rounding error possible
+C. It describes spacing near 1, so tolerance still needs a scale policy
+D. It is a money rounding rule
+
+**Answer: C.** Measurement comparison needs a domain-specific tolerance; EPSILON alone does not define one.

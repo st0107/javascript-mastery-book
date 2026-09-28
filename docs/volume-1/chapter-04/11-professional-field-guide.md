@@ -1,83 +1,40 @@
 # Professional Field Guide
 
-## How Staff Engineers Think About This Topic
+## Write a Parsing Contract in Six Lines
 
-A staff-level JavaScript engineer does not treat Type Conversion and Coercion as isolated syntax. They ask how the rule affects API contracts, debugging, performance, security, teaching, and long-term maintenance. They also know when to stop explaining internals and make the code obvious enough that fewer internals are needed.
+For each boundary field, record source type, accepted text grammar, missing-value policy, target representation, range, and error behavior. For pageSize this chapter chooses: string; positive decimal digits without leading zeros; default 25 only when undefined; Number; 1 through 100; reject malformed supplied input.
 
-The best professional code makes the important path easy and the dangerous path hard. It names values honestly, validates hostile inputs, avoids hidden mutation, and fails where the error still has context.
+That contract explains why "25" succeeds while 25, true, "025", "25px", and null fail. If the product later accepts trimmed text, change the contract and its assertions deliberately.
 
-## Code Review Checklist
+## Choose Representation From Meaning
 
-- Explicit conversion with `String`, `Number`, `Boolean`, and `BigInt`: is the code using this feature because it clarifies intent, or because it is shorter?
-- Implicit conversion rules: is the code using this feature because it clarifies intent, or because it is shorter?
-- Truthy and falsy values: is the code using this feature because it clarifies intent, or because it is shorter?
-- Loose equality versus strict equality: is the code using this feature because it clarifies intent, or because it is shorter?
-- Abstract relational comparison: is the code using this feature because it clarifies intent, or because it is shorter?
-- Object-to-primitive conversion: is the code using this feature because it clarifies intent, or because it is shorter?
-- Interview edge cases: is the code using this feature because it clarifies intent, or because it is shorter?
-- Are boundary conversions explicit?
-- Are error messages useful without leaking sensitive information?
-- Is ownership of objects and arrays clear?
-- Are browser-only or Node-only APIs isolated from shared utilities?
-- Are edge cases covered by tests?
-- Is there any hidden global state?
-- Can a teammate predict the output without executing the code mentally for several minutes?
+| Value | Useful representation | Reason |
+| --- | --- | --- |
+| Bounded page count | Safe integer Number | Arithmetic and bounds are small and exact. |
+| Approximate sensor reading | Finite Number | Floating-point approximation is an accepted part of the domain. |
+| Large integral arithmetic quantity | BigInt parsed directly from text | Avoid an intermediate Number losing digits. |
+| Identifier with leading zeros | String | Textual identity must survive. |
+| Boolean setting | Boolean after explicit vocabulary parsing | Truthiness does not interpret words. |
+| Three-state setting | Boolean or a documented third value | Absence/defer must remain distinguishable. |
 
-## Whiteboard Strategy
+BigInt is not a decimal-money type, and converting an identifier to a number is not required merely because all its characters are digits.
 
-When asked to whiteboard Type Conversion and Coercion, draw the smallest useful model:
+## Review a Parser Repair
 
-1. Input values enter the program.
-2. Bindings or references are created.
-3. Rules evaluate expressions or statements.
-4. Memory changes or control flow changes.
-5. Output is returned or an error is thrown.
+The original query helper called Number(value) and checked positivity/integrality. That admitted true and unsafe integer strings. The repair adds a primitive type check, bounded complete digit grammar, safe-integer check, and page-specific maximums. It also separates missing from malformed values.
 
-Do not draw every internal engine structure unless the interviewer asks. A precise small diagram is stronger than a large vague one.
+Review tests against the contract rather than counting assertions: smallest value, largest value, immediate outside neighbors, wrong primitive types, whitespace, suffixes, leading zeros, unsafe integers, and unchanged caller data. A happy-path printout cannot establish any of those boundaries.
 
-## Follow-Up Answers
+## Review Conversion in General Code
 
-### What if the input is missing?
+For +, ask whether either operand can become a string. For comparisons, ask whether both values share a validated representation. For object operands, ask whether conversion hooks can run more than once, mutate state, or throw. For boolean conditions, ask whether the program wants truthiness or exact boolean identity.
 
-Say whether missing input is acceptable. If it is acceptable, choose an explicit default. If it is not acceptable, throw early with a message that names the field. Do not let missing input become `undefined` that fails three layers later.
+Use explicit named formatting/conversion methods when units or side effects would otherwise be hidden. Implicit hooks are appropriate only when their behavior is consistent and useful throughout the object's API.
 
-### What if this runs in the browser?
+## Explain an Incident Clearly
 
-Identify the browser APIs involved and mention main-thread responsiveness, DOM availability, user-controlled input, and security constraints. If the code touches the DOM or URL, discuss validation and escaping.
+A useful explanation is: "The boundary accepted true, Number converted it to 1, and the integer guard admitted it. We now require the declared string type before conversion and test that true fails." This identifies the entry point, language rule, incorrect policy, and regression.
 
-### What if this runs in Node.js?
+For a precision incident, preserve the original text before it is rounded. Once two strings map to the same Number, inspecting that Number cannot reconstruct which ID arrived.
 
-Identify process-level concerns: environment variables, file and network I/O, concurrency, event-loop blocking, logs, and secrets. Node.js gives powerful host APIs, so boundary discipline matters even more.
-
-### What if performance becomes a problem?
-
-Give the complexity first. Then describe what you would measure. Only then suggest a change. This order signals engineering judgment.
-
-## Mini Case Study
-
-A team receives intermittent production bugs around coercion. The junior response is to patch the failing line. The senior response is to ask where the value entered the system, what contract was assumed, whether the code path differs between browser and server, and why tests did not include the edge value.
-
-The fix usually includes more than one line:
-
-- A boundary parser or guard.
-- A clearer function contract.
-- A regression test for the surprising value.
-- A code review note explaining the rule.
-- A monitoring or logging improvement if the bug came from external data.
-
-## Mastery Questions
-
-- Can you explain this topic without using the word "magic"?
-- Can you produce a memory or flow diagram in under two minutes?
-- Can you name one browser-specific concern and one Node.js-specific concern?
-- Can you write a production example that validates input?
-- Can you identify when not to use the feature?
-- Can you teach the edge case without making the language sound random?
-
-## Final Interview Script
-
-Here is the answer shape to practice:
-
-"Type Conversion and Coercion is about explicit conversion, implicit conversion, truthiness, equality, and the edge cases interviewers love. The key rule is that JavaScript follows deterministic specification behavior, while the host environment supplies extra APIs. In production I would make the boundary explicit, keep the internal representation stable, and test the surprising values. Internally, the engine evaluates the relevant expression or statement according to lexical scope, value/reference behavior, and host interaction. The trade-off is between concise code and code whose assumptions are easy to audit."
-
-That script is not meant to be memorized word for word. It is a scaffold for confident reasoning. Replace the generic phrases with the specific rule from the question, and you will sound like an engineer explaining a system, not a candidate reciting notes.
+Complete the [exercise set](06-exercises-coding-challenges.md), rehearse the [interview traces](05-interview-perspective.md), and continue to [Strings, Numbers, and Dates](../chapter-05/01-introduction.md) for text and numeric representation details.

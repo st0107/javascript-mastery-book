@@ -1,93 +1,100 @@
-# Edge Cases, Debugging, and Failure Modes
+# Control Flow: Edge Cases and Debugging
 
-## Why Edge Cases Matter
+## Missing a While Update
 
-Edge cases are compressed lessons. They expose the exact point where a casual mental model stops working and the real JavaScript rule takes over. For Control Flow, the important habit is to slow down and ask three questions: what value is actually present, which rule is being applied, and which environment is supplying the surrounding behavior.
-
-In production, edge cases often arrive through data rather than syntax. A form sends an empty string. A URL parameter is missing. A backend sends `null` where an object was expected. A feature flag service omits a nested key. A loop receives a sparse array or a record with inherited properties. The bug is rarely that JavaScript is unpredictable; the bug is usually that the program accepted unclear input and waited too long to clarify it.
-
-## Debugging Playbook
-
-1. Reproduce the behavior with the smallest possible input.
-2. Log both the value and its type at the boundary.
-3. Separate ECMAScript behavior from browser or Node.js behavior.
-4. Identify whether a primitive value, object reference, binding, or host API is involved.
-5. Replace implicit assumptions with explicit guards.
-6. Add a regression test that names the edge case.
-
-This playbook prevents the most common debugging mistake: explaining the symptom instead of the rule. In an interview, the same discipline makes your answer sound calm and senior. You are not guessing; you are narrowing the execution path.
-
-## Topic-Specific Edge Cases
-
-### if, else, switch, and ternary expressions
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For if, else, switch, and ternary expressions, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### for, while, and do...while loops
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For for, while, and do...while loops, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### for...of and iterable values
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For for...of and iterable values, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### for...in and enumerable property names
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For for...in and enumerable property names, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### break, continue, and labels
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For break, continue, and labels, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Guard clauses and production control-flow design
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Guard clauses and production control-flow design, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-## Common Failure Modes
-
-- Boundary drift: parsing is delayed until many functions have already handled the value.
-- Silent defaults: missing values are converted into defaults that hide upstream contract breaks.
-- Shared mutation: a helper changes caller-owned data and creates action-at-a-distance bugs.
-- Host confusion: code assumes a browser API exists in Node.js or a Node.js API exists in the browser.
-- Over-compression: clever syntax hides a branch, conversion, or allocation that should be visible.
-
-## Debugging Example
+A continue placed before the only increment can make a while loop repeat the same input forever. Keep this demonstration safe by placing the update before the guard:
 
 ```js
-function debugBoundaryValue(label, value) {
-  return {
-    label,
-    value,
-    type: typeof value,
-    isArray: Array.isArray(value),
-    isNull: value === null,
-    truthy: Boolean(value)
-  };
+const values = [0, 2, 0, 4];
+let index = 0;
+let sum = 0;
+while (index < values.length) {
+  const value = values[index];
+  index++;
+  if (value === 0) continue;
+  sum += value;
 }
+console.log(index, sum);
+// Expected output:
+// 4 6
 ```
 
-This helper is intentionally boring. When debugging fundamentals, boring is a feature. It tells you what the runtime sees before your assumptions reshape the story.
+To debug a hanging loop, inspect the condition variables and every continue path. Set a breakpoint at the loop test and confirm that at least one bounded progress measure changes. Do not reproduce an unbounded loop in a shared runtime merely to demonstrate the failure.
 
-## Interview Drill
+## Accidental Fallthrough
 
-Take one topic from this chapter and prepare a two-minute explanation:
+```js
+const actions = [];
+switch ('paid') {
+  case 'paid':
+    actions.push('payment');
+    // Deliberate fallthrough for this demonstration.
+  case 'shipped':
+    actions.push('shipment');
+    break;
+}
+console.log(actions.join(','));
+// Expected output:
+// payment,shipment
+```
 
-1. Define it.
-2. Show one production example.
-3. Show one edge case.
-4. Explain the internal reason.
-5. Name the safest professional default.
+The shipment statement runs even though the discriminant is paid. A real transition handler should return or break unless shared execution is part of the policy. A comment documents intended fallthrough; it does not make unintended behavior correct.
 
-If your explanation skips the edge case, it sounds memorized. If it skips the production implication, it sounds academic. The strongest answers connect both.
+## Sparse Arrays and Extra Properties
+
+```js
+const list = [];
+list[1] = 'job';
+list.note = 'metadata';
+const keys = [];
+for (const key in list) keys.push(key);
+const values = [];
+for (const value of list) values.push(String(value));
+console.log(keys.join(','));
+console.log(values.join(','));
+// Expected output:
+// 1,note
+// undefined,job
+```
+
+Different iteration forms traverse different abstractions. Pick one based on the contract; do not assume changing loop syntax preserves which entries are visited.
+
+## Mutating a Collection During Traversal
+
+```js
+const queue = ['a'];
+const visited = [];
+for (const item of queue) {
+  visited.push(item);
+  if (item === 'a') queue.push('b');
+}
+console.log(visited.join(','));
+// Expected output:
+// a,b
+```
+
+The ordinary array iterator observes the appended element here. An append on every iteration could prevent completion. A fixed-batch function should establish its no-mutation assumption or use a deliberate snapshot; an evolving queue needs an explicit budget.
+
+## Labels Make the Target Explicit
+
+```js
+const accepted = [];
+rows:
+for (const row of [[1, 2], [3, -1], [4]]) {
+  for (const value of row) {
+    if (value < 0) continue rows;
+  }
+  accepted.push(row.join(':'));
+}
+console.log(accepted.join(','));
+// Expected output:
+// 1:2,4
+```
+
+The labeled continue skips the rest of the outer row iteration. It does not merely continue the inner value loop. A helper returning whether the row is acceptable could express the same policy when it improves readability.
+
+## Debugging Checklist
+
+Build a tiny input containing one normal, one malformed, one cancelled, and one fatal record. Include a record satisfying competing conditions. Record the branch taken and the output length after each visit.
+
+Distinguish an invalid batch from an invalid entry: the production batch rejects a non-array but skips a malformed record. Check mutation separately by comparing input state before and after and by changing a returned record in a test.

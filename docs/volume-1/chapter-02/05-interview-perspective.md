@@ -1,52 +1,68 @@
 # Interview Perspective
 
-## How To Answer Confidently
+## What Does const Guarantee?
 
-Start with the plain-language rule. Give a small example. Explain what the engine or host does internally. Then name the practical trade-off. This four-step answer pattern works for almost every JavaScript fundamentals question:
+A `const` binding cannot be reassigned after initialization. It does not recursively freeze the value it holds. Property assignment and identifier assignment target different things. Show the difference with a record rather than saying "const means constant object."
 
-1. Observable behavior.
-2. Why the rule exists.
-3. Internal model.
-4. Production implication.
+```js
+'use strict';
 
-## Beginner Questions
+const invoice = { cents: 500 };
+const alias = invoice;
+alias.cents = 700;
+console.log(invoice.cents);
+try { invoice = { cents: 900 }; } catch (error) { console.log(error.name); }
 
-- What is var, let, and const, and when would you use it?
-- What is Primitive types and reference types, and when would you use it?
-- What is Dynamic typing, and when would you use it?
-- What is typeof and its historical quirks, and when would you use it?
+// Expected output:
+// 700
+// TypeError
+```
 
-## Intermediate Questions
+The alias and original designate the same object. The property mutation succeeds; replacing the immutable binding fails. Freezing an object is a separate operation and is shallow, as the later object chapter explains.
 
-- What bugs can appear when a developer misunderstands Dynamic typing?
-- What bugs can appear when a developer misunderstands typeof and its historical quirks?
-- What bugs can appear when a developer misunderstands Stack and heap mental models?
-- What bugs can appear when a developer misunderstands Creation, initialization, reassignment, and garbage collection?
+## Why Does This Shadowing Fail?
 
-## Senior Questions
+```js
+'use strict';
 
-- How would you teach this topic to a team that keeps shipping bugs in this area?
-- Which trade-offs would you document in a shared utility or style guide?
-- How would you design tests that prove edge cases are handled?
+let count = 10;
+try {
+  const count = count + 1;
+  console.log(count);
+} catch (error) {
+  console.log(error.name);
+}
+console.log(count);
 
-## FAANG Questions
+// Expected output:
+// ReferenceError
+// 10
+```
 
-- Predict the output of a short program and explain every step.
-- Refactor a brittle implementation into a readable production version.
-- Explain browser and Node.js differences without mixing host APIs with language rules.
-- Identify which values live in local bindings, heap objects, or preserved lexical environments.
+The initializer's read resolves to the inner `count`, which is uninitialized until its initializer completes. The outer value is not a fallback. Use a different name when an initializer deliberately derives a new value from the outer binding.
 
-## Whiteboard Prompt
+## Is JavaScript Pass-by-Reference?
 
-Draw the flow from source code to execution. Include parsing, scope creation, evaluation, memory references, and the relevant host environment.
+Argument values initialize parameter bindings. For an object, the copied value designates the same object identity. A property mutation can affect the caller's observation; assigning another object to the parameter does not replace the caller's binding. That second fact is why "pass-by-reference" is usually a misleading answer here.
 
-## Follow-up Questions
+Draw two bindings pointing to object A. Then draw a parameter reassignment as moving only the parameter's arrow. If the interviewer asks about primitive arguments, there is no mutable primitive object whose contents can be altered through the parameter.
 
-- What changes if this code runs in strict mode?
-- What changes if the value arrives from a form, URL, database, or environment variable?
-- What would you measure before optimizing this code?
-- What security issue appears if the input is controlled by an attacker?
+## What Is Wrong With typeof x === 'object' as a Record Guard?
 
-## Interviewer Expectations
+It accepts null and arrays as well as ordinary records. A non-null object check plus `!Array.isArray(x)` is a first container check for an ordinary JSON-object contract, not proof that every required field is valid. Inspect field types and business constraints next. Arbitrary JavaScript objects may contain getters, proxies, or unusual prototypes; do not silently promise to handle all of them.
 
-Interviewers expect precise vocabulary, not theatrical detail. Use terms like binding, reference, primitive value, object, execution context, iterable, truthy, falsy, and host API accurately. If you do not remember a corner case, say the rule you do know and reason from it.
+## What Does Hoisting Mean?
+
+It is informal vocabulary for declaration behavior observable before a declaration's textual position. A `var` binding ordinarily starts as undefined; lexical bindings exist but cannot be read until initialization. A function declaration can already be callable before its statement position. State the declaration form and its timing instead of claiming every declaration is simply moved to the top.
+
+## Why Can typeof Throw?
+
+`typeof missingName` returns the string `undefined` when there is no binding for the name. A lexical binding in its TDZ exists and throws when read, including through `typeof`. This distinction is useful when diagnosing a capability check accidentally shadowed by a local declaration.
+
+## Does Leaving a Function Free Its Objects?
+
+Not necessarily. Another binding, object property, collection, or returned function can retain access to data. Unreachable data becomes eligible for collection, with no promised immediate collection time. A local variable and the object it designates can have different useful lifetimes.
+
+## Senior Design Question
+
+A normalizer returns `{ ...input }` and claims callers cannot affect its state. Ask whether any properties contain objects and whether those objects are shared. A new outer record is insufficient to establish nested ownership. For a narrow `{ id, email }` string schema, construct a new record from validated primitive fields. For a nested schema, document copying or immutability at every mutable boundary.

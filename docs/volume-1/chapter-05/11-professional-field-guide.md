@@ -1,83 +1,46 @@
-# Professional Field Guide
+# Strings, Numbers, and Dates: Professional Field Guide
 
-## How Staff Engineers Think About This Topic
+## Choose the Representation First
 
-A staff-level JavaScript engineer does not treat Strings, Numbers, and Dates as isolated syntax. They ask how the rule affects API contracts, debugging, performance, security, teaching, and long-term maintenance. They also know when to stop explaining internals and make the code obvious enough that fewer internals are needed.
+| Requirement | Representation and policy |
+| --- | --- |
+| Opaque external ID | Validated string; preserve digits and case |
+| Large integer arithmetic | Bounded BigInt with string serialization |
+| Small inventory count | Nonnegative safe Number with checked results |
+| Two-decimal price in this chapter | Bounded integer cents plus supported currency |
+| User-visible label limit | Grapheme policy plus a separate storage-size limit |
+| Exact event instant | Validated UTC timestamp or integer epoch milliseconds |
+| Recurring local appointment | Calendar fields, named zone, and ambiguity policy |
+| Localized presentation | Explicit Intl formatter; keep source domain data |
 
-The best professional code makes the important path easy and the dangerous path hard. It names values honestly, validates hostile inputs, avoids hidden mutation, and fails where the error still has context.
+## Review a Text Helper
 
-## Code Review Checklist
+Ask what its unit is and what transformations it promises. Trimming whitespace is often appropriate for a label but not for an opaque token. NFC normalization merges canonical spellings; case conversion can depend on language and does not define a universal identifier policy.
 
-- String methods and template literals: is the code using this feature because it clarifies intent, or because it is shorter?
-- Unicode and user-visible text: is the code using this feature because it clarifies intent, or because it is shorter?
-- Regular expression basics: is the code using this feature because it clarifies intent, or because it is shorter?
-- Number and Math objects: is the code using this feature because it clarifies intent, or because it is shorter?
-- BigInt for integer precision: is the code using this feature because it clarifies intent, or because it is shorter?
-- Floating-point precision: is the code using this feature because it clarifies intent, or because it is shorter?
-- Date object, timestamps, formatting, and calculations: is the code using this feature because it clarifies intent, or because it is shorter?
-- Are boundary conversions explicit?
-- Are error messages useful without leaking sensitive information?
-- Is ownership of objects and arrays clear?
-- Are browser-only or Node-only APIs isolated from shared utilities?
-- Are edge cases covered by tests?
-- Is there any hidden global state?
-- Can a teammate predict the output without executing the code mentally for several minutes?
+Then examine allocation and limits. Does the helper build all grapheme segments to return a short prefix? That may be fine for a bounded display field, but the limit should be stated.
 
-## Whiteboard Strategy
+## Review a Numeric Helper
 
-When asked to whiteboard Strings, Numbers, and Dates, draw the smallest useful model:
+Write the unit beside every argument: cents, milliseconds, seconds, or item count. Check both accepted inputs and intermediate results. If an operation produces fractions, identify who owns the rounding decision and whether totals must reconcile after allocation.
 
-1. Input values enter the program.
-2. Bindings or references are created.
-3. Rules evaluate expressions or statements.
-4. Memory changes or control flow changes.
-5. Output is returned or an error is thrown.
+A display function should not silently become an accounting function. The [money example](04-production-examples.md) supports a narrow, testable contract rather than arbitrary currency precision.
 
-Do not draw every internal engine structure unless the interviewer asks. A precise small diagram is stronger than a large vague one.
+## Review a Time Helper
 
-## Follow-Up Answers
+Specify the accepted text grammar, the date-validity check, the supported range, the source of now, and the interval boundaries. Distinguish an invalid request from a valid instant outside the interval. Keep that distinction in logs and error handling.
 
-### What if the input is missing?
+Test around midnight and year boundaries without relying on the machine's local zone. A named-zone scheduling feature also needs tests at offset transitions; this chapter's UTC elapsed-window helper does not claim that feature.
 
-Say whether missing input is acceptable. If it is acceptable, choose an explicit default. If it is not acceptable, throw early with a message that names the field. Do not let missing input become `undefined` that fails three layers later.
+## References
 
-### What if this runs in the browser?
+- [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String): indexing, immutability, and methods.
+- [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter): grapheme boundaries.
+- [Number.isSafeInteger](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger): representable integer limits.
+- [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt): arithmetic and serialization boundaries.
+- [Date.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse): standard and implementation-dependent parsing behavior.
 
-Identify the browser APIs involved and mention main-thread responsiveness, DOM availability, user-controlled input, and security constraints. If the code touches the DOM or URL, discuss validation and escaping.
+## Further Reading
 
-### What if this runs in Node.js?
+Read [String.normalize](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) before designing a Unicode identity policy. Read [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat) and [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) when building localized presentation.
 
-Identify process-level concerns: environment variables, file and network I/O, concurrency, event-loop blocking, logs, and secrets. Node.js gives powerful host APIs, so boundary discipline matters even more.
-
-### What if performance becomes a problem?
-
-Give the complexity first. Then describe what you would measure. Only then suggest a change. This order signals engineering judgment.
-
-## Mini Case Study
-
-A team receives intermittent production bugs around built-ins. The junior response is to patch the failing line. The senior response is to ask where the value entered the system, what contract was assumed, whether the code path differs between browser and server, and why tests did not include the edge value.
-
-The fix usually includes more than one line:
-
-- A boundary parser or guard.
-- A clearer function contract.
-- A regression test for the surprising value.
-- A code review note explaining the rule.
-- A monitoring or logging improvement if the bug came from external data.
-
-## Mastery Questions
-
-- Can you explain this topic without using the word "magic"?
-- Can you produce a memory or flow diagram in under two minutes?
-- Can you name one browser-specific concern and one Node.js-specific concern?
-- Can you write a production example that validates input?
-- Can you identify when not to use the feature?
-- Can you teach the edge case without making the language sound random?
-
-## Final Interview Script
-
-Here is the answer shape to practice:
-
-"Strings, Numbers, and Dates is about text, numeric data, BigInt, regular expressions, timestamps, and time calculations. The key rule is that JavaScript follows deterministic specification behavior, while the host environment supplies extra APIs. In production I would make the boundary explicit, keep the internal representation stable, and test the surprising values. Internally, the engine evaluates the relevant expression or statement according to lexical scope, value/reference behavior, and host interaction. The trade-off is between concise code and code whose assumptions are easy to audit."
-
-That script is not meant to be memorized word for word. It is a scaffold for confident reasoning. Replace the generic phrases with the specific rule from the question, and you will sound like an engineer explaining a system, not a candidate reciting notes.
+Next, [Control Flow](../chapter-06/01-introduction.md) shows how to validate, skip, stop, and accumulate work without losing the domain rules.

@@ -1,83 +1,33 @@
 # Professional Field Guide
 
-## How Staff Engineers Think About This Topic
+## Case Study: A Snapshot Changes After Review
 
-A staff-level JavaScript engineer does not treat Variables and Data Types as isolated syntax. They ask how the rule affects API contracts, debugging, performance, security, teaching, and long-term maintenance. They also know when to stop explaining internals and make the code obvious enough that fewer internals are needed.
+An order page stores `const snapshot = order` and later changes `order.status`. The earlier snapshot now displays the new status. The bug is an ownership error: the second binding received the same identity. No historical snapshot was created.
 
-The best professional code makes the important path easy and the dangerous path hard. It names values honestly, validates hostile inputs, avoids hidden mutation, and fails where the error still has context.
+For a view containing only string `id` and `status`, build `{ id: order.id, status: order.status }` from validated fields. Each view then owns its two property slots and immutable primitive values. If the view later includes `items`, decide whether it owns copies of those records or intentionally displays a live collection. A future nested field can invalidate an earlier isolation claim.
 
-## Code Review Checklist
+## Case Study: A Type Guard Accepts Null
 
-- `var`, `let`, and `const`: is the code using this feature because it clarifies intent, or because it is shorter?
-- Primitive types and reference types: is the code using this feature because it clarifies intent, or because it is shorter?
-- Dynamic typing: is the code using this feature because it clarifies intent, or because it is shorter?
-- `typeof` and its historical quirks: is the code using this feature because it clarifies intent, or because it is shorter?
-- Stack and heap mental models: is the code using this feature because it clarifies intent, or because it is shorter?
-- Creation, initialization, reassignment, and garbage collection: is the code using this feature because it clarifies intent, or because it is shorter?
-- Temporal dead zone and hoisting: is the code using this feature because it clarifies intent, or because it is shorter?
-- Are boundary conversions explicit?
-- Are error messages useful without leaking sensitive information?
-- Is ownership of objects and arrays clear?
-- Are browser-only or Node-only APIs isolated from shared utilities?
-- Are edge cases covered by tests?
-- Is there any hidden global state?
-- Can a teammate predict the output without executing the code mentally for several minutes?
+A handler checks `typeof payload === 'object'` and then reads `payload.id`. A null payload passes the guard and throws at the property access. Repair the boundary: reject null and arrays for an ordinary-record contract, then validate required fields before calling their methods.
 
-## Whiteboard Strategy
+Add null, empty object, array, wrong field types, blank normalized strings, and a valid record to the regression suite. Also assert that the output is a new record with only allowed fields. The tests now describe the contract that the handler actually depends on.
 
-When asked to whiteboard Variables and Data Types, draw the smallest useful model:
+## Choosing the Binding and Ownership Policy
 
-1. Input values enter the program.
-2. Bindings or references are created.
-3. Rules evaluate expressions or statements.
-4. Memory changes or control flow changes.
-5. Output is returned or an error is thrown.
+| Need | Choice | Review question |
+| --- | --- | --- |
+| Stable reference to current mutable state | `const` binding with deliberate property mutation | Who else observes this identity? |
+| Replace the selected value | `let` binding | Which events permit replacement? |
+| Preserve a narrow historical view | New record containing owned schema values | Are any nested objects still shared? |
+| Convert boundary input | New named normalized value | Which representations are accepted? |
+| Retain records between calls | Explicitly owned collection or closure | What bounds retention and releases it? |
 
-Do not draw every internal engine structure unless the interviewer asks. A precise small diagram is stronger than a large vague one.
+## Explain an Incident With Four Questions
 
-## Follow-Up Answers
+First locate the binding resolved by the identifier. Then determine whether it had initialized before the read. Next identify the value's actual type. Finally identify any aliases to its object identity. This sequence distinguishes a TDZ failure from a missing property, and a parameter reassignment from a shared-object mutation.
 
-### What if the input is missing?
+For an unexpected memory increase, extend the final question to retaining paths. A name leaving scope does not prove that its previous value became unreachable.
 
-Say whether missing input is acceptable. If it is acceptable, choose an explicit default. If it is not acceptable, throw early with a message that names the field. Do not let missing input become `undefined` that fails three layers later.
+## Readiness Check
 
-### What if this runs in the browser?
-
-Identify the browser APIs involved and mention main-thread responsiveness, DOM availability, user-controlled input, and security constraints. If the code touches the DOM or URL, discuss validation and escaping.
-
-### What if this runs in Node.js?
-
-Identify process-level concerns: environment variables, file and network I/O, concurrency, event-loop blocking, logs, and secrets. Node.js gives powerful host APIs, so boundary discipline matters even more.
-
-### What if performance becomes a problem?
-
-Give the complexity first. Then describe what you would measure. Only then suggest a change. This order signals engineering judgment.
-
-## Mini Case Study
-
-A team receives intermittent production bugs around variables. The junior response is to patch the failing line. The senior response is to ask where the value entered the system, what contract was assumed, whether the code path differs between browser and server, and why tests did not include the edge value.
-
-The fix usually includes more than one line:
-
-- A boundary parser or guard.
-- A clearer function contract.
-- A regression test for the surprising value.
-- A code review note explaining the rule.
-- A monitoring or logging improvement if the bug came from external data.
-
-## Mastery Questions
-
-- Can you explain this topic without using the word "magic"?
-- Can you produce a memory or flow diagram in under two minutes?
-- Can you name one browser-specific concern and one Node.js-specific concern?
-- Can you write a production example that validates input?
-- Can you identify when not to use the feature?
-- Can you teach the edge case without making the language sound random?
-
-## Final Interview Script
-
-Here is the answer shape to practice:
-
-"Variables and Data Types is about bindings, primitive values, reference values, dynamic typing, memory behavior, and variable lifecycle. The key rule is that JavaScript follows deterministic specification behavior, while the host environment supplies extra APIs. In production I would make the boundary explicit, keep the internal representation stable, and test the surprising values. Internally, the engine evaluates the relevant expression or statement according to lexical scope, value/reference behavior, and host interaction. The trade-off is between concise code and code whose assumptions are easy to audit."
-
-That script is not meant to be memorized word for word. It is a scaffold for confident reasoning. Replace the generic phrases with the specific rule from the question, and you will sound like an engineer explaining a system, not a candidate reciting notes.
+Predict a `typeof` TDZ read; explain why const permits property mutation; distinguish null from an ordinary record; show why reassigning a parameter does not replace the caller's binding; and design a normalizer with an explicit output schema. Use the [exercises](06-exercises-coding-challenges.md) to verify these explanations, then continue to [Operators and Expressions](../chapter-03/01-introduction.md).

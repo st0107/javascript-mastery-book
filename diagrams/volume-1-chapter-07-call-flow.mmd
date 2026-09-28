@@ -1,0 +1,7 @@
+flowchart TD
+  Call["Resolve callable and evaluate arguments"] --> Params["Initialize parameters and defaults"]
+  Params --> Body["Execute body and local operations"]
+  Body --> Outcome{"Completion"}
+  Outcome -->|"return value"| Caller["Resume caller with value"]
+  Outcome -->|"end or bare return"| Undefined["Resume caller with undefined"]
+  Outcome -->|"throw"| Handler["Unwind to a matching handler"]

@@ -1,61 +1,101 @@
-# Internal Working
+# Control Flow: Internal Working
 
-## Engine-Level View
-
-When JavaScript source reaches an engine, it is parsed into tokens and then into an abstract syntax tree. The engine records scope information, creates internal representations for declarations, and emits bytecode or optimized machine code depending on execution history. The exact pipeline differs between engines, but the observable language rules remain defined by ECMAScript.
-
-Modern engines optimize common paths aggressively. They prefer stable shapes, predictable types, clear control flow, and code that does not force the engine to abandon assumptions. This does not mean you should write unnatural code for the optimizer. It means you should avoid patterns that make correctness and optimization harder at the same time.
-
-## Memory Diagram
+## From a Policy to a Flowchart
 
 ```mermaid
 flowchart TD
-  A[Input collection] --> B{Has next item?}
-  B -->|No| C[Return result]
-  B -->|Yes| D{Valid item?}
-  D -->|No| B
-  D -->|Yes| E[Process item]
-  E --> F{Fatal condition?}
-  F -->|Yes| C
-  F -->|No| B
+    A["Validate batch shape and limit"] --> B{"Next job?"}
+    B -- No --> R["Return processed records"]
+    B -- Yes --> C{"Valid record?"}
+    C -- No --> B
+    C -- Yes --> D{"Fatal priority?"}
+    D -- Yes --> R
+    D -- No --> E{"Cancelled?"}
+    E -- Yes --> B
+    E -- No --> F["Append fresh processed record"]
+    F --> B
 ```
 
-## Flowchart
+Source: `diagrams/volume-1-chapter-06-job-flow.mmd`.
+
+Validation precedes business decisions. A malformed record that happens to contain `priority: 'fatal'` is skipped under this contract. A valid fatal record stops the batch even if its cancellation flag is true. Reversing those two business checks would implement a different policy.
+
+## Execution Trace
+
+For a batch containing normal a, null, cancelled b, cancelled fatal c, and normal d:
+
+| Visit | Validation | Decision | Output IDs |
+| --- | --- | --- | --- |
+| a | Valid | Append a fresh result | a |
+| null | Invalid | Continue | a |
+| b | Valid | Continue because cancelled | a |
+| c | Valid | Break because fatal | a |
+| d | Not visited | None | a |
+
+No output is produced for a fatal marker. The array returned after the loop is the accumulated prefix result. An empty batch returns an empty output.
+
+## Reference and Accumulator Model
 
 ```mermaid
-flowchart TD
-  A[Evaluate condition] --> B{Condition truthy?}
-  B -->|Yes| C[Execute branch or loop body]
-  C --> D{break / continue / return?}
-  D -->|continue| A
-  D -->|break / return| E[Exit]
-  D -->|none| A
-  B -->|No| E
+flowchart LR
+    A["jobs binding"] --> L["Input array"]
+    L --> J1["Job a object"]
+    L --> J2["Job b object"]
+    V["current job binding"] --> J2
+    P["processed binding"] --> O["Output array"]
+    O --> R["Fresh record: id a, status processed"]
+    J1 --> S["string value a"]
+    R --> S
 ```
 
-## Execution Steps
+Source: `diagrams/volume-1-chapter-06-job-memory.mmd`.
 
-1. The host loads a script or module.
-2. The engine parses the source and builds scope information.
-3. Declarations are registered according to their kind.
-4. Top-level code begins executing.
-5. Expressions and statements create values, references, and control-flow decisions.
-6. Functions create new execution contexts when called.
-7. Objects and closures remain reachable while references to them exist.
-8. Values with no reachable references become eligible for garbage collection.
+The current loop variable refers to the current input object; the loop does not copy it automatically. The implementation creates a fresh result object and copies the immutable ID string into it. Mutating an output record therefore does not mutate an input job record.
 
-## Browser Perspective
+The diagram describes observable ownership. It does not claim a particular engine memory layout or allocation count after optimization.
 
-Browser control flow must respect responsiveness. Long loops can block rendering and input; large work should be chunked, scheduled, streamed, or moved to a worker.
+```js
+const input = [{ id: 'a', cancelled: false }];
+const output = [];
+for (const job of input) {
+  output.push({ id: job.id, status: 'processed' });
+}
+output[0].id = 'changed';
+console.log(input[0].id);
+console.log(input[0] === output[0]);
+// Expected output:
+// a
+// false
+```
 
-## Node.js Perspective
+## A Classic For Loop's Next Instruction
 
-Node.js services also run on a single main JavaScript thread. CPU-heavy loops block the event loop and delay every request sharing that process.
+```js
+const trace = [];
+for (let index = 0; index < 3; index++) {
+  trace.push('visit ' + index);
+  if (index === 1) continue;
+  trace.push('keep ' + index);
+}
+console.log(trace.join(' | '));
+// Expected output:
+// visit 0 | keep 0 | visit 1 | visit 2 | keep 2
+```
 
-## Performance
+At index 1, `continue` skips the rest of the body, but the update expression still increments index. At index 3, the test fails and the loop completes. Moving the update into a skipped path of a `while` loop can remove this progress guarantee.
 
-Most fundamental operations are fast enough for ordinary application code. Performance problems appear when a simple operation is placed inside a hot loop, repeated across large data, or combined with allocation-heavy patterns. Analyze complexity first, then profile. Optimize only the path that measurements identify.
+## Iterator and Completion Semantics
 
-## Security Notes
+Conceptually, `for...of` obtains an iterator, repeatedly requests a step, checks whether it is done, and binds the yielded value for the body. This explains why it works with several collection types without interpreting their property names.
 
-Security begins at boundaries. Parse and validate external input. Avoid dynamic code execution. Keep secrets out of browser JavaScript. Treat serialization and deserialization as security-sensitive operations. Make failure modes explicit so unsafe values do not drift through the program as if they were trusted.
+The specification models control transfers using completion records, including normal, break, continue, return, and throw. A construct consumes the completions it handles and lets others propagate. This is a language model, not a requirement that an engine allocate a JavaScript object per statement. [ECMAScript statements and declarations](https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html).
+
+On an early exit from `for...of`, iterator closing can invoke an iterator's `return` method. Generators and custom iterators are covered later; the practical rule here is that loop exit can have cleanup semantics, so manually replacing iteration with indexed access is not always equivalent.
+
+## Engine Internals and Cost
+
+An engine can compile branches and loops into different machine instructions while preserving observable evaluation order. A switch does not promise a jump table, and source-level nesting does not prove poor performance.
+
+For n input jobs, the batch performs at most n visits and creates at most n result records: O(n) work and O(n) output space, with constant-sized checks under the bounded ID contract. A fatal record may stop earlier. The output array is the main retained growth; control statements themselves do not produce one output per branch.
+
+Continue with the [production contracts](04-production-examples.md).

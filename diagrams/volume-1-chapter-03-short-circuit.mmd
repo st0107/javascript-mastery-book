@@ -1,0 +1,6 @@
+flowchart TD
+  A["Evaluate left operand once"] --> B["Read its value"]
+  B --> C{"Operator selects right?"}
+  C -->|"No"| D["Return left value"]
+  C -->|"Yes"| E["Evaluate right operand"]
+  E --> F["Return right value"]

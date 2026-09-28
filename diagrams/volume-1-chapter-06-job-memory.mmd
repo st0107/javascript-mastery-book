@@ -1,0 +1,9 @@
+flowchart LR
+    A["jobs binding"] --> L["Input array"]
+    L --> J1["Job a object"]
+    L --> J2["Job b object"]
+    V["current job binding"] --> J2
+    P["processed binding"] --> O["Output array"]
+    O --> R["Fresh record: id a, status processed"]
+    J1 --> S["string value a"]
+    R --> S

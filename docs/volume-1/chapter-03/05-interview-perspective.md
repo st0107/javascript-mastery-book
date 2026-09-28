@@ -1,52 +1,65 @@
 # Interview Perspective
 
-## How To Answer Confidently
+## Explain a Rule, Then Trace It
 
-Start with the plain-language rule. Give a small example. Explain what the engine or host does internally. Then name the practical trade-off. This four-step answer pattern works for almost every JavaScript fundamentals question:
+A strong answer names the operator, states its selection or conversion rule, and accounts for observable effects. Avoid answering only with a memorized output. The interviewer may change an operand from zero to null or insert a getter.
 
-1. Observable behavior.
-2. Why the rule exists.
-3. Internal model.
-4. Production implication.
+### Does Precedence Mean Multiplication's Operands Run First?
 
-## Beginner Questions
+No. Precedence groups the expression. In `readA() + readB() * readC()`, the calls occur A, B, C if none throws; multiplication combines B/C before addition combines that result with A. Mention skipped operands separately for logical operators.
 
-- What is Arithmetic, assignment, comparison, logical, and bitwise operators, and when would you use it?
-- What is Conditional expressions, and when would you use it?
-- What is Optional chaining, and when would you use it?
-- What is Nullish coalescing, and when would you use it?
+### Why Does a Logical Expression Return Zero?
 
-## Intermediate Questions
+`&&` returns the first falsy operand it encounters, or the final operand if all preceding operands are truthy. It does not convert that returned value into false. A feature API promising booleans should either use boolean-producing comparisons or explicitly normalize its final result.
 
-- What bugs can appear when a developer misunderstands Optional chaining?
-- What bugs can appear when a developer misunderstands Nullish coalescing?
-- What bugs can appear when a developer misunderstands Short-circuit evaluation?
-- What bugs can appear when a developer misunderstands Operator precedence and associativity?
+```js
+console.log('user' && 0);
+console.log(Boolean('user' && 0));
+console.log(false ?? 'fallback');
+console.log(false || 'fallback');
 
-## Senior Questions
+// Expected output:
+// 0
+// false
+// false
+// fallback
+```
 
-- How would you teach this topic to a team that keeps shipping bugs in this area?
-- Which trade-offs would you document in a shared utility or style guide?
-- How would you design tests that prove edge cases are handled?
+### When Is Nullish Coalescing the Wrong Default?
 
-## FAANG Questions
+When the domain intentionally treats an empty string as missing. Conversely, || is wrong when zero or false is meaningful. Neither validates a negative count, an oversized timeout, or a string boolean. State the accepted input policy before selecting an operator.
 
-- Predict the output of a short program and explain every step.
-- Refactor a brittle implementation into a readable production version.
-- Explain browser and Node.js differences without mixing host APIs with language rules.
-- Identify which values live in local bindings, heap objects, or preserved lexical environments.
+### Does Optional Chaining Make an Entire Expression Safe?
 
-## Whiteboard Prompt
+It protects only the documented nullish boundary along a continuous chain. It does not catch exceptions from getters or callbacks, make nonfunctions callable, or resolve undeclared variables. Parentheses may end the chain before a later ordinary property access.
 
-Draw the flow from source code to execution. Include parsing, scope creation, evaluation, memory references, and the relevant host environment.
+### Can Logical Assignment Invoke a Setter Less Often?
 
-## Follow-up Questions
+Yes. `object.count ??= 1` skips the write when count is present. `object.count = object.count ?? 1` writes even then. A getter runs for both forms; a setter can distinguish them. This is an observable semantic difference, not merely an optimization.
 
-- What changes if this code runs in strict mode?
-- What changes if the value arrives from a form, URL, database, or environment variable?
-- What would you measure before optimizing this code?
-- What security issue appears if the input is controlled by an attacker?
+### Is a Chained Comparison a Range Check?
 
-## Interviewer Expectations
+No. `0 < count < 10` first produces a boolean, then compares that boolean with 10 after conversion. Use two comparisons joined with &&. Ask whether the bounds are inclusive, then choose <= or < deliberately.
 
-Interviewers expect precise vocabulary, not theatrical detail. Use terms like binding, reference, primitive value, object, execution context, iterable, truthy, falsy, and host API accurately. If you do not remember a corner case, say the rule you do know and reason from it.
+### Why Is a Bitwise Shortcut Dangerous for Counts?
+
+Number bitwise operators use a 32-bit representation. A valid larger integer may wrap and a fraction may be truncated. Use explicit numeric validation. Bit masks remain appropriate for a documented small flag domain.
+
+## Worked Senior Prompt
+
+A configuration helper uses `retries: config.retries || 3` and a feature check uses `feature.allowedUserIds.includes(user.id)`. Product requirements say zero retries is valid and a missing allowlist denies ordinary members.
+
+A complete answer has four parts:
+
+1. Replace the default with `??`, then validate the selected count.
+2. Define the list's absence and malformed-data policies before accessing it.
+3. Require actual boolean flags rather than trusting strings such as "false".
+4. Test zero, false, missing values, malformed lists, and unchanged input ownership.
+
+The [production examples](04-production-examples.md) implement that contract. Optional chaining alone would still leave unclear whether an absent list means deny, error, or unrestricted access.
+
+## Whiteboard Trace
+
+Trace `cache.value ??= build()` under three cases: value is zero; value is undefined; build throws. Draw one property reference, the read, the branch, and the possible write. Expected answers: return zero without build/write; build and store; or propagate the error without the assignment occurring. If build mutates other state before throwing, the operator does not roll that back.
+
+The follow-up is whether this is a correct asynchronous cache. It is not sufficient by itself: promise rejection, concurrent requests, and retry policy need explicit design.

@@ -1,56 +1,90 @@
-# Internal Working
+# Strings, Numbers, and Dates: Internal Working
 
-## Engine-Level View
+## Value and Reference Model
 
-When JavaScript source reaches an engine, it is parsed into tokens and then into an abstract syntax tree. The engine records scope information, creates internal representations for declarations, and emits bytecode or optimized machine code depending on execution history. The exact pipeline differs between engines, but the observable language rules remain defined by ECMAScript.
-
-Modern engines optimize common paths aggressively. They prefer stable shapes, predictable types, clear control flow, and code that does not force the engine to abandon assumptions. This does not mean you should write unnatural code for the optimizer. It means you should avoid patterns that make correctness and optimization harder at the same time.
-
-## Memory Diagram
+The diagram is conceptual: it describes observable relationships, not an engine's exact stack layout or string allocation strategy.
 
 ```mermaid
 flowchart LR
-  UserInput[User text] --> Normalize[String normalization]
-  Normalize --> Validate[Regex / parser]
-  Validate --> Store[Canonical storage]
-  Store --> Format[Intl formatting]
-  Format --> UserOutput[User display]
+    A["original binding"] --> S["string value: A plus U+1F680"]
+    B["copy binding"] --> S
+    C["short binding"] --> T["string value: A"]
+    D["date binding"] --> O["Date object"]
+    E["alias binding"] --> O
+    O --> N["internal time value: milliseconds"]
 ```
 
-## Flowchart
+Source: `diagrams/volume-1-chapter-05-value-memory.mmd`.
+
+Copying a string value cannot give another binding a way to mutate it. Copying a Date reference does share a mutable object. A fresh Date constructed from the original timestamp separates that state.
+
+```js
+const original = 'A\u{1F680}';
+const copy = original;
+const short = original.slice(0, 1);
+const date = new Date('2026-01-01T00:00:00.000Z');
+const alias = date;
+const snapshot = new Date(date.getTime());
+
+alias.setUTCDate(2);
+console.log(copy.length, short);
+console.log(date.toISOString());
+console.log(snapshot.toISOString());
+// Expected output:
+// 3 A
+// 2026-01-02T00:00:00.000Z
+// 2026-01-01T00:00:00.000Z
+```
+
+Execution steps:
+
+1. Bind `original` and `copy` to the same string value.
+2. Derive the one-code-unit prefix without changing that value.
+3. Allocate one Date and bind both `date` and `alias` to it.
+4. Allocate a second Date with the copied numeric time value.
+5. Mutate the first object's time value; the second keeps its timestamp.
+
+The language permits engines to share immutable string storage or optimize temporary values. Do not infer retention sizes from this picture; measure actual retained memory when that matters.
+
+## Binary Arithmetic Trace
+
+In `0.1 + 0.2`, each literal is first represented as a binary floating-point value. Addition operates on those represented values and rounds the result. Decimal formatting later chooses text to represent that result. A formatting step cannot prove that earlier arithmetic matched the domain's intended decimal policy.
+
+By contrast, the formatter's integer `1299` is exact. The accepted range is deliberately bounded. Division by 100 creates an approximation sufficiently precise for the two-decimal display at that bound; it does not change the integer storage value. Applying tax, splitting amounts, and rounding fractional cents require separate contracts.
+
+## UTC Window Validation Flow
 
 ```mermaid
 flowchart TD
-  A[Receive amount/date/text] --> B[Normalize]
-  B --> C[Validate]
-  C --> D[Store canonical value]
-  D --> E[Compute using canonical representation]
-  E --> F[Format at presentation boundary]
+    A["startIso, nowMs, durationMs"] --> B{"Canonical UTC syntax?"}
+    B -- No --> X["Throw"]
+    B -- Yes --> C{"Parse and round-trip match?"}
+    C -- No --> X
+    C -- Yes --> D{"Numeric arguments and end in bounds?"}
+    D -- No --> X
+    D -- Yes --> E{"start <= now and now < end?"}
+    E -- Yes --> Y["true"]
+    E -- No --> Z["false"]
 ```
 
-## Execution Steps
+Source: `diagrams/volume-1-chapter-05-utc-window.mmd`.
 
-1. The host loads a script or module.
-2. The engine parses the source and builds scope information.
-3. Declarations are registered according to their kind.
-4. Top-level code begins executing.
-5. Expressions and statements create values, references, and control-flow decisions.
-6. Functions create new execution contexts when called.
-7. Objects and closures remain reachable while references to them exist.
-8. Values with no reachable references become eligible for garbage collection.
+For start `2026-07-06T10:00:00.000Z`, now at 10:30 UTC, and duration 3,600,000:
 
-## Browser Perspective
+| Step | Result | Why it matters |
+| --- | --- | --- |
+| Check fixed grammar | Accepted | Zone and precision are explicit |
+| Parse and round-trip | Same text | Calendar normalization did not change the input |
+| Check numeric arguments | Accepted | Addition cannot concatenate a duration string |
+| Calculate end | 11:00 UTC | Bounded integer arithmetic |
+| Compare | `true` | Start is inclusive; end is exclusive |
 
-Browser UIs format numbers and dates using the user locale. `Intl` is usually better than hand-written formatting, but storage and API contracts should stay locale-neutral.
+At exactly 11:00 the result is false. Adjacent windows can share that boundary without counting it twice. A zero-duration window contains no instants.
 
-## Node.js Perspective
+## Engine Semantics Versus Optimization
 
-Node.js services should normalize timestamps at system boundaries, log ISO strings, and avoid relying on the server machine locale for business rules.
+A string method call on a primitive has wrapper-like property access semantics; it does not require a permanent wrapper object to remain allocated. Numeric optimizations must still preserve specified results, including `NaN` and negative zero. Date parsing and international formatting invoke built-in algorithms and runtime data; they are not simple string slicing operations.
 
-## Performance
+For this chapter, correctness depends on the value rules, not on whether an engine uses a compact integer representation, a shared string buffer, or compiled fast paths. Benchmark a real workload before choosing an algorithm based on guessed engine behavior.
 
-Most fundamental operations are fast enough for ordinary application code. Performance problems appear when a simple operation is placed inside a hot loop, repeated across large data, or combined with allocation-heavy patterns. Analyze complexity first, then profile. Optimize only the path that measurements identify.
-
-## Security Notes
-
-Security begins at boundaries. Parse and validate external input. Avoid dynamic code execution. Keep secrets out of browser JavaScript. Treat serialization and deserialization as security-sensitive operations. Make failure modes explicit so unsafe values do not drift through the program as if they were trusted.
+See [the production examples](04-production-examples.md) for the complete boundary implementations.

@@ -1,52 +1,61 @@
-# Interview Perspective
+# Control Flow: Interview Perspective
 
-## How To Answer Confidently
+## Beginner: Trace Continue and Break
 
-Start with the plain-language rule. Give a small example. Explain what the engine or host does internally. Then name the practical trade-off. This four-step answer pattern works for almost every JavaScript fundamentals question:
+```js
+const seen = [];
+for (let index = 0; index < 6; index++) {
+  if (index === 2) continue;
+  if (index === 4) break;
+  seen.push(index);
+}
+console.log(seen.join(','));
+// Expected output:
+// 0,1,3
+```
 
-1. Observable behavior.
-2. Why the rule exists.
-3. Internal model.
-4. Production implication.
+At 2, continue skips the append but still reaches the for update. At 4, break exits the loop before appending. Index 5 is never visited. A good explanation names both the skipped statements and the next executed step.
 
-## Beginner Questions
+## Intermediate: A Switch Inside a Loop
 
-- What is if, else, switch, and ternary expressions, and when would you use it?
-- What is for, while, and do...while loops, and when would you use it?
-- What is for...of and iterable values, and when would you use it?
-- What is for...in and enumerable property names, and when would you use it?
+```js
+const seen = [];
+for (const value of ['skip', 'keep']) {
+  switch (value) {
+    case 'skip':
+      break;
+    default:
+      seen.push('case');
+  }
+  seen.push('after');
+}
+console.log(seen.join(','));
+// Expected output:
+// after,case,after
+```
 
-## Intermediate Questions
+The break exits the switch, so code after the switch still runs. If the intended policy is to skip the rest of the loop iteration, use continue in that context. If the policy is to leave the whole function, return expresses that target.
 
-- What bugs can appear when a developer misunderstands for...of and iterable values?
-- What bugs can appear when a developer misunderstands for...in and enumerable property names?
-- What bugs can appear when a developer misunderstands break, continue, and labels?
-- What bugs can appear when a developer misunderstands Guard clauses and production control-flow design?
+## Intermediate: Values or Keys?
 
-## Senior Questions
+For an array of jobs, use `for...of` for values. For a dictionary, use `Object.keys` or `Object.entries` for own enumerable properties. `for...in` also considers inherited enumerable string keys, which can be surprising for data processing.
 
-- How would you teach this topic to a team that keeps shipping bugs in this area?
-- Which trade-offs would you document in a shared utility or style guide?
-- How would you design tests that prove edge cases are handled?
+Follow-up: ?Does const inside for...of make a job immutable?? No. Each iteration has a binding whose object can still be mutated. Show whether the output should retain the original object or create a separate result.
 
-## FAANG Questions
+## Senior: Review a Batch Policy
 
-- Predict the output of a short program and explain every step.
-- Refactor a brittle implementation into a readable production version.
-- Explain browser and Node.js differences without mixing host APIs with language rules.
-- Identify which values live in local bindings, heap objects, or preserved lexical environments.
+State the precedence explicitly: malformed records are skipped; valid fatal markers stop; other cancelled jobs are skipped; remaining normal jobs become outputs. Then prove the invariant: every result corresponds to a valid, normal, non-cancelled record before the first valid fatal marker.
 
-## Whiteboard Prompt
+A useful test contains a cancelled fatal record followed by a normal record. If the normal record is processed, the implementation ignored the intended stop policy.
 
-Draw the flow from source code to execution. Include parsing, scope creation, evaluation, memory references, and the relevant host environment.
+## Design Challenge: Termination Under Mutation
 
-## Follow-up Questions
+A loop appends to the same array it is traversing. Ask whether newly appended items are part of the work set. Without a fixed snapshot or explicit count budget, an iterator can observe continuing growth and fail to finish.
 
-- What changes if this code runs in strict mode?
-- What changes if the value arrives from a form, URL, database, or environment variable?
-- What would you measure before optimizing this code?
-- What security issue appears if the input is controlled by an attacker?
+For a fixed batch, forbid mutation during traversal or process a snapshot according to a documented shallow-copy policy. For a queue, design an explicit stopping condition, maximum work budget, and scheduling boundary. Calling a growing queue ?just an array loop? hides those requirements.
 
-## Interviewer Expectations
+## How to Explain Complexity
 
-Interviewers expect precise vocabulary, not theatrical detail. Use terms like binding, reference, primitive value, object, execution context, iterable, truthy, falsy, and host API accurately. If you do not remember a corner case, say the rule you do know and reason from it.
+Count visited records and output records. An early break improves some inputs but does not remove the worst-case linear scan. Nested loops over a rectangular matrix with r rows and c columns visit at most r times c cells; ragged matrices are better described by total cell count plus row overhead.
+
+Do not claim that switch is always faster than if. Runtime strategy and workload determine performance; branch correctness comes first.

@@ -1,33 +1,46 @@
-# Revision Sheet and Chapter Summary
+# Control Flow: Revision and Summary
 
 ## Revision Sheet
 
-- `if`, `else`, `switch`, and ternary expressions: know the definition, the internal model, one production use case, and one edge case.
-- `for`, `while`, and `do...while` loops: know the definition, the internal model, one production use case, and one edge case.
-- `for...of` and iterable values: know the definition, the internal model, one production use case, and one edge case.
-- `for...in` and enumerable property names: know the definition, the internal model, one production use case, and one edge case.
-- `break`, `continue`, and labels: know the definition, the internal model, one production use case, and one edge case.
-- Guard clauses and production control-flow design: know the definition, the internal model, one production use case, and one edge case.
-- Separate ECMAScript language rules from browser and Node.js host APIs.
-- Prefer explicit parsing and validation at system boundaries.
-- Use diagrams to explain memory, references, control flow, and execution.
-- In interviews, answer with behavior, rule, internal model, and production implication.
+| Construct | Rule to remember |
+| --- | --- |
+| `if / else` | Evaluate a condition and execute only its selected branch |
+| Conditional operator | Select one expression value |
+| `switch` | Strictly match cases; statements fall through without an exit |
+| Case with declarations | Use braces when an independent lexical scope is needed |
+| `for` | Initialize, test, body, update, test again |
+| `while` | Test before each body execution |
+| `do...while` | Run the body once before the first test |
+| `for...of` | Consume iterable values |
+| `for...in` | Enumerate enumerable string keys, including inherited keys |
+| `Object.keys` | Produce own enumerable string keys |
+| `break` | Exit the nearest loop or switch |
+| `continue` | Move to the next iteration; classic for still runs its update |
+| `return` | Exit the current function |
+| Labeled break | Exit the named enclosing statement |
+| Invariant | A statement that remains true at a chosen loop boundary |
+| Termination argument | A bounded measure moves toward completion |
 
-## Chapter Summary
+## One-Minute Explanation
 
-Control Flow gives you a professional foundation for branching, looping, iteration protocols, early exit, and labels. The goal is not to memorize isolated facts. The goal is to build a mental model that survives production incidents and interview pressure.
+?I choose a branch structure that makes the policy order visible. I validate a record before reading fields, distinguish skip from stop, and state which condition has precedence. For loops, I identify the visited unit, the progress step, the exit, and the ownership of output records. I use values iteration for arrays and deliberate own-key enumeration for records.?
 
-You learned the main rules, how engines and hosts participate, how memory and flow diagrams clarify behavior, how to write production-style examples, and how to discuss trade-offs with interviewer-grade precision.
+## Trace Checklist
 
-## References
+For any loop, answer:
 
-- ECMAScript Language Specification.
-- MDN Web Docs: JavaScript Guide and Reference.
-- V8 documentation on parsing, execution, and optimization.
-- Node.js documentation for runtime-specific APIs.
+1. Can the body run zero times?
+2. What happens after continue?
+3. What does break exit here?
+4. Which state changes on every non-exiting path?
+5. Can the traversed collection change?
+6. What has been accumulated before the current iteration?
+7. What happens at the first invalid, fatal, or boundary record?
 
-## Further Reading
+## Summary
 
-- Volume 2 for closures, prototypes, objects, and advanced runtime behavior.
-- Volume 3 for asynchronous JavaScript and event loop internals.
-- Volume 5 for interview patterns and whiteboard communication.
+Control flow translates a policy into an execution path. Different loops have different test and update schedules; exits have different targets. Correct code needs both a valid result and an argument that processing ends.
+
+The batch example skips invalid records, prioritizes valid fatal markers over cancellation, and creates separate output records. The order dispatcher enforces payment before shipping. Neither claims external processing or retries.
+
+Review the [exercises](06-exercises-coding-challenges.md) and [MCQs](07-mcqs.md). Continue to [Functions and Callbacks](../chapter-07/01-introduction.md).

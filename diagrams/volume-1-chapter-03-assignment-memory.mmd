@@ -1,0 +1,8 @@
+flowchart LR
+  A["settings binding"] --> B["Object: retries = 0"]
+  C["alias binding"] --> B
+  D["Evaluated reference: object + key retries"] --> B
+  D --> E["Read old value"]
+  E --> F["Compute next value 2"]
+  F --> G["Write through same reference"]
+  G --> B

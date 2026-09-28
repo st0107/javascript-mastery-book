@@ -1,35 +1,39 @@
-# Revision Sheet and Chapter Summary
+# Revision Sheet and Summary
 
-## Revision Sheet
+## The Rules to Remember
 
-- History and evolution of JavaScript: know the definition, the internal model, one production use case, and one edge case.
-- ECMAScript and the TC39 process: know the definition, the internal model, one production use case, and one edge case.
-- Browser JavaScript versus Node.js: know the definition, the internal model, one production use case, and one edge case.
-- The JavaScript ecosystem: know the definition, the internal model, one production use case, and one edge case.
-- Where JavaScript runs: know the definition, the internal model, one production use case, and one edge case.
-- JavaScript engines and runtime architecture: know the definition, the internal model, one production use case, and one edge case.
-- Browser architecture at a practical level: know the definition, the internal model, one production use case, and one edge case.
-- How interviewers evaluate JavaScript fundamentals: know the definition, the internal model, one production use case, and one edge case.
-- Separate ECMAScript language rules from browser and Node.js host APIs.
-- Prefer explicit parsing and validation at system boundaries.
-- Use diagrams to explain memory, references, control flow, and execution.
-- In interviews, answer with behavior, rule, internal model, and production implication.
+| Question | Working answer |
+| --- | --- |
+| What is ECMAScript? | The standard defining core language syntax and semantics. |
+| What is an engine? | An implementation that parses and evaluates the language. |
+| What is a host? | The environment supplying loading, external APIs, and scheduling facilities. |
+| Is `Array.isArray` host-specific? | No; it is a language built-in. |
+| Is `document` universally available? | No; browser pages provide a DOM, while workers and ordinary Node code do not provide that page document. |
+| Does a capability-shaped object imply permission? | No; the operation still has to succeed. |
+| Does transpiling install every missing API? | No; syntax transformation and runtime support are different. |
+| Does integer-valued mean safely exact? | No; Number inputs need safe-integer and domain bounds when exact integer arithmetic is required. |
+| Does client validation authorize a transaction? | No; the server owns its authorization and trusted price checks. |
 
-## Chapter Summary
+## Trace an Operation
 
-Introduction to JavaScript gives you a professional foundation for the language, its history, the ECMAScript standard, and the environments that execute JavaScript. The goal is not to memorize isolated facts. The goal is to build a mental model that survives production incidents and interview pressure.
+Source is parsed; declarations are instantiated; statements evaluate; function calls introduce call-local bindings; host adapters perform effects. This is a semantic account, not a promise that every engine allocates these records literally.
 
-You learned the main rules, how engines and hosts participate, how memory and flow diagrams clarify behavior, how to write production-style examples, and how to discuss trade-offs with interviewer-grade precision.
+For `totalFor(3)` with a price of 1500 cents, the parameter receives 3, outer lookup finds 1500, multiplication produces 4500, and the caller receives that value. Logging is a separate host request.
 
-## References
+## Decisions Worth Practicing
 
-- ECMAScript Language Specification.
-- MDN Web Docs: JavaScript Guide and Reference.
-- V8 documentation on parsing, execution, and optimization.
-- Node.js documentation for runtime-specific APIs.
+Use shared pure calculations when rules are portable. Inject a host adapter when an operation needs output, storage, or network access. Check a proposal's status and the actual target runtime separately. Define a supported input representation before converting external data. Let callers observe an operation failure rather than returning a misleading success result.
 
-## Further Reading
+## Summary
 
-- Volume 2 for closures, prototypes, objects, and advanced runtime behavior.
-- Volume 3 for asynchronous JavaScript and event loop internals.
-- Volume 5 for interview patterns and whiteboard communication.
+JavaScript's core behavior and its surrounding environment are separate layers. This explains why portable calculations can be reused while DOM, filesystem, and permission assumptions require explicit adapters. A clear input contract and independently tested effects make that separation practical.
+
+Continue with [Variables and Data Types](../chapter-02/01-introduction.md). After learning functions, use the [execution-model companion](../chapter-01-execution-model.md) to revisit calls and lexical environments in more depth.
+
+## References and Further Reading
+
+- [TC39 process](https://tc39.es/process-document/): proposal maturity and integration into the standard.
+- [ECMAScript hosts and implementations](https://tc39.es/ecma262/multipage/overview.html#sec-hosts-and-implementations): the language/host boundary.
+- [Node globals](https://nodejs.org/api/globals.html): actual runtime facilities, including their version and stability information.
+- [Using Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers): a browser context with a different capability set from a page.
+- [V8 Ignition](https://v8.dev/docs/ignition): one engine's interpreter, rather than a universal JavaScript pipeline.

@@ -1,169 +1,147 @@
 # MCQs
 
-1. What does optional chaining return when a base is nullish?
-   - A. `undefined` is returned instead of throwing for that property access.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+Choose an answer before reading the explanation. Assume modern JavaScript and ordinary data values unless the question states otherwise.
 
-   Answer: A. Explanation: `undefined` is returned instead of throwing for that property access. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 1. What does `0 ?? 8` produce?
 
-2. What values trigger nullish coalescing?
-   - A. Only `null` and `undefined` trigger the right-hand fallback.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. 8
+B. 0
+C. false
+D. undefined
 
-   Answer: A. Explanation: Only `null` and `undefined` trigger the right-hand fallback. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Zero is present. Only null and undefined choose the coalescing fallback.
 
-3. Why is `??` different from `||` for defaults?
-   - A. `||` treats all falsy values as missing, while `??` preserves `0`, `false`, and empty strings.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 2. What is the result of `'ready' && 0`?
 
-   Answer: A. Explanation: `||` treats all falsy values as missing, while `??` preserves `0`, `false`, and empty strings. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. true
+B. false
+C. 'ready'
+D. 0
 
-4. What is short-circuit evaluation?
-   - A. Evaluation stops once the final logical result is already determined.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** The truthy left operand selects the right operand, which is returned unchanged.
 
-   Answer: A. Explanation: Evaluation stops once the final logical result is already determined. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 3. In `a() + b() * c()`, which calls execute first when none throws?
 
-5. Why can assignment expressions be risky?
-   - A. They produce values and side effects, which can reduce readability.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. a, then b, then c
+B. b, then c, then a
+C. c, then b, then a
+D. The engine may freely reorder observable calls
 
-   Answer: A. Explanation: They produce values and side effects, which can reduce readability. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Multiplication controls grouping, not the order of those operand calls.
 
-6. What does operator precedence decide?
-   - A. It decides how expressions group when parentheses are absent.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 4. How does `2 ** 3 ** 2` group?
 
-   Answer: A. Explanation: It decides how expressions group when parentheses are absent. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. (2 ** 3) ** 2
+B. 2 ** (3 * 2)
+C. 2 ** (3 ** 2)
+D. It is a syntax error
 
-7. When should you add parentheses even if precedence is known?
-   - A. When they make business logic easier to audit.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Exponentiation is right-associative, so the result is 512.
 
-   Answer: A. Explanation: When they make business logic easier to audit. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 5. Given `let n = 4`, what value does `n++` return?
 
-8. What do bitwise operators do to ordinary numbers?
-   - A. Most bitwise operators convert operands to 32-bit signed integers.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. 5
+B. 4
+C. undefined
+D. A reference to n
 
-   Answer: A. Explanation: Most bitwise operators convert operands to 32-bit signed integers. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Postfix update returns the old numeric value while storing the incremented value.
 
-9. What is the conditional operator best for?
-   - A. Small expression-level choices, not complex multi-step branching.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 6. With `const x = 0`, what happens at `x ??= 9`?
 
-   Answer: A. Explanation: Small expression-level choices, not complex multi-step branching. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. x becomes 9
+B. SyntaxError
+C. TypeError
+D. It returns 0 without writing
 
-10. Why can `+` be surprising?
-   - A. It performs numeric addition or string concatenation depending on operands.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** The nullish condition is false, so no assignment to the const binding is attempted.
 
-   Answer: A. Explanation: It performs numeric addition or string concatenation depending on operands. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 7. For `const a = null`, what happens at `(a?.b).c`?
 
-11. What does `===` avoid?
-   - A. It avoids loose equality coercion.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. TypeError
+B. undefined
+C. null
+D. ReferenceError
 
-   Answer: A. Explanation: It avoids loose equality coercion. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Grouping ends the optional chain; ordinary access on undefined throws.
 
-12. What is compound assignment?
-   - A. An operator that reads, computes, and writes a binding or property in one expression.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 8. What happens at `({ run: 3 }).run?.()`?
 
-   Answer: A. Explanation: An operator that reads, computes, and writes a binding or property in one expression. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. Returns 3
+B. Returns undefined
+C. TypeError
+D. Skips run because it is not callable
 
-13. Why is `user && user.name` less common in modern code?
-   - A. Optional chaining expresses null-safe property access more directly.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Optional invocation skips nullish values, not arbitrary nonfunctions.
 
-   Answer: A. Explanation: Optional chaining expresses null-safe property access more directly. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 9. What does `-8 % 3` produce?
 
-14. What is the risk of deeply nested optional chaining?
-   - A. It can hide a missing required dependency that should fail explicitly.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. 1
+B. -2
+C. 2
+D. -1
 
-   Answer: A. Explanation: It can hide a missing required dependency that should fail explicitly. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Remainder is not a nonnegative modulo operation; its nonzero sign follows the dividend.
 
-15. Why should production feature gates be explicit?
-   - A. A gate often controls security, rollout, or billing behavior.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 10. What is `1 << 32` for Number operands?
 
-   Answer: A. Explanation: A gate often controls security, rollout, or billing behavior. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. 0
+B. 4294967296
+C. RangeError
+D. 1
 
-16. What does associativity decide?
-   - A. It decides grouping order among operators with the same precedence.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** The shift count is reduced to its low five bits, so 32 acts like zero.
 
-   Answer: A. Explanation: It decides grouping order among operators with the same precedence. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 11. Which expression checks that all required bits are available?
 
-17. Why should expressions avoid hidden mutation?
-   - A. Hidden mutation makes output prediction and testing harder.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. (available & required) === required
+B. (available & required) !== 0
+C. available === required
+D. available | required
 
-   Answer: A. Explanation: Hidden mutation makes output prediction and testing harder. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Nonzero intersection tests any overlap. Equality with the required mask tests every required bit.
 
-18. What is a unary operator?
-   - A. An operator that acts on one operand, such as `!`, `typeof`, or unary `+`.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 12. Why can `target[key()] += 1` differ from a naive expanded assignment?
 
-   Answer: A. Explanation: An operator that acts on one operand, such as `!`, `typeof`, or unary `+`. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. Compound assignment never calls getters
+B. It always returns a boolean
+C. The compound form evaluates the destination once
+D. The expanded form cannot write properties
 
-19. Why is `delete` rarely used on hot objects?
-   - A. It can make object shapes less predictable for engines.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** Repeating target/key expressions may repeat effects or select a different destination.
 
-   Answer: A. Explanation: It can make object shapes less predictable for engines. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+## 13. Which condition correctly checks an exclusive range?
 
-20. What is a practical use of logical AND?
-   - A. Guarding later checks that require earlier values to exist.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. 0 < n < 10
+B. 0 < n && n < 10
+C. n > (0 && n) < 10
+D. 0 < (n < 10)
 
-   Answer: A. Explanation: Guarding later checks that require earlier values to exist. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Each comparison must inspect n. A chained comparison instead compares an intermediate boolean.
 
-21. What is the interview-safe advice for operators?
-   - A. Know precedence, but use parentheses for clarity in production code.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 14. What does `false || 'fallback'` return?
 
-   Answer: A. Explanation: Know precedence, but use parentheses for clarity in production code. This is directly relevant to Operators and Expressions because the topic is about predictable behavior, not memorized trivia.
+A. false
+B. true
+C. undefined
+D. 'fallback'
+
+**Answer: D.** OR selects the right operand when the left is falsy; it does not normalize to a boolean.
+
+## 15. Which is valid JavaScript?
+
+A. (a ?? b) || c
+B. a ?? b || c
+C. a && b ?? c
+D. a || b ?? c
+
+**Answer: A.** Mixing coalescing with AND/OR requires explicit grouping.
+
+## 16. Why avoid `value | 0` as a general integer validator?
+
+A. It rejects every numeric string
+B. It preserves all safe integers
+C. It can truncate and wrap values into signed 32-bit range
+D. It always throws for fractions
+
+**Answer: C.** A conversion that discards information is not validation; validate the input domain first.

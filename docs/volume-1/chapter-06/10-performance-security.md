@@ -1,66 +1,37 @@
-# Performance and Security Notes
+# Control Flow: Performance and Security
 
-## Performance Model
+## Count Work, Then Measure
 
-Performance in Control Flow starts with clarity. The fastest bug is still a bug. Before optimizing, identify whether the work is constant time, linear in input size, or nested across multiple collections. Then measure the actual path under realistic data.
+A single scan is O(n) in visited entries. Creating one result object per accepted entry adds O(k) output space. A nested scan over every pair may be O(n squared); an early break reduces some executions but leaves the worst case unchanged.
 
-The engine can optimize predictable code, but it cannot save unclear ownership, unbounded loops, repeated parsing, or accidental allocation in hot paths. Most JavaScript performance work begins with three questions:
+Prefer an algorithmic reduction before a syntax micro-optimization. Searching repeatedly through the same large list may justify an index or Set, taught in the collections chapter. Replacing for with while alone does not change the amount of work.
 
-1. How many times does this execute?
-2. How much memory does each execution allocate?
-3. Does the shape or type of the data stay stable?
+## Bound Synchronous Processing
 
-## Complexity Checklist
+A finite array can still be too large to process responsively in one synchronous call. Put explicit limits at input boundaries. The job example accepts at most 10,000 records, making its operational expectation visible.
 
-- `if`, `else`, `switch`, and ternary expressions: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- `for`, `while`, and `do...while` loops: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- `for...of` and iterable values: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- `for...in` and enumerable property names: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- `break`, `continue`, and labels: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Guard clauses and production control-flow design: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
+A while loop that waits for an external signal without yielding cannot let queued JavaScript callbacks run in the same thread. Real cancellation and scheduling require cooperation with the host and asynchronous design. The synchronous example therefore makes no claim of live shutdown handling.
 
-## Optimization Techniques
+## Preserve Validation Order
 
-- Move loop-invariant work outside loops.
-- Prefer one pass when validation, normalization, and selection can be combined cleanly.
-- Avoid parsing the same value repeatedly across layers.
-- Keep hot data structures shape-stable.
-- Do not allocate defensive copies in inner loops unless the copy protects a real ownership boundary.
-- Profile before and after changes so optimization does not become folklore.
+Validate a record before using its fields for a decision. An inherited property or unexpected type should not silently satisfy an authorization or transition rule. The examples require own modeled fields and exact booleans or strings.
 
-## Browser Performance
+These checks are written for ordinary data records. Arbitrary objects can contain getters or proxies whose property access executes code. Decode and validate untrusted serialized input into your accepted data model; a series of field reads is not a sandbox.
 
-Browser JavaScript shares the main thread with rendering, input handling, style calculation, layout, and painting. A loop that feels acceptable in Node.js can create a frozen UI in a browser tab. For large work, consider chunking, streaming, request scheduling, virtualization, or Web Workers.
+## Make Resource Growth Visible
 
-The browser also makes memory leaks visible in a different way. A detached DOM node can stay alive if a closure or cache still references it. Event listeners, timers, observers, and global arrays should have clear cleanup paths.
+A loop can grow its own input, append unbounded output, or create repeated temporary copies. Identify the retained structures in a review. Do not assume that an early-exit branch bounds output unless every path enforces that limit.
 
-## Node.js Performance
+For a queue that intentionally grows, define both a work budget and what happens to unprocessed items. A cap that silently discards remaining work changes the business contract.
 
-Node.js services can handle many concurrent operations because I/O is asynchronous, but CPU-heavy JavaScript still blocks the main event loop. A synchronous loop over a huge payload can delay unrelated HTTP requests. For expensive work, consider batching, streaming, worker threads, native services, or queue-based processing.
+## Avoid Timing-Based Correctness
 
-In server code, performance and reliability meet at backpressure. A service that parses and stores unlimited input without limits is both slow and unsafe.
+The result of a branch should depend on validated state, not a guessed machine speed. Retry and timeout policies need explicit budgets, clocks, and failure semantics; a large busy loop is not a delay primitive.
 
-## Security Model
+Benchmark representative accepted and rejected inputs. Keep logging out of a hot loop when it dominates runtime, but preserve useful aggregate counts or diagnostics at the surrounding boundary.
 
-Security for Control Flow is mostly boundary discipline. Values from users, URLs, headers, cookies, local storage, environment variables, files, databases, and third-party services are not trustworthy just because they look friendly in development.
+## Security Is in the Policy
 
-Security-sensitive JavaScript should:
+A branch can correctly execute the wrong policy. Test combinations: paid and shipped states, fatal and cancelled flags, a missing required ID, and an inherited field. A single happy path does not establish that an access or workflow check is sound.
 
-- Validate type, shape, range, and allowed values.
-- Avoid dynamic code execution such as `eval` and string-built functions.
-- Keep secrets out of browser-delivered code.
-- Treat serialization formats as untrusted input.
-- Avoid prototype pollution by rejecting dangerous keys such as `__proto__`, `constructor`, and `prototype` when merging objects.
-- Log enough context for diagnosis without leaking personal data or secrets.
-
-## Threat Examples
-
-- A query parameter that becomes a number without validation can bypass pagination limits.
-- A string that becomes HTML without escaping can create cross-site scripting.
-- A JSON object merged into configuration can alter prototypes if keys are not filtered.
-- A long input processed by a vulnerable regular expression can pin a CPU core.
-- A default value can accidentally grant access when missing data should have failed closed.
-
-## Professional Default
-
-The professional default is explicitness at boundaries and simplicity in the core. Once data is parsed and validated, internal functions can stay smaller, faster, and easier to reason about. This is not ceremony. It is how large JavaScript systems remain debuggable.
+Unknown transitions should have a deliberate default. The dispatcher rejects them so they cannot silently advance or overwrite state.

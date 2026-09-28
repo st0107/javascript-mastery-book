@@ -1,0 +1,7 @@
+flowchart LR
+    A["original binding"] --> S["string value: A plus U+1F680"]
+    B["copy binding"] --> S
+    C["short binding"] --> T["string value: A"]
+    D["date binding"] --> O["Date object"]
+    E["alias binding"] --> O
+    O --> N["internal time value: milliseconds"]

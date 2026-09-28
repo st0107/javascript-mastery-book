@@ -1,67 +1,37 @@
-# Performance and Security Notes
+# Strings, Numbers, and Dates: Performance and Security
 
-## Performance Model
+## Bound Input Before Expensive Work
 
-Performance in Strings, Numbers, and Dates starts with clarity. The fastest bug is still a bug. Before optimizing, identify whether the work is constant time, linear in input size, or nested across multiple collections. Then measure the actual path under realistic data.
+Normalize, segment, or match only text that fits a documented input-size limit. Grapheme segmentation may produce many segments; collecting them with `Array.from` also allocates an array. If only a prefix is required, a loop can stop after the necessary cluster count.
 
-The engine can optimize predictable code, but it cannot save unclear ownership, unbounded loops, repeated parsing, or accidental allocation in hot paths. Most JavaScript performance work begins with three questions:
+Avoid assuming that string concatenation, slicing, or normalization has one universal allocation strategy. Engines can share or flatten storage. Measure the complete workload and retained objects, especially when keeping a tiny substring of a very large input.
 
-1. How many times does this execute?
-2. How much memory does each execution allocate?
-3. Does the shape or type of the data stay stable?
+## Reuse Formatters Deliberately
 
-## Complexity Checklist
+Repeatedly creating an `Intl.NumberFormat` or `Intl.DateTimeFormat` for unchanged options adds work. Construct one formatter per fixed configuration. If configuration comes from requests, bound the supported locale/currency combinations before caching; an unbounded cache is a memory-growth policy.
 
-- String methods and template literals: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Unicode and user-visible text: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Regular expression basics: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Number and Math objects: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- BigInt for integer precision: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Floating-point precision: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Date object, timestamps, formatting, and calculations: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
+Keep formatting outside calculation loops when the result is only displayed once. Do not optimize away validation at an external boundary because a microbenchmark measures it.
 
-## Optimization Techniques
+## Regex Resource Limits
 
-- Move loop-invariant work outside loops.
-- Prefer one pass when validation, normalization, and selection can be combined cleanly.
-- Avoid parsing the same value repeatedly across layers.
-- Keep hot data structures shape-stable.
-- Do not allocate defensive copies in inner loops unless the copy protects a real ownership boundary.
-- Profile before and after changes so optimization does not become folklore.
+A pattern with nested overlapping repetition can require excessive backtracking for a near-match. Prefer a simple bounded grammar when the domain permits one, cap input length, and test long failing inputs. A safe result for a short example does not establish a worst-case runtime guarantee.
 
-## Browser Performance
+Do not construct an executable pattern directly from arbitrary user text unless the product intentionally accepts regex syntax and supplies resource controls. Plain-text search often needs a string method instead.
 
-Browser JavaScript shares the main thread with rendering, input handling, style calculation, layout, and painting. A loop that feels acceptable in Node.js can create a frozen UI in a browser tab. For large work, consider chunking, streaming, request scheduling, virtualization, or Web Workers.
+## Numeric Integrity
 
-The browser also makes memory leaks visible in a different way. A detached DOM node can stay alive if a closure or cache still references it. Event listeners, timers, observers, and global arrays should have clear cleanup paths.
+A malformed numeric value can be a correctness or authorization bug: infinity may bypass a range assumption, an unsafe integer may merge distinct IDs, and string concatenation may extend an expiry window. Validate type, syntax where applicable, finite/safe range, units, and computed results.
 
-## Node.js Performance
+BigInt permits large values but computation and memory grow with digit count. Length limits belong before conversion. Native BigInt operations should not be assumed constant-time for secret-dependent cryptographic work. See [BigInt cryptography notes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#cryptography).
 
-Node.js services can handle many concurrent operations because I/O is asynchronous, but CPU-heavy JavaScript still blocks the main event loop. A synchronous loop over a huge payload can delay unrelated HTTP requests. For expensive work, consider batching, streaming, worker threads, native services, or queue-based processing.
+## Text Safety Is Contextual
 
-In server code, performance and reliability meet at backpressure. A service that parses and stores unlimited input without limits is both slow and unsafe.
+Normalization is not sanitization. Template interpolation is not HTML escaping. A valid identifier grammar does not make text safe for every output context. Use the destination's safe API: text content for ordinary DOM text and parameters for database values.
 
-## Security Model
+A normalized label may still contain visually confusing characters. Decide whether labels are display names, trusted IDs, or credentials before applying a policy. Never silently transform a password or signature through a convenience text-cleaning helper.
 
-Security for Strings, Numbers, and Dates is mostly boundary discipline. Values from users, URLs, headers, cookies, local storage, environment variables, files, databases, and third-party services are not trustworthy just because they look friendly in development.
+## Clock and Calendar Costs
 
-Security-sensitive JavaScript should:
+Reading a wall clock is not a reliable way to benchmark short operations: clock adjustments can change it. Use the runtime's monotonic performance clock for elapsed measurements. For business expiry, use the authoritative system clock with an explicit service policy.
 
-- Validate type, shape, range, and allowed values.
-- Avoid dynamic code execution such as `eval` and string-built functions.
-- Keep secrets out of browser-delivered code.
-- Treat serialization formats as untrusted input.
-- Avoid prototype pollution by rejecting dangerous keys such as `__proto__`, `constructor`, and `prototype` when merging objects.
-- Log enough context for diagnosis without leaking personal data or secrets.
-
-## Threat Examples
-
-- A query parameter that becomes a number without validation can bypass pagination limits.
-- A string that becomes HTML without escaping can create cross-site scripting.
-- A JSON object merged into configuration can alter prototypes if keys are not filtered.
-- A long input processed by a vulnerable regular expression can pin a CPU core.
-- A default value can accidentally grant access when missing data should have failed closed.
-
-## Professional Default
-
-The professional default is explicitness at boundaries and simplicity in the core. Once data is parsed and validated, internal functions can stay smaller, faster, and easier to reason about. This is not ceremony. It is how large JavaScript systems remain debuggable.
+UTC arithmetic avoids host-zone dependence for elapsed windows. It does not implement local recurring schedules, business days, or holiday calendars. Choose the representation from the requirement before optimizing it.

@@ -1,0 +1,5 @@
+flowchart LR
+  Original["const original"] --> A["Object A: status ready"]
+  Selected["let selected"] --> A
+  Parameter["parameter record"] --> B["Object B: status local"]
+  Note["Rebinding record did not change either caller binding"]

@@ -1,51 +1,94 @@
 # Theory
 
-## What This Topic Is
+## A Language, an Engine, and a Host
 
-Introduction to JavaScript covers the language, its history, the ECMAScript standard, and the environments that execute JavaScript. The language gives you rules; professional engineering requires knowing why those rules exist and how to apply them consistently.
+A language defines what a program means. For example, multiplication of two Number values produces another Number according to ECMAScript rules. An engine implements those rules using its own data structures and machine code. A host decides how source arrives, which external operations are available, and how work is scheduled.
 
-### History and evolution of JavaScript
+This separation explains a common failure: moving a function that calls `document.querySelector` from a browser page into Node does not make the selector expression invalid JavaScript. The program parses, but resolving `document` fails because that host does not supply it by default. Conversely, `Array.isArray` is a language built-in available across conforming hosts.
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain History and evolution of JavaScript, start with the observable behavior, then connect that behavior to the underlying execution model.
+```js
+'use strict';
 
-### ECMAScript and the TC39 process
+const values = [1, 2, 3];
+console.log(Array.isArray(values), values.length);
+console.log(typeof missingHostApi);
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain ECMAScript and the TC39 process, start with the observable behavior, then connect that behavior to the underlying execution model.
+// Expected output:
+// true 3
+// undefined
+```
 
-### Browser JavaScript versus Node.js
+The final line demonstrates a safe `typeof` check for an undeclared name. It does not establish that every present value is callable, permitted, or functioning. Temporal-dead-zone bindings have a different rule, covered in Chapter 2.
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain Browser JavaScript versus Node.js, start with the observable behavior, then connect that behavior to the underlying execution model.
+## How JavaScript Reached Its Current Role
 
-### The JavaScript ecosystem
+JavaScript began at Netscape in 1995 to make web pages programmable. Standardization produced the first ECMAScript edition in 1997. The language subsequently accumulated more structured facilities while retaining compatibility with existing programs: ES5 introduced strict mode, and ECMAScript 2015 added features including lexical declarations, classes, promises, and modules. The historical details and design constraints are documented in the co-designers' [JavaScript history paper](https://www.wirfs-brock.com/allen/posts/866).
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain The JavaScript ecosystem, start with the observable behavior, then connect that behavior to the underlying execution model.
+The practical consequence is coexistence. You will encounter `var` and `let`, CommonJS and ECMAScript modules, callback APIs and promises. Older syntax is not automatically broken, and newer syntax does not automatically fit every deployment target. Learn the behavior and the compatibility requirement before migrating code.
 
-### Where JavaScript runs
+## ECMAScript and TC39
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain Where JavaScript runs, start with the observable behavior, then connect that behavior to the underlying execution model.
+TC39 develops ECMAScript through a proposal process. Ecma publishes the resulting standards. A proposal is a design being evaluated; a shipped engine implementation and a finalized standard are related but separate milestones.
 
-### JavaScript engines and runtime architecture
+The current process uses stages 0, 1, 2, 2.7, 3, and 4:
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain JavaScript engines and runtime architecture, start with the observable behavior, then connect that behavior to the underlying execution model.
+| Stage | Meaning for a reader |
+| --- | --- |
+| 0 | An idea under exploration |
+| 1 | A problem and possible solution under committee consideration |
+| 2 | A preferred design being refined |
+| 2.7 | Complete design undergoing testing and validation |
+| 3 | Implementation experience is being gathered |
+| 4 | Completed feature ready for integration into the standard |
 
-### Browser architecture at a practical level
+Check the [TC39 process](https://tc39.es/process-document/) when evaluating a proposal. A stage number alone cannot tell you whether a particular production browser supports a feature. Check the actual runtime targets and test the deployed artifact.
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain Browser architecture at a practical level, start with the observable behavior, then connect that behavior to the underlying execution model.
+## Tools Do Different Jobs
 
-### How interviewers evaluate JavaScript fundamentals
+| Tool | What it changes | What it cannot guarantee |
+| --- | --- | --- |
+| Package manager | Installs declared dependencies | That dependencies are safe or compatible |
+| Bundler | Resolves and packages an application's code | That a host API exists at runtime |
+| Transpiler | Rewrites supported source syntax | That every missing runtime behavior is supplied |
+| Polyfill | Supplies some missing API behavior | That unsupported syntax will parse |
+| Linter | Flags selected patterns and mistakes | Full program correctness |
+| Test runner | Executes checks you provide | Correctness outside those checks |
 
-This area matters in production because it affects correctness, readability, debugging, and interview communication. When you explain How interviewers evaluate JavaScript fundamentals, start with the observable behavior, then connect that behavior to the underlying execution model.
+A transpiler can rewrite a syntax construct before delivery. A polyfill is itself executable code, so a file containing syntax the engine cannot parse fails before that file can install its own fallback. Do not confuse build-time acceptance with runtime support.
 
-## Why Developers Need It
+## Capabilities Are More Useful Than Runtime Labels
 
-Real systems are mostly boundary management. Values enter from users, APIs, files, databases, environment variables, and browser events. JavaScript code must transform those values without losing meaning. When developers understand the fundamentals, they avoid the two most expensive categories of bugs: code that accidentally works and code that fails only in edge conditions.
+A browser worker runs JavaScript but has no page DOM. A Node process may offer familiar web APIs. An embedded runtime may expose a carefully restricted subset of host features. Therefore, `window exists` is not a universal test for "JavaScript running in a browser," and `fetch exists` does not prove a browser page.
 
-## Common Misconceptions
+Prefer asking the narrow question that the operation needs. For an injected adapter, check that its operation is callable:
 
-JavaScript is often dismissed as a small scripting language. In practice, it is a standardized, aggressively optimized language that sits inside browsers, servers, CLIs, edge runtimes, desktop apps, and embedded systems.
+```js
+'use strict';
 
-Another common mistake is treating the browser, Node.js, and the ECMAScript language as one thing. ECMAScript defines the core language. Hosts provide APIs. Engines implement and optimize execution. Keeping those layers separate makes explanations sharper.
+function hasWriter(adapter) {
+  return adapter !== null &&
+    (typeof adapter === 'object' || typeof adapter === 'function') &&
+    typeof adapter.writeText === 'function';
+}
 
-## Trade-offs
+console.log(hasWriter({ writeText() {} }));
+console.log(hasWriter({ writeText: true }), hasWriter(null));
 
-The trade-off is usually between brevity and explicitness. JavaScript lets you write compact expressions, dynamic values, and flexible control flow. Professional code should still make important conversions, assumptions, and failure paths visible. Cleverness is useful only when it reduces real complexity.
+// Expected output:
+// true
+// false false
+```
+
+This is a capability-shape check on trusted adapters, not a permission probe or a guarantee that a later write will succeed. An adapter can throw because a file is unavailable, a permission is denied, or its implementation fails. Handle operation outcomes as well as presence.
+
+## Browser Pages, Workers, and Node
+
+A page can update its document and respond to UI events. A worker runs separately from that page's UI context and communicates through supported messaging APIs; it cannot directly manipulate the page's DOM. Node provides process and server-oriented APIs and supports both CommonJS and ECMAScript modules. Consult the [browser worker guide](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) and [Node globals reference](https://nodejs.org/api/globals.html) for the actual facilities.
+
+Keep business rules independent of these capabilities when practical. Let a page adapter read a form and let a server adapter read a request. Both can call the same amount validator. The server must still validate its own input: a browser-side check improves feedback but cannot authorize a payment.
+
+## Predictability and Dynamic Behavior
+
+JavaScript is dynamically typed: operations inspect the values present at execution time. It is not "untyped," and an object, a string, and a number do not obey identical operations. Its flexibility makes explicit contracts valuable. If a function accepts integer cents, state that it requires a Number within a defined range; do not silently accept every value that can be converted to a number.
+
+Use a class, framework, or build system only when its responsibilities are useful. A small shared validator can be a plain function. Adding a framework does not remove the need to understand its input values, effects, and host dependencies.

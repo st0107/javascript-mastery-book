@@ -1,34 +1,68 @@
-# Revision Sheet and Chapter Summary
+# Revision and Summary
 
-## Revision Sheet
+## Conversion Rules at a Glance
 
-- Explicit conversion with `String`, `Number`, `Boolean`, and `BigInt`: know the definition, the internal model, one production use case, and one edge case.
-- Implicit conversion rules: know the definition, the internal model, one production use case, and one edge case.
-- Truthy and falsy values: know the definition, the internal model, one production use case, and one edge case.
-- Loose equality versus strict equality: know the definition, the internal model, one production use case, and one edge case.
-- Abstract relational comparison: know the definition, the internal model, one production use case, and one edge case.
-- Object-to-primitive conversion: know the definition, the internal model, one production use case, and one edge case.
-- Interview edge cases: know the definition, the internal model, one production use case, and one edge case.
-- Separate ECMAScript language rules from browser and Node.js host APIs.
-- Prefer explicit parsing and validation at system boundaries.
-- Use diagrams to explain memory, references, control flow, and execution.
-- In interviews, answer with behavior, rule, internal model, and production implication.
+| Operation | Rule to recall |
+| --- | --- |
+| String(value) | Creates a string representation; this is not JSON serialization. |
+| Number(value) | Converts a whole value using permissive numeric rules; empty text and null become zero. |
+| Boolean(value) | Tests truthiness; nonempty "false" and ordinary objects are true. |
+| BigInt(value) | Accepts integer representations; Number input may already have lost precision. |
+| parseInt(text, radix) | Reads a numeric prefix, so trailing text may be ignored. |
+| Binary + | Obtain primitives, concatenate if either is a string, otherwise add numeric values. |
+| === | No mixed-type coercion; objects compare identity; NaN differs from itself. |
+| == | Type-directed conversions, including null/undefined pairing and object/primitive conversion. |
+| Object.is | Same-value comparison: NaN matches itself, signed zeros differ. |
+| Relational comparison | Two strings use code-unit order; otherwise numeric rules apply. |
+| Symbol.toPrimitive | Receives a hint and must return a primitive. |
+| Boolean(object) | Does not request an object's primitive conversion. |
 
-## Chapter Summary
+## Prediction Check
 
-Type Conversion and Coercion gives you a professional foundation for explicit conversion, implicit conversion, truthiness, equality, and the edge cases interviewers love. The goal is not to memorize isolated facts. The goal is to build a mental model that survives production incidents and interview pressure.
+```js
+console.log(Number(''), Boolean(''));
+console.log(Number('false'), Boolean('false'));
+console.log(null == undefined, null == 0, null >= 0);
+console.log('2' + 1, '2' - 1);
+console.log(Number.isSafeInteger(Number('9007199254740993')));
 
-You learned the main rules, how engines and hosts participate, how memory and flow diagrams clarify behavior, how to write production-style examples, and how to discuss trade-offs with interviewer-grade precision.
+// Expected output:
+// 0 false
+// NaN true
+// true false true
+// 21 1
+// false
+```
 
-## References
+For each output, name the operation before the rule. The same input can legitimately produce different results under numeric conversion, truthiness, equality, and ordering.
 
-- ECMAScript Language Specification.
-- MDN Web Docs: JavaScript Guide and Reference.
-- V8 documentation on parsing, execution, and optimization.
-- Node.js documentation for runtime-specific APIs.
+## Boundary Parser Checklist
 
-## Further Reading
+1. State the source type. A string parser must reject true before it becomes 1.
+2. Define missing versus invalid. Default an absent field only when the contract permits it.
+3. Bound source length and validate the complete grammar.
+4. Convert once to the desired representation.
+5. Check finite/safe status as appropriate and enforce domain limits.
+6. Preserve caller ownership and test both sides of every bound.
 
-- Volume 2 for closures, prototypes, objects, and advanced runtime behavior.
-- Volume 3 for asynchronous JavaScript and event loop internals.
-- Volume 5 for interview patterns and whiteboard communication.
+Opaque identifiers may need no numeric conversion. Exact large integer arithmetic may need direct BigInt parsing. Approximate decimal measurements may legitimately use Number. Choose representation from the domain.
+
+## Common Mistakes to Retire
+
+- Treating Boolean('false') as a text parser.
+- Treating parseInt as full-string validation.
+- Assuming Number.isInteger implies a safe integer.
+- Explaining all mixed comparisons with one conversion rule.
+- Converting a large integer through Number before BigInt.
+- Assuming conversion methods cannot throw or mutate state.
+- Comparing numeric strings lexicographically by accident.
+
+## References and Further Reading
+
+- [Number conversion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number): accepted primitive and string cases.
+- [Boolean conversion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean): falsy values, wrappers, and objects.
+- [Equality](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality): type-directed comparison cases.
+- [Symbol.toPrimitive](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive): conversion customization and hints.
+- [ECMAScript abstract operations](https://tc39.es/ecma262/multipage/abstract-operations.html#sec-type-conversion): normative definitions when a trace is disputed.
+
+Continue to [Strings, Numbers, and Dates](../chapter-05/01-introduction.md) for representation details: text units, numeric precision, and explicit timestamp contracts.

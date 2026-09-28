@@ -1,0 +1,9 @@
+flowchart TD
+  Input["Host receives external data"] --> Parse["Parse the documented representation"]
+  Parse --> Validate{"Type and domain checks pass?"}
+  Validate -->|No| Reject["Return or throw a defined failure"]
+  Validate -->|Yes| Rule["Run shared language-level rule"]
+  Rule --> Adapter["Host adapter performs required effect"]
+  Adapter --> Outcome{"Operation succeeds?"}
+  Outcome -->|No| Failure["Handle operation failure"]
+  Outcome -->|Yes| Result["Return result"]

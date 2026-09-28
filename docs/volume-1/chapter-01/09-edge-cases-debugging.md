@@ -1,105 +1,80 @@
-# Edge Cases, Debugging, and Failure Modes
+# Edge Cases and Debugging
 
-## Why Edge Cases Matter
+## Distinguish Syntax Failure From Operation Failure
 
-Edge cases are compressed lessons. They expose the exact point where a casual mental model stops working and the real JavaScript rule takes over. For Introduction to JavaScript, the important habit is to slow down and ask three questions: what value is actually present, which rule is being applied, and which environment is supplying the surrounding behavior.
-
-In production, edge cases often arrive through data rather than syntax. A form sends an empty string. A URL parameter is missing. A backend sends `null` where an object was expected. A feature flag service omits a nested key. A loop receives a sparse array or a record with inherited properties. The bug is rarely that JavaScript is unpredictable; the bug is usually that the program accepted unclear input and waited too long to clarify it.
-
-## Debugging Playbook
-
-1. Reproduce the behavior with the smallest possible input.
-2. Log both the value and its type at the boundary.
-3. Separate ECMAScript behavior from browser or Node.js behavior.
-4. Identify whether a primitive value, object reference, binding, or host API is involved.
-5. Replace implicit assumptions with explicit guards.
-6. Add a regression test that names the edge case.
-
-This playbook prevents the most common debugging mistake: explaining the symptom instead of the rule. In an interview, the same discipline makes your answer sound calm and senior. You are not guessing; you are narrowing the execution path.
-
-## Topic-Specific Edge Cases
-
-### History and evolution of JavaScript
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For History and evolution of JavaScript, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### ECMAScript and the TC39 process
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For ECMAScript and the TC39 process, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Browser JavaScript versus Node.js
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Browser JavaScript versus Node.js, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### The JavaScript ecosystem
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For The JavaScript ecosystem, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Where JavaScript runs
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Where JavaScript runs, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### JavaScript engines and runtime architecture
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For JavaScript engines and runtime architecture, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Browser architecture at a practical level
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Browser architecture at a practical level, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### How interviewers evaluate JavaScript fundamentals
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For How interviewers evaluate JavaScript fundamentals, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-## Common Failure Modes
-
-- Boundary drift: parsing is delayed until many functions have already handled the value.
-- Silent defaults: missing values are converted into defaults that hide upstream contract breaks.
-- Shared mutation: a helper changes caller-owned data and creates action-at-a-distance bugs.
-- Host confusion: code assumes a browser API exists in Node.js or a Node.js API exists in the browser.
-- Over-compression: clever syntax hides a branch, conversion, or allocation that should be visible.
-
-## Debugging Example
+A parser error prevents evaluation of the affected script. A missing identifier can fail after earlier statements have already run. A writer can exist and still throw while performing its operation. These failures call for different repairs: fix the source, fix the dependency, or handle the operation outcome.
 
 ```js
-function debugBoundaryValue(label, value) {
-  return {
-    label,
-    value,
-    type: typeof value,
-    isArray: Array.isArray(value),
-    isNull: value === null,
-    truthy: Boolean(value)
-  };
+'use strict';
+
+console.log('before lookup');
+try {
+  unavailableDocument.querySelector('main');
+} catch (error) {
+  console.log(error.name);
 }
+console.log('after handled failure');
+
+// Expected output:
+// before lookup
+// ReferenceError
+// after handled failure
 ```
 
-This helper is intentionally boring. When debugging fundamentals, boring is a feature. It tells you what the runtime sees before your assumptions reshape the story.
+The unavailable root name fails before property lookup or method invocation. Read the first relevant application frame in the error stack, then identify whether the missing name was supposed to be a local binding, an import, or a host capability.
 
-## Interview Drill
+## Presence Is Not Callability
 
-Take one topic from this chapter and prepare a two-minute explanation:
+```js
+'use strict';
 
-1. Define it.
-2. Show one production example.
-3. Show one edge case.
-4. Explain the internal reason.
-5. Name the safest professional default.
+const adapter = { writeText: true };
+console.log('writeText' in adapter);
+console.log(typeof adapter.writeText === 'function');
+try {
+  adapter.writeText('report');
+} catch (error) {
+  console.log(error.name);
+}
 
-If your explanation skips the edge case, it sounds memorized. If it skips the production implication, it sounds academic. The strongest answers connect both.
+// Expected output:
+// true
+// false
+// TypeError
+```
+
+Checking a property name alone accepts unusable values. Even the improved check assumes a trusted adapter: property access can invoke a getter or proxy trap. Do not present capability inspection as a sandbox for arbitrary JavaScript objects.
+
+## A Working Adapter Can Fail on One Request
+
+```js
+'use strict';
+
+function writeReport(writeText, text) {
+  if (typeof writeText !== 'function') throw new TypeError('writer required');
+  writeText(text);
+  return 'saved';
+}
+try {
+  console.log(writeReport(() => { throw new Error('quota exceeded'); }, 'report'));
+} catch (error) {
+  console.log(error.message);
+}
+
+// Expected output:
+// quota exceeded
+```
+
+The success value is produced only after the synchronous writer returns. Retrying every failure immediately may worsen a full disk or exhausted quota; callers need an operation-specific recovery policy.
+
+## Other Boundaries to Reproduce
+
+| Symptom | Check first | Appropriate evidence |
+| --- | --- | --- |
+| Works in page, fails in worker | Direct DOM dependency | Run the adapter test in the worker context. |
+| Works locally, fails after deployment | Runtime version, transformed output, asset loading | Test the actual built artifact. |
+| Number looks rounded unexpectedly | Source text, conversion, safe range | Compare documented input with the parsed value before calculations. |
+| Works in console, fails as a file | Script/module mode and injected console bindings | Reproduce in the intended file mode. |
+| Error message differs across engines | Test relies on exact message wording | Assert error category and application-owned messages where appropriate. |
+
+Keep a minimal failing input and an assertion for the promised outcome. A log of one successful checkout would not detect accepting an unsafe amount or mistaking a process label for permission.

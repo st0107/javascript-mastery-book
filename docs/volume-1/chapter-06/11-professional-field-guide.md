@@ -1,82 +1,47 @@
-# Professional Field Guide
+# Control Flow: Professional Field Guide
 
-## How Staff Engineers Think About This Topic
+## Choose the Construct From the Decision
 
-A staff-level JavaScript engineer does not treat Control Flow as isolated syntax. They ask how the rule affects API contracts, debugging, performance, security, teaching, and long-term maintenance. They also know when to stop explaining internals and make the code obvious enough that fewer internals are needed.
+| Requirement | Useful starting point |
+| --- | --- |
+| Several ordered validation checks | Guard clauses |
+| One simple selected value | Conditional expression |
+| Dispatch on a closed event vocabulary | Switch with explicit default |
+| Indexed work with clear bounds | Classic for |
+| Consume iterable values | For...of |
+| Own object fields | Object.keys or Object.entries |
+| Repeat while state permits | While with a visible progress step |
+| Perform at least one attempt | Do...while |
+| Return the first search result | Small function with early return |
+| Exit a tightly scoped nested traversal | Descriptive labeled break |
 
-The best professional code makes the important path easy and the dangerous path hard. It names values honestly, validates hostile inputs, avoids hidden mutation, and fails where the error still has context.
+## Review Loop Correctness
 
-## Code Review Checklist
+Name the input unit, invariant, progress measure, exit target, and output ownership. For the batch example, the unit is a job; the invariant is the accepted prefix; progress comes from the finite iterator; fatal exits the loop; outputs are fresh records.
 
-- `if`, `else`, `switch`, and ternary expressions: is the code using this feature because it clarifies intent, or because it is shorter?
-- `for`, `while`, and `do...while` loops: is the code using this feature because it clarifies intent, or because it is shorter?
-- `for...of` and iterable values: is the code using this feature because it clarifies intent, or because it is shorter?
-- `for...in` and enumerable property names: is the code using this feature because it clarifies intent, or because it is shorter?
-- `break`, `continue`, and labels: is the code using this feature because it clarifies intent, or because it is shorter?
-- Guard clauses and production control-flow design: is the code using this feature because it clarifies intent, or because it is shorter?
-- Are boundary conversions explicit?
-- Are error messages useful without leaking sensitive information?
-- Is ownership of objects and arrays clear?
-- Are browser-only or Node-only APIs isolated from shared utilities?
-- Are edge cases covered by tests?
-- Is there any hidden global state?
-- Can a teammate predict the output without executing the code mentally for several minutes?
+Then ask how each assumption could fail. A malformed object can break a field read. A continue can skip a while update. Appending to the traversed input can change termination. Sharing original records can make later callers mutate your source data.
 
-## Whiteboard Strategy
+## Review Policy Precedence
 
-When asked to whiteboard Control Flow, draw the smallest useful model:
+Write competing conditions as a small decision table. Valid fatal plus cancelled means stop in this chapter. Invalid plus fatal-looking means skip. Those are application choices, not universal JavaScript rules.
 
-1. Input values enter the program.
-2. Bindings or references are created.
-3. Rules evaluate expressions or statements.
-4. Memory changes or control flow changes.
-5. Output is returned or an error is thrown.
+Keep the table beside the tests when the policy matters. Rearranging guards for style can alter precedence even when every individual condition remains present.
 
-Do not draw every internal engine structure unless the interviewer asks. A precise small diagram is stronger than a large vague one.
+## Make Failure Behavior Consistent
 
-## Follow-Up Answers
+For the job batch, invalid entries are an expected skip path; an invalid top-level batch is a caller error. For the state dispatcher, unsupported events are rejected. Do not silently change one contract into the other.
 
-### What if the input is missing?
+A production service may need counts or structured rejection reasons. Add them as explicit return fields and test them; do not claim diagnostics the function does not return.
 
-Say whether missing input is acceptable. If it is acceptable, choose an explicit default. If it is not acceptable, throw early with a message that names the field. Do not let missing input become `undefined` that fails three layers later.
+## References
 
-### What if this runs in the browser?
+- [Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration): language constructs and their schedules.
+- [Switch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch): matching, scope, and fallthrough.
+- [For...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of): iterable values and early exit.
+- [For...in](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in): enumerable string-key traversal.
+- [Continue](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/continue): update behavior and targets.
+- [ECMAScript statements](https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html): specification-level execution semantics.
 
-Identify the browser APIs involved and mention main-thread responsiveness, DOM availability, user-controlled input, and security constraints. If the code touches the DOM or URL, discuss validation and escaping.
+## Further Reading
 
-### What if this runs in Node.js?
-
-Identify process-level concerns: environment variables, file and network I/O, concurrency, event-loop blocking, logs, and secrets. Node.js gives powerful host APIs, so boundary discipline matters even more.
-
-### What if performance becomes a problem?
-
-Give the complexity first. Then describe what you would measure. Only then suggest a change. This order signals engineering judgment.
-
-## Mini Case Study
-
-A team receives intermittent production bugs around control flow. The junior response is to patch the failing line. The senior response is to ask where the value entered the system, what contract was assumed, whether the code path differs between browser and server, and why tests did not include the edge value.
-
-The fix usually includes more than one line:
-
-- A boundary parser or guard.
-- A clearer function contract.
-- A regression test for the surprising value.
-- A code review note explaining the rule.
-- A monitoring or logging improvement if the bug came from external data.
-
-## Mastery Questions
-
-- Can you explain this topic without using the word "magic"?
-- Can you produce a memory or flow diagram in under two minutes?
-- Can you name one browser-specific concern and one Node.js-specific concern?
-- Can you write a production example that validates input?
-- Can you identify when not to use the feature?
-- Can you teach the edge case without making the language sound random?
-
-## Final Interview Script
-
-Here is the answer shape to practice:
-
-"Control Flow is about branching, looping, iteration protocols, early exit, and labels. The key rule is that JavaScript follows deterministic specification behavior, while the host environment supplies extra APIs. In production I would make the boundary explicit, keep the internal representation stable, and test the surprising values. Internally, the engine evaluates the relevant expression or statement according to lexical scope, value/reference behavior, and host interaction. The trade-off is between concise code and code whose assumptions are easy to audit."
-
-That script is not meant to be memorized word for word. It is a scaffold for confident reasoning. Replace the generic phrases with the specific rule from the question, and you will sound like an engineer explaining a system, not a candidate reciting notes.
+Read [labeled statements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/label) when reviewing nested exits. Then study [Functions and Callbacks](../chapter-07/01-introduction.md) to place early returns inside clear, reusable operations. Later error-handling material develops throw, catch, and finally; asynchronous volumes explain scheduling and cooperative cancellation.

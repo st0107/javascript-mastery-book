@@ -1,169 +1,147 @@
 # MCQs
 
-1. What does explicit conversion mean?
-   - A. Calling a conversion function or parser intentionally, such as `Number(value)`.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+Choose one answer before reading the explanation. Assume default built-ins and ordinary objects in Node.js unless stated otherwise.
 
-   Answer: A. Explanation: Calling a conversion function or parser intentionally, such as `Number(value)`. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 1. What does Number('   ') return?
 
-2. What does implicit conversion mean?
-   - A. JavaScript converts a value automatically because an operation requires another type.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. NaN
+B. 0
+C. undefined
+D. TypeError
 
-   Answer: A. Explanation: JavaScript converts a value automatically because an operation requires another type. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Whitespace-only strings convert to zero. A strict input schema can reject them before conversion.
 
-3. Which values are falsy?
-   - A. `false`, `0`, `-0`, `0n`, empty string, `null`, `undefined`, and `NaN`.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 2. What is Boolean('false')?
 
-   Answer: A. Explanation: `false`, `0`, `-0`, `0n`, empty string, `null`, `undefined`, and `NaN`. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. false
+B. TypeError
+C. The string "false"
+D. true
 
-4. Why is strict equality preferred?
-   - A. It compares without loose equality coercion.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Every nonempty string is truthy; Boolean does not interpret a boolean word.
 
-   Answer: A. Explanation: It compares without loose equality coercion. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 3. Which result follows from Number.isInteger(9007199254740992)?
 
-5. What does `Number("")` return?
-   - A. It returns `0`, which surprises many developers.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. true, despite being outside the safe-integer range
+B. false because every unsafe integer is fractional
+C. RangeError
+D. true and therefore every neighboring integer is exact
 
-   Answer: A. Explanation: It returns `0`, which surprises many developers. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** Being integral and being safe are separate properties. Number.isSafeInteger rejects this value.
 
-6. What does `Boolean("false")` return?
-   - A. It returns `true` because non-empty strings are truthy.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 4. What is parseInt('15px', 10)?
 
-   Answer: A. Explanation: It returns `true` because non-empty strings are truthy. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. NaN
+B. TypeError
+C. 15
+D. 150
 
-7. Why should environment booleans be parsed explicitly?
-   - A. Environment variables are strings, so `"false"` is truthy unless parsed.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** parseInt consumes a valid digit prefix. It does not enforce a full-string numeric schema.
 
-   Answer: A. Explanation: Environment variables are strings, so `"false"` is truthy unless parsed. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 5. Why is [] == false true?
 
-8. What is `NaN` unusual about?
-   - A. It is not equal to itself under `===`.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. Empty arrays are falsy
+B. The array converts to an empty string, then both sides reach numeric zero
+C. Equality compares array length to the boolean
+D. Both values are converted to strings with identical text
 
-   Answer: A. Explanation: It is not equal to itself under `===`. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Equality and truthiness request different conversion algorithms. Boolean([]) is true.
 
-9. How should you test for `NaN`?
-   - A. Use `Number.isNaN(value)` for precise checks.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 6. What does [] == [] produce?
 
-   Answer: A. Explanation: Use `Number.isNaN(value)` for precise checks. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. false
+B. true
+C. TypeError
+D. undefined
 
-10. What does object-to-primitive conversion use?
-   - A. Methods such as `valueOf`, `toString`, or `Symbol.toPrimitive`.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: A.** The operands are distinct objects; loose equality does not convert two objects for structural comparison.
 
-   Answer: A. Explanation: Methods such as `valueOf`, `toString`, or `Symbol.toPrimitive`. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 7. Which statement describes Object.is?
 
-11. Why is `== null` sometimes intentionally used?
-   - A. It matches only `null` or `undefined`, but it should be documented if used.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. It converts numeric strings to Numbers
+B. It performs deep object comparison
+C. It treats NaN as equal to itself and distinguishes positive/negative zero
+D. It treats Number 1 and BigInt 1n as equal
 
-   Answer: A. Explanation: It matches only `null` or `undefined`, but it should be documented if used. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: C.** Object.is uses same-value semantics while still comparing objects by identity.
 
-12. What does `parseInt("08px", 10)` return?
-   - A. It returns `8` because parsing stops at the non-digit after reading digits.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 8. What is '12' < '3'?
 
-   Answer: A. Explanation: It returns `8` because parsing stops at the non-digit after reading digits. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. false because 12 exceeds 3
+B. TypeError because both operands are strings
+C. NaN
+D. true because the comparison is lexicographic
 
-13. Why can `Number("08px")` be safer than `parseInt`?
-   - A. It rejects the whole invalid numeric string by producing `NaN`.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Both primitives are strings, so code-unit ordering compares the first characters.
 
-   Answer: A. Explanation: It rejects the whole invalid numeric string by producing `NaN`. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 9. Which expression is true?
 
-14. What is truthiness useful for?
-   - A. Presence checks when all falsy values are truly invalid.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. null == 0
+B. null >= 0
+C. undefined >= 0
+D. undefined < 0
 
-   Answer: A. Explanation: Presence checks when all falsy values are truly invalid. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** Relational conversion turns null into zero. The equality and undefined cases follow different rules.
 
-15. When is truthiness dangerous?
-   - A. When `0`, `false`, or empty string are valid business values.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 10. Which conversion can preserve all digits of '9007199254740993' for integer arithmetic?
 
-   Answer: A. Explanation: When `0`, `false`, or empty string are valid business values. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. BigInt(Number(text))
+B. parseInt(text, 10)
+C. Number(text)
+D. BigInt(text)
 
-16. Why do form values need parsing?
-   - A. Form controls typically provide strings even for numeric-looking input.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: D.** Direct BigInt parsing avoids an intermediate Number's precision loss.
 
-   Answer: A. Explanation: Form controls typically provide strings even for numeric-looking input. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 11. What happens when BigInt('1.5') is evaluated?
 
-17. What does `[] == false` demonstrate?
-   - A. Loose equality can coerce arrays through primitive conversion and boolean-to-number conversion.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. SyntaxError
+B. It returns 1n
+C. It returns 2n
+D. It returns NaN
 
-   Answer: A. Explanation: Loose equality can coerce arrays through primitive conversion and boolean-to-number conversion. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: A.** A fractional string is not valid integer syntax. This differs from a nonintegral Number argument, which raises RangeError.
 
-18. What is a boundary parser?
-   - A. A function that converts and validates external data before internal use.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 12. Which hint does binary + pass to an object's Symbol.toPrimitive method?
 
-   Answer: A. Explanation: A function that converts and validates external data before internal use. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. "string" for every use
+B. "number" for every use
+C. "default"
+D. No hint argument
 
-19. Why should coercion edge cases be learned?
-   - A. They reveal the deterministic rules behind surprising interview prompts.
-   - B. It is only a formatting preference.
-   - C. It applies only when code runs in a browser tab.
-   - D. It is handled by npm instead of the JavaScript runtime.
+**Answer: C.** The primitive result then determines whether + selects concatenation or numeric addition.
 
-   Answer: A. Explanation: They reveal the deterministic rules behind surprising interview prompts. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+## 13. What happens if Symbol.toPrimitive returns an object?
 
-20. What is the safest API design?
-   - A. Accept clear types internally and convert only at boundaries.
-   - B. It applies only when code runs in a browser tab.
-   - C. It is handled by npm instead of the JavaScript runtime.
-   - D. It is only a formatting preference.
+A. The engine always tries that object's toString
+B. TypeError
+C. The object becomes truthy
+D. The original object is returned from Number
 
-   Answer: A. Explanation: Accept clear types internally and convert only at boundaries. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+**Answer: B.** The hook must directly return a primitive. Ordinary fallback is not used to rescue an invalid hook result.
 
-21. What should a coercion interview answer include?
-   - A. The conversion path, the resulting value, and the production lesson.
-   - B. It is handled by npm instead of the JavaScript runtime.
-   - C. It is only a formatting preference.
-   - D. It applies only when code runs in a browser tab.
+## 14. Which operation does not call an ordinary object's conversion methods?
 
-   Answer: A. Explanation: The conversion path, the resulting value, and the production lesson. This is directly relevant to Type Conversion and Coercion because the topic is about predictable behavior, not memorized trivia.
+A. Boolean(object)
+B. Number(object)
+C. String(object)
+D. object + 1
+
+**Answer: A.** Boolean conversion treats ordinary objects as truthy without requesting a primitive.
+
+## 15. What does 2 + 3 + '4' produce?
+
+A. Number 9
+B. String "234"
+C. String "54"
+D. TypeError
+
+**Answer: C.** Left grouping adds the first Numbers, then the string operand selects concatenation.
+
+## 16. Which validation sequence fits a strict bounded page-size string?
+
+A. Number conversion, then accept any truthy result
+B. parseInt, then default every falsy result
+C. Boolean conversion, then Number conversion
+D. Source type, full grammar, numeric conversion, safe/domain bounds
+
+**Answer: D.** Conversion alone accepts representations and magnitudes that a boundary contract may forbid.

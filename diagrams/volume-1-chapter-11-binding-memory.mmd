@@ -1,0 +1,7 @@
+flowchart LR
+  ImportA[Importer A count binding] --> Slot[Counter module count slot]
+  ImportB[Importer B count binding] --> Slot
+  Increment[Exported increment function] --> Slot
+  Slot --> Current[Current primitive value 1]
+  Snapshot[Local initial variable] --> Old[Copied primitive value 0]
+  Factory[Factory invocation] --> Private[New per-call state]

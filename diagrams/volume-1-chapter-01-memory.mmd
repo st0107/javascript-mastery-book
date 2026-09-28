@@ -1,0 +1,14 @@
+flowchart TB
+  subgraph Outer["Script environment"]
+    Price["priceCents: 1500"]
+    FunctionBinding["totalFor: function reference"]
+    Invoice["invoiceCents: uninitialized"]
+  end
+  FunctionBinding --> FunctionObject["Function object"]
+  FunctionObject -->|enclosing environment| Outer
+  subgraph Call["Active totalFor call"]
+    Copies["copies: 3"]
+    Result["result: 4500"]
+  end
+  Call -->|outer lookup| Outer
+  Call -->|returns 4500| Invoice

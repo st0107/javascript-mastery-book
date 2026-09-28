@@ -1,0 +1,14 @@
+flowchart TB
+  subgraph Enclosing["Enclosing file environment"]
+    Price["centsPerCopy: 1200"]
+    Quote["quote: function reference"]
+    Result["result: uninitialized during call"]
+  end
+  Quote --> Function["quote function object"]
+  Function -->|definition environment| Enclosing
+  subgraph Active["Active quote call"]
+    Copies["copies: 2"]
+    Total["totalCents: 2400"]
+  end
+  Active -->|outer lookup| Enclosing
+  Active -->|return value| Result

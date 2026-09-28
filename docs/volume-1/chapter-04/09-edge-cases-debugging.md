@@ -1,99 +1,92 @@
-# Edge Cases, Debugging, and Failure Modes
+# Edge Cases and Debugging
 
-## Why Edge Cases Matter
+## Preserve the Original Representation
 
-Edge cases are compressed lessons. They expose the exact point where a casual mental model stops working and the real JavaScript rule takes over. For Type Conversion and Coercion, the important habit is to slow down and ask three questions: what value is actually present, which rule is being applied, and which environment is supplying the surrounding behavior.
-
-In production, edge cases often arrive through data rather than syntax. A form sends an empty string. A URL parameter is missing. A backend sends `null` where an object was expected. A feature flag service omits a nested key. A loop receives a sparse array or a record with inherited properties. The bug is rarely that JavaScript is unpredictable; the bug is usually that the program accepted unclear input and waited too long to clarify it.
-
-## Debugging Playbook
-
-1. Reproduce the behavior with the smallest possible input.
-2. Log both the value and its type at the boundary.
-3. Separate ECMAScript behavior from browser or Node.js behavior.
-4. Identify whether a primitive value, object reference, binding, or host API is involved.
-5. Replace implicit assumptions with explicit guards.
-6. Add a regression test that names the edge case.
-
-This playbook prevents the most common debugging mistake: explaining the symptom instead of the rule. In an interview, the same discipline makes your answer sound calm and senior. You are not guessing; you are narrowing the execution path.
-
-## Topic-Specific Edge Cases
-
-### Explicit conversion with String, Number, Boolean, and BigInt
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Explicit conversion with String, Number, Boolean, and BigInt, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Implicit conversion rules
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Implicit conversion rules, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Truthy and falsy values
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Truthy and falsy values, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Loose equality versus strict equality
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Loose equality versus strict equality, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Abstract relational comparison
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Abstract relational comparison, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Object-to-primitive conversion
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Object-to-primitive conversion, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-### Interview edge cases
-
-The edge case to watch is the gap between the friendly example and the value that arrives from a real system. For Interview edge cases, test the missing value, the empty value, the boundary value, and the value that has the right shape but the wrong meaning. Then decide whether the function should return a default, throw an exception, skip the item, or preserve the value for a later layer.
-
-Interview explanation: state the rule first, then the surprising result. For production explanation: name the prevention strategy. A strong answer does both.
-
-## Common Failure Modes
-
-- Boundary drift: parsing is delayed until many functions have already handled the value.
-- Silent defaults: missing values are converted into defaults that hide upstream contract breaks.
-- Shared mutation: a helper changes caller-owned data and creates action-at-a-distance bugs.
-- Host confusion: code assumes a browser API exists in Node.js or a Node.js API exists in the browser.
-- Over-compression: clever syntax hides a branch, conversion, or allocation that should be visible.
-
-## Debugging Example
+A log containing only the converted result can hide the defect. An empty string, whitespace, null, and zero can all reach Number zero. Record a safe field label, original type, and an appropriate redacted representation before conversion when investigating a parser. Do not place secrets or arbitrary request text in logs.
 
 ```js
-function debugBoundaryValue(label, value) {
-  return {
-    label,
-    value,
-    type: typeof value,
-    isArray: Array.isArray(value),
-    isNull: value === null,
-    truthy: Boolean(value)
-  };
+for (const raw of ['', ' ', null, 0]) {
+  console.log(JSON.stringify(raw), typeof raw, Number(raw));
 }
+
+// Expected output:
+// "" string 0
+// " " string 0
+// null object 0
+// 0 number 0
 ```
 
-This helper is intentionally boring. When debugging fundamentals, boring is a feature. It tells you what the runtime sees before your assumptions reshape the story.
+The inputs are observably different even though the converted Number is equal. A parser can reject three of them and accept the fourth if that is its contract.
 
-## Interview Drill
+## NaN Needs Its Own Check
 
-Take one topic from this chapter and prepare a two-minute explanation:
+```js
+const invalid = Number('missing');
+console.log(invalid === NaN);
+console.log(Number.isNaN(invalid));
+console.log(Number.isNaN('missing'));
+console.log(isNaN('missing'));
+console.log(Number.isFinite('25'), isFinite('25'));
 
-1. Define it.
-2. Show one production example.
-3. Show one edge case.
-4. Explain the internal reason.
-5. Name the safest professional default.
+// Expected output:
+// false
+// true
+// false
+// true
+// false true
+```
 
-If your explanation skips the edge case, it sounds memorized. If it skips the production implication, it sounds academic. The strongest answers connect both.
+The global isNaN/isFinite functions coerce; their Number counterparts inspect without coercing. Use Number.isNaN for a Number result and Number.isFinite for a required finite Number. Neither checks an application's range or syntax.
+
+## A Conversion Hook Can Fail Before Arithmetic
+
+```js
+const bad = { [Symbol.toPrimitive]() { return {}; } };
+try { console.log(Number(bad)); }
+catch (error) { console.log(error.name); }
+const throwing = { valueOf() { throw new Error('conversion failed'); } };
+try { console.log(throwing * 2); }
+catch (error) { console.log(error.message); }
+console.log(Boolean(throwing));
+
+// Expected output:
+// TypeError
+// conversion failed
+// true
+```
+
+Boolean conversion does not run the hook. Numeric conversion does. Reject nonstrings at a string boundary before attempting to coerce their values; this avoids treating application objects as interchangeable input text.
+
+## Symbol and BigInt Are Not Universal Numeric Inputs
+
+```js
+const id = Symbol('id');
+console.log(String(id));
+try { console.log('id=' + id); } catch (error) { console.log(error.name); }
+try { console.log(+1n); } catch (error) { console.log(error.name); }
+console.log(Number(1n));
+console.log(1n == 1, 1n === 1);
+
+// Expected output:
+// Symbol(id)
+// TypeError
+// TypeError
+// 1
+// true false
+```
+
+String explicitly handles a Symbol primitive, while implicit concatenation does not. Unary + rejects BigInt even though Number can explicitly convert it. Explicit Number conversion of a large BigInt can lose precision.
+
+## Full Grammar Means Full Input
+
+JavaScript's $ regular-expression anchor may match just before a final line terminator. If validating an entire input with an anchored match, verify the matched text equals the original text or use a grammar that rejects every non-digit character. The production integer parser takes the latter approach. Include newline and carriage-return cases in regression tests, not only spaces.
+
+Also decide whether leading zeros, a plus sign, exponent notation, a hexadecimal prefix, and a decimal point are allowed. Their mathematical meaning may match a valid value while their source syntax violates a canonical representation policy.
+
+## Turn the Audit Failure Into a Regression
+
+The old parser accepted true as 1 and rounded '9007199254740993'. The repaired companion asserts that both fail. Neighbor checks accept the documented maximum and reject the next value; they also verify that missing pagination defaults while explicit null fails.
+
+When debugging a comparison, write the types beside both operands, identify the operator's algorithm, and show each intermediate primitive. If user-defined conversion is involved, instrument a local trace rather than assuming the object's printed label is its numeric value.
+
+The [Number.isNaN reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN) explains the noncoercing check, and [Symbol.toPrimitive](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive) explains hook failures.

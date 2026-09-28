@@ -1,0 +1,9 @@
+flowchart TD
+  A["Evaluate operands left to right"] --> B["Convert each object to a primitive"]
+  B --> C{"Either primitive is a string?"}
+  C -->|"Yes"| D["Convert other primitive to string"]
+  D --> E["Concatenate"]
+  C -->|"No"| F["Convert primitives to numeric values"]
+  F --> G{"Same numeric type?"}
+  G -->|"Yes"| H["Add Number or BigInt values"]
+  G -->|"No"| I["Throw TypeError"]

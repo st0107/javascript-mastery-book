@@ -1,444 +1,219 @@
-# Chapter 1: JavaScript Execution Model
+# JavaScript Execution Model: A Companion
 
-## Introduction
+This companion revisits the introduction after [Variables and Data Types](chapter-02/01-introduction.md) and [Functions and Callbacks](chapter-07/01-introduction.md). Its stable URL also serves readers entering Volume 2. It develops execution contexts and lexical environments; it does not replace the main Chapter 1 reading sequence.
 
-JavaScript looks simple when it runs a few lines from top to bottom. The real language is more structured than that. Before JavaScript executes your code, the engine parses it, creates internal records for declarations, prepares memory for bindings, and then evaluates statements inside execution contexts.
+## Objectives and Prerequisites
 
-This chapter gives you the mental model you will reuse throughout the book. When you understand execution contexts, lexical environments, the call stack, and host interaction, features like closures, hoisting, modules, promises, and `this` become easier to reason about.
+Know declarations, function calls, parameters, return values, and basic object/array syntax. Run the independent examples in Node.js 20 or later. By the end, distinguish a binding from a call frame, resolve an identifier from its definition environment, trace initialization order, and explain why a returned array copy may still expose internal records.
 
-## Learning Objectives
+## Execution Contexts Are a Semantic Model
 
-By the end of this chapter, you should be able to:
+An execution context tracks the evaluation of code, including its lexical environment and other specification state. An environment record associates names with bindings and can link to an outer environment. These concepts define behavior; engines do not have to allocate a literal heap object for every box drawn in a teaching diagram. See [ECMAScript execution contexts and environment records](https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html).
 
-- Define the JavaScript execution model.
-- Explain why execution contexts exist.
-- Trace global and function execution step by step.
-- Distinguish the creation phase from the execution phase.
-- Describe the call stack and lexical environment.
-- Predict simple hoisting behavior.
-- Use diagrams to explain memory and scope.
-- Answer interview questions about JavaScript runtime behavior.
+The call stack answers which synchronous computation resumes when a call returns. Lexical lookup answers which binding an identifier denotes. These are different questions: a function does not generally obtain free variables from whichever function happens to call it.
 
-## Prerequisites
+Top-level code also depends on execution mode. A classic script, an ECMAScript module, and a Node CommonJS file do not have identical top-level binding behavior. This companion uses CommonJS-compatible files and avoids relying on top-level `this` or global-object properties.
 
-You should be comfortable with:
-
-- Basic JavaScript syntax.
-- Variables declared with `let`, `const`, and `var`.
-- Function declarations and function calls.
-- Running a `.js` file with Node.js.
-
-## Definition
-
-The JavaScript execution model is the set of rules an engine follows to parse source code, create execution contexts, allocate bindings, maintain scope, call functions, return values, and interact with the host environment.
-
-An execution context is an internal engine structure that represents code currently being evaluated. It contains references to the lexical environment, variable environment, `this` binding, and other specification-level state.
-
-## Why It Exists
-
-JavaScript needs a disciplined way to answer questions such as:
-
-- Which variable does this identifier refer to?
-- What happens when a function is called?
-- Where should local variables live?
-- What should happen after a function returns?
-- How should nested functions remember outer variables?
-
-Without execution contexts, scope and function calls would be ambiguous. The engine needs a precise model so the same program behaves consistently across environments.
-
-## Problem It Solves
-
-Consider this code:
+## Trace a Call
 
 ```js
-const taxRate = 0.18;
+'use strict';
 
-function totalWithTax(amount) {
-  const tax = amount * taxRate;
-  return amount + tax;
+const centsPerCopy = 1200;
+function quote(copies) {
+  const totalCents = copies * centsPerCopy;
+  return totalCents;
 }
+const result = quote(2);
+console.log(result);
 
-console.log(totalWithTax(100));
+// Expected output:
+// 2400
 ```
 
-The engine must know that `amount` belongs to the function call, `taxRate` belongs to the outer scope, and `tax` should disappear after the function returns. The execution model solves this by creating a global execution context and a new function execution context for the call.
+Before the surrounding statements run, declaration instantiation makes the function declaration callable. The lexical bindings for `centsPerCopy` and `result` initially remain uninitialized. Evaluating the first declaration initializes `centsPerCopy` to 1200. Calling `quote` supplies 2 to the parameter `copies`. The function resolves `centsPerCopy` from its enclosing environment, computes 2400, initializes its local `totalCents`, and returns that value. Only then is `result` initialized.
 
-## Theory
+Calling this "creation, then execution" can be a useful simplification. It is not a claim that source lines move or that all declarations receive undefined. Different declaration forms have different initialization rules.
 
-JavaScript execution has two major phases:
-
-1. Creation phase: the engine prepares the context, registers declarations, creates bindings, and determines scope relationships.
-2. Execution phase: the engine evaluates statements, assigns values, calls functions, and produces results.
-
-The exact specification machinery is more formal than this simplified teaching model, but the two-phase explanation is extremely useful in interviews.
-
-## Internal Working
-
-When JavaScript starts running a script, the engine creates a global execution context. When a function is called, the engine creates a function execution context and pushes it onto the call stack.
-
-Each context contains:
-
-- Lexical environment: stores `let`, `const`, function declarations, and references to outer environments.
-- Variable environment: stores `var` declarations in script/function code.
-- `this` binding: the value of `this` for the current context.
-- Outer reference: a link to the parent lexical environment.
-
-The outer reference is what makes scope chains possible.
-
-## Memory Diagram
+## Memory and Lookup Diagram
 
 ```mermaid
 flowchart TB
-  subgraph GlobalExecutionContext
-    GE[Global Lexical Environment]
-    taxRate["taxRate -> 0.18"]
-    totalWithTax["totalWithTax -> function object"]
+  subgraph Enclosing["Enclosing file environment"]
+    Price["centsPerCopy: 1200"]
+    Quote["quote: function reference"]
+    Result["result: uninitialized during call"]
   end
-
-  subgraph FunctionExecutionContext
-    FE[Function Lexical Environment]
-    amount["amount -> 100"]
-    tax["tax -> 18"]
+  Quote --> Function["quote function object"]
+  Function -->|definition environment| Enclosing
+  subgraph Active["Active quote call"]
+    Copies["copies: 2"]
+    Total["totalCents: 2400"]
   end
-
-  FE -->|"outer reference"| GE
+  Active -->|outer lookup| Enclosing
+  Active -->|return value| Result
 ```
 
-The function context stores local bindings. When it cannot find `taxRate` locally, it follows the outer reference to the global lexical environment.
+Source: `diagrams/volume-1-chapter-01-companion-memory.mmd`. This is a semantic snapshot immediately before the return; it makes no claim about physical stack or heap allocation.
 
-## Flowchart
+## Call and Return Flow
 
 ```mermaid
 flowchart TD
-  A[Source code] --> B[Parse code]
-  B --> C[Create global execution context]
-  C --> D[Register declarations]
-  D --> E[Execute top-level statements]
-  E --> F{Function call?}
-  F -->|Yes| G[Create function execution context]
-  G --> H[Push context onto call stack]
-  H --> I[Execute function body]
-  I --> J[Return value]
-  J --> K[Pop function context]
-  F -->|No| L[Continue current context]
-  K --> L
+  Caller["Evaluate callee and argument expressions"] --> Enter["Enter function evaluation"]
+  Enter --> Bind["Initialize parameters and prepare body declarations"]
+  Bind --> Body["Evaluate body statements"]
+  Body --> Outcome{"Completion"}
+  Outcome -->|return value| Resume["Resume caller with value"]
+  Outcome -->|uncaught throw| Propagate["Propagate error to caller"]
+  Outcome -->|end of ordinary function body| Undefined["Resume caller with undefined"]
 ```
 
-## Engine Internals
+Source: `diagrams/volume-1-chapter-01-companion-flow.mmd`. This diagram covers ordinary synchronous functions. Generators and asynchronous functions add suspension and completion behavior developed later.
 
-A modern engine such as V8 uses several stages:
-
-1. Parse source code into an abstract syntax tree.
-2. Build scope information from declarations.
-3. Generate bytecode for an interpreter.
-4. Execute bytecode while collecting runtime feedback.
-5. Optimize hot paths with a just-in-time compiler.
-6. Deoptimize when runtime assumptions become invalid.
-
-At the language level, you do not manually control these stages. As an engineer, you should understand that predictable code gives the engine better optimization opportunities.
-
-## Execution Steps
-
-For the earlier `totalWithTax` example, execution proceeds like this:
-
-1. Create the global execution context.
-2. Create a binding for `taxRate`.
-3. Create a binding for `totalWithTax`.
-4. Assign `0.18` to `taxRate`.
-5. Store the function object in `totalWithTax`.
-6. Evaluate `console.log(totalWithTax(100))`.
-7. Create a function execution context for `totalWithTax`.
-8. Bind `amount` to `100`.
-9. Evaluate `amount * taxRate`.
-10. Resolve `amount` locally.
-11. Resolve `taxRate` through the outer environment.
-12. Bind `tax` to `18`.
-13. Return `118`.
-14. Pop the function execution context.
-15. Pass `118` to `console.log`.
-
-## Production Example
-
-In production code, execution context reasoning helps you avoid hidden shared state.
+## Definition Location Wins Over Call Location
 
 ```js
-function createInvoiceCalculator({ taxRate, discountRate }) {
-  return function calculateInvoiceTotal(items) {
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const discount = subtotal * discountRate;
-    const taxableAmount = subtotal - discount;
-    const tax = taxableAmount * taxRate;
+'use strict';
 
-    return {
-      subtotal,
-      discount,
-      tax,
-      total: taxableAmount + tax
-    };
-  };
-}
-```
-
-The returned function keeps access to `taxRate` and `discountRate` through its outer lexical environment. This is the foundation of closures, which are covered deeply in Volume 2.
-
-See `code/chapter-01/example-01-execution-context.js` for a runnable version.
-
-## Interview Explanation
-
-A strong interview answer:
-
-> JavaScript executes code inside execution contexts. The engine creates a global context first. Each function call creates a new function execution context, which is pushed onto the call stack. A context contains lexical bindings, variable bindings, a `this` binding, and a reference to the outer lexical environment. Identifier lookup starts in the current environment and walks outward through the scope chain.
-
-Then add a quick example:
-
-```js
-const currency = 'USD';
-
-function label(amount) {
-  return `${currency} ${amount}`;
-}
-```
-
-`amount` is local to the function context. `currency` is resolved through the outer lexical environment.
-
-## Common Mistakes
-
-- Thinking JavaScript simply reads files line by line without a creation phase.
-- Saying all declarations are hoisted in the same way.
-- Believing local variables remain available after a normal function returns.
-- Confusing the call stack with the event loop.
-- Treating lexical scope and dynamic call location as the same thing.
-
-## Edge Cases
-
-### `var` Binding
-
-`var` is function-scoped, not block-scoped.
-
-```js
-function countOrders(orders) {
-  if (orders.length > 0) {
-    var status = 'ready';
-  }
-
-  return status;
-}
-```
-
-The `status` binding belongs to the function environment, so the return statement can access it. With `let`, the binding would belong to the `if` block.
-
-### Temporal Dead Zone
-
-`let` and `const` bindings are known during creation, but cannot be accessed before initialization.
-
-```js
-console.log(total);
-const total = 42;
-```
-
-This throws a `ReferenceError`. The binding exists, but it is uninitialized.
-
-## Performance Notes
-
-Execution context creation is normal and fast, but unnecessary function churn can matter in hot paths. Avoid creating new functions inside tight loops unless the function needs fresh lexical state.
-
-Predictable object shapes, stable function usage, and limited mutation help engines optimize. Performance work should be guided by profiling, not guesses.
-
-## Security Notes
-
-Avoid `eval` and dynamically constructed functions. They make scope analysis harder, can expose sensitive bindings, and often prevent optimizations.
-
-Do not rely on global variables for security-sensitive state. Global state is easier to overwrite, inspect, or misuse across modules.
-
-## Best Practices
-
-- Prefer `const` by default and `let` when reassignment is necessary.
-- Keep functions small enough that their local execution context is easy to reason about.
-- Avoid accidental globals.
-- Use modules to limit top-level scope.
-- Explain scope using lexical location, not call location.
-- Treat runtime diagrams as reasoning tools, not decoration.
-
-## When Not to Use This Mental Model Too Literally
-
-The creation/execution phase model is a teaching model. It maps well to observable behavior, but engines use sophisticated internal representations. In interviews, use it to explain behavior clearly, then acknowledge that actual engines optimize heavily.
-
-## Hands-on Exercises
-
-### Easy
-
-Trace the output:
-
-```js
 const region = 'APAC';
-
-function formatUser(id) {
-  const prefix = 'user';
-  return `${region}:${prefix}:${id}`;
+function label(id) {
+  return `${region}:${id}`;
 }
+function runInAnotherScope() {
+  const region = 'EU';
+  return label('A-7');
+}
+console.log(runInAnotherScope());
 
-console.log(formatUser(7));
+// Expected output:
+// APAC:A-7
 ```
 
-Hint: identify which bindings are global and which are function-local.
+The local `region` inside `runInAnotherScope` does not become an outer environment of `label`. The called function retains the lexical relationship established where it was created. A debugger's caller frame is not an extra lexical scope for the callee.
 
-### Medium
-
-Rewrite this function to avoid accidental shared mutable state:
+## A Returned Function Retains a Binding
 
 ```js
-const auditEvents = [];
+'use strict';
 
-function recordAuditEvent(event) {
-  auditEvents.push(event);
-  return auditEvents;
-}
-```
-
-Hint: return a function that owns its own lexical environment.
-
-### Hard
-
-Explain why this fails:
-
-```js
-function run() {
-  console.log(orderId);
-  const orderId = 'A-100';
-}
-
-run();
-```
-
-Hint: discuss the temporal dead zone.
-
-### FAANG
-
-Design a small function factory for pricing rules. It should accept configuration once and return a pure function that calculates totals for many carts.
-
-Requirements:
-
-- No global mutable state.
-- Clear input validation.
-- Deterministic output.
-- Explain which variables live in which lexical environment.
-
-## Coding Challenges
-
-1. Build `createCounter(start)` that returns `increment`, `decrement`, and `value` functions.
-2. Build `createRateLimiter(limit)` that tracks call count in a closure.
-3. Build `createFormatter(locale, currency)` that returns a currency formatting function.
-
-## Solutions
-
-### Easy Solution
-
-The output is:
-
-```text
-APAC:user:7
-```
-
-`region` is resolved from the global lexical environment. `id` and `prefix` are resolved from the function execution context.
-
-### Medium Solution
-
-```js
-function createAuditRecorder() {
-  const auditEvents = [];
-
-  return function recordAuditEvent(event) {
-    auditEvents.push({ ...event, recordedAt: new Date().toISOString() });
-    return [...auditEvents];
-  };
-}
-```
-
-Complexity: each call is `O(n)` time and space because it returns a copy of all events. Returning a copy protects internal state from external mutation.
-
-Alternative: persist each event to a database or stream and return only the created record.
-
-### Hard Solution
-
-The function throws a `ReferenceError` because `orderId` is a `const` binding. The binding is created when the function context is prepared, but it is not initialized until execution reaches the declaration. The region before initialization is the temporal dead zone.
-
-### FAANG Solution
-
-```js
-function createPricingRule({ taxRate, discountRate }) {
-  if (taxRate < 0 || discountRate < 0 || discountRate > 1) {
-    throw new RangeError('Invalid pricing configuration.');
+function createCounter(start) {
+  if (!Number.isSafeInteger(start) || start < 0 || start >= 1000) {
+    throw new RangeError('start must be an integer from 0 through 999');
   }
-
-  return function priceCart(items) {
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const discount = subtotal * discountRate;
-    const taxableAmount = subtotal - discount;
-    const tax = taxableAmount * taxRate;
-
-    return {
-      subtotal,
-      discount,
-      tax,
-      total: taxableAmount + tax
-    };
+  let count = start;
+  return function next() {
+    if (count === 1000) throw new RangeError('counter limit reached');
+    count += 1;
+    return count;
   };
 }
+const first = createCounter(3);
+const second = createCounter(10);
+console.log(first(), first(), second());
+
+// Expected output:
+// 4 5 11
 ```
 
-`taxRate` and `discountRate` live in the outer lexical environment created by `createPricingRule`. `items`, `subtotal`, `discount`, `taxableAmount`, and `tax` live in each call to `priceCart`.
+Each factory call creates its own `count` binding. Returning does not make that reachable state vanish: `first` and `second` retain access to separate environments. The active factory calls have finished, but their bindings remain useful to the returned functions. This distinction is the foundation of [lexical scope and closures](../volume-2/chapter-01/01-introduction.md).
 
-## MCQs
+## Initialization Errors Are About Timing
 
-1. What is created when a function is called?
-   - A. A new JavaScript engine
-   - B. A new function execution context
-   - C. A new source file
-   - D. A new browser tab
+```js
+'use strict';
 
-   Answer: B.
+function readTooSoon() {
+  return total;
+  const total = 42;
+}
+try {
+  readTooSoon();
+} catch (error) {
+  console.log(error.name);
+}
+function readAfterInitialization() {
+  function read() { return total; }
+  const total = 42;
+  return read();
+}
+console.log(readAfterInitialization());
 
-2. Where does identifier lookup start?
-   - A. The global object
-   - B. The current lexical environment
-   - C. The nearest module file
-   - D. The package manager
+// Expected output:
+// ReferenceError
+// 42
+```
 
-   Answer: B.
+The first function's declaration still creates the lexical binding even though its initializer is never reached. Reading it throws. In the second function the nested function is defined before `total`, but called after initialization. Textual position alone does not determine whether a read occurs in the temporal dead zone.
 
-3. What happens when code accesses a `const` binding before initialization?
-   - A. It returns `undefined`
-   - B. It returns `null`
-   - C. It throws a `ReferenceError`
-   - D. It creates a global variable
+## Production Exercise: An Audit Recorder With Owned Records
 
-   Answer: C.
+**Requirements:** Create an isolated recorder per request or workflow. Accept ordinary data records with nonempty string `id` and `action` fields. Copy only those primitive fields into internal storage. Return a history whose array and entry objects can be changed by the caller without affecting later results. No clocks, global state, or nested-data ownership claims are allowed in this contract.
 
-## Revision Sheet
+**Solution:** Copy the record on ingress and copy each retained record on egress. A new outer array alone is insufficient.
 
-- JavaScript runs code inside execution contexts.
-- The global context is created first.
-- Every function call creates a function execution context.
-- The call stack tracks active execution contexts.
-- Lexical environments store bindings and outer references.
-- Identifier lookup starts locally and walks outward.
-- `var` is function-scoped.
-- `let` and `const` are block-scoped and have a temporal dead zone.
-- Closures rely on preserved lexical environments.
+```js
+'use strict';
+const assert = require('node:assert/strict');
 
-## Summary
+function createAuditRecorder() {
+  const entries = [];
+  return function record(event) {
+    if (event === null || typeof event !== 'object' || Array.isArray(event)) {
+      throw new TypeError('event object required');
+    }
+    const { id, action } = event;
+    if (typeof id !== 'string' || id.trim() === '' ||
+        typeof action !== 'string' || action.trim() === '') {
+      throw new TypeError('nonempty id and action required');
+    }
+    entries.push({ id: id.trim(), action: action.trim() });
+    return entries.map(entry => ({ id: entry.id, action: entry.action }));
+  };
+}
+const record = createAuditRecorder();
+const input = { id: 'A-1', action: 'created' };
+const snapshot = record(input);
+input.action = 'tampered';
+snapshot[0].id = 'changed';
+snapshot.push({ id: 'injected', action: 'fake' });
+const next = record({ id: 'A-2', action: 'approved' });
+assert.deepEqual(next, [
+  { id: 'A-1', action: 'created' },
+  { id: 'A-2', action: 'approved' }
+]);
+assert.throws(() => record({ id: 'A-3', action: {} }), TypeError);
+assert.equal(createAuditRecorder()({ id: 'B-1', action: 'created' }).length, 1);
+console.log(next.map(entry => `${entry.id}:${entry.action}`).join('|'));
 
-The execution model is the foundation for serious JavaScript reasoning. It explains how code is prepared, how functions run, how variables are resolved, and why scope behaves the way it does. Master this chapter before moving to closures, promises, modules, and browser internals.
+// Expected output:
+// A-1:created|A-2:approved
+```
 
-## References
+After `n` retained events, producing a complete history takes O(n) record-copy work plus the relevant string processing. The recorder keeps O(n) records; the returned history also contains O(n) records. Repeated full snapshots after each event incur quadratic cumulative record-copy work. For a long-lived audit log, append to durable storage and return one accepted record or a paginated query instead.
 
-- ECMAScript Language Specification, Execution Contexts.
-- MDN Web Docs, JavaScript Guide.
-- V8 documentation on parsing, bytecode, and optimization.
+This implementation deliberately retains only primitive strings. If the schema later includes an object-valued `details`, decide who owns that graph. Adding `{ ...event }` would make only a shallow copy and would reintroduce shared nested state. The [object ownership chapter](chapter-08/01-introduction.md) develops that contract.
 
-## Further Reading
+## Debugging, Performance, and Security
 
-- Volume 2: Lexical Scope and Closures.
-- Volume 3: Microtasks and Macrotasks.
-- Appendix: Glossary.
+When a free identifier has an unexpected value, inspect where its function was defined and the binding's current value, not just the immediate caller. When data changes after a function returns, inspect aliases to the object as well as retained closures. A stack frame finishing is not evidence that every value it touched has become unreachable.
 
+A retained callback can keep a large graph reachable through its enclosing state. Garbage collection reclaims unreachable data at an implementation-chosen time; it does not impose an application retention policy. Keep histories bounded and release references when the owning feature is finished.
+
+A closure limits ordinary access paths but is not a complete security boundary. Returning a mutable internal record grants an access path to that record. Likewise, exposing a method capable of writing arbitrary paths grants that capability even if its implementation is hidden in a closure. Validate and restrict the operations you expose.
+
+V8's [Ignition documentation](https://v8.dev/docs/ignition) describes one execution tier. Do not infer a fixed physical allocation or a guaranteed optimization from this chapter's semantic diagrams. Measure a real workload before rewriting clear function boundaries for speculative engine gains.
+
+## Interview Answer and Revision
+
+An ordinary call evaluates the callee and arguments, enters function evaluation with parameter bindings, runs the body, and resumes its caller with a return value or propagated error. Identifier lookup follows lexical environment relationships. Returned functions can retain access to bindings after the creating call finishes. Copying a container does not automatically copy its elements.
+
+Practice by drawing the two separate counter environments and by changing only one snapshot record in the audit example. Explain which bindings change, which objects are shared, and why the next history remains intact after the fix.
+
+## References and Further Reading
+
+- [ECMAScript environment records](https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-environment-records): formal binding operations and outer environments.
+- [ECMAScript function calls](https://tc39.es/ecma262/multipage/ordinary-and-exotic-objects-behaviours.html#sec-ecmascript-function-objects-call-thisargument-argumentslist): ordinary function call semantics.
+- [MDN closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures): lexical retention with practical examples.
+- [MDN memory management](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management): reachability and collection limits.
+- [Volume 2: Lexical Scope and Closures](../volume-2/chapter-01/01-introduction.md): deeper lifetime, loop-binding, and callback behavior.

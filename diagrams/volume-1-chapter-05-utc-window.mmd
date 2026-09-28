@@ -1,0 +1,10 @@
+flowchart TD
+    A["startIso, nowMs, durationMs"] --> B{"Canonical UTC syntax?"}
+    B -- No --> X["Throw"]
+    B -- Yes --> C{"Parse and round-trip match?"}
+    C -- No --> X
+    C -- Yes --> D{"Numeric arguments and end in bounds?"}
+    D -- No --> X
+    D -- Yes --> E{"start <= now and now < end?"}
+    E -- Yes --> Y["true"]
+    E -- No --> Z["false"]

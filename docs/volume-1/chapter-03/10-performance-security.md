@@ -1,67 +1,49 @@
-# Performance and Security Notes
+# Performance and Security
 
-## Performance Model
+## Count the Work Inside the Operands
 
-Performance in Operators and Expressions starts with clarity. The fastest bug is still a bug. Before optimizing, identify whether the work is constant time, linear in input size, or nested across multiple collections. Then measure the actual path under realistic data.
+A logical operator performs a small selection, but its operands may search collections, allocate strings, or invoke application code. `enabled && allowedIds.includes(id)` avoids the search when enabled is falsy. When enabled is true, searching n IDs is O(n) in the worst case; comparing each string also depends on ID length.
 
-The engine can optimize predictable code, but it cannot save unclear ownership, unbounded loops, repeated parsing, or accidental allocation in hot paths. Most JavaScript performance work begins with three questions:
+The production gate bounds both list length and ID length. Its complete validation pass precedes the staff shortcut because malformed configuration must deny everyone. Moving staff first changes that policy. Performance work must preserve decisions as well as happy-path results.
 
-1. How many times does this execute?
-2. How much memory does each execution allocate?
-3. Does the shape or type of the data stay stable?
+For repeated lookups against one stable configuration, validating once and building a Set may pay off. Construction consumes O(n) storage; rebuilding on every request loses the benefit. Define configuration ownership and invalidation before retaining such an index. ECMAScript requires average sublinear Set access, not one particular hash-table implementation or a universal constant-time guarantee. See [Set performance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set#performance).
 
-## Complexity Checklist
+## Lazy Defaults Avoid Unneeded Work
 
-- Arithmetic, assignment, comparison, logical, and bitwise operators: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Conditional expressions: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Optional chaining: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Nullish coalescing: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Short-circuit evaluation: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Operator precedence and associativity: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Expression design for readable production code: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
+```js
+let builds = 0;
+function buildDefault() { builds += 1; return { retries: 3 }; }
+const supplied = { retries: 0 };
+const selected = supplied ?? buildDefault();
+console.log(selected === supplied);
+console.log(builds);
+const fallback = null ?? buildDefault();
+console.log(fallback.retries, builds);
 
-## Optimization Techniques
+// Expected output:
+// true
+// 0
+// 3 1
+```
 
-- Move loop-invariant work outside loops.
-- Prefer one pass when validation, normalization, and selection can be combined cleanly.
-- Avoid parsing the same value repeatedly across layers.
-- Keep hot data structures shape-stable.
-- Do not allocate defensive copies in inner loops unless the copy protects a real ownership boundary.
-- Profile before and after changes so optimization does not become folklore.
+This is useful when a fallback requires work. It does not imply every allocation should become a cache. Reusing a mutable fallback can create shared state; building a fresh record can be the correct ownership choice.
 
-## Browser Performance
+## Avoid Unproven Numeric Micro-optimizations
 
-Browser JavaScript shares the main thread with rendering, input handling, style calculation, layout, and painting. A loop that feels acceptable in Node.js can create a frozen UI in a browser tab. For large work, consider chunking, streaming, request scheduling, virtualization, or Web Workers.
+`value | 0` and `~~value` convert to signed 32-bit values. They can wrap, truncate, or turn NaN into zero. Applying them to pagination, money, or identifiers changes accepted values. Choose a validation contract first, then measure the actual workload.
 
-The browser also makes memory leaks visible in a different way. A detached DOM node can stay alive if a closure or cache still references it. Event listeners, timers, observers, and global arrays should have clear cleanup paths.
+String concatenation may copy or defer copying depending on engine strategy. BigInt arithmetic depends on operand magnitude. Do not label every + operation constant-time simply because the source contains one operator. Bounded Number arithmetic is a useful constant-cost model here; arbitrary strings and integers need size-aware reasoning.
 
-## Node.js Performance
+## Defaults Can Change Access Decisions
 
-Node.js services can handle many concurrent operations because I/O is asynchronous, but CPU-heavy JavaScript still blocks the main event loop. A synchronous loop over a huge payload can delay unrelated HTTP requests. For expensive work, consider batching, streaming, worker threads, native services, or queue-based processing.
+Security-sensitive flags should be booleans from a trusted source. The string "false" is truthy, so a guard such as `if (input.enabled)` can enable an operation the sender appeared to disable. The chapter's gate requires `enabled === true` and `active === true`; malformed shapes deny access.
 
-In server code, performance and reliability meet at backpressure. A service that parses and stores unlimited input without limits is both slow and unsafe.
+A missing allowlist needs a named policy. Falling back to true, or placing `|| true` after membership testing, can grant access when data is absent. An empty list denies ordinary members. A trusted staff bypass is a separate explicit policy, not a reason to trust a role submitted by a browser.
 
-## Security Model
+These guards operate on ordinary application data. Getters and proxies can run code during reads; shape checking is not a sandbox for arbitrary JavaScript objects. Bound serialized request size before parsing and obtain identity/roles from the authentication layer.
 
-Security for Operators and Expressions is mostly boundary discipline. Values from users, URLs, headers, cookies, local storage, environment variables, files, databases, and third-party services are not trustworthy just because they look friendly in development.
+## Keep Decisions Reviewable
 
-Security-sensitive JavaScript should:
+Split an access expression when a reviewer cannot identify each condition. Name predicates when that clarifies policy, and preserve short-circuiting when a later operation depends on an earlier guard. Do not reorder effectful getters or callbacks based only on apparent cost.
 
-- Validate type, shape, range, and allowed values.
-- Avoid dynamic code execution such as `eval` and string-built functions.
-- Keep secrets out of browser-delivered code.
-- Treat serialization formats as untrusted input.
-- Avoid prototype pollution by rejecting dangerous keys such as `__proto__`, `constructor`, and `prototype` when merging objects.
-- Log enough context for diagnosis without leaking personal data or secrets.
-
-## Threat Examples
-
-- A query parameter that becomes a number without validation can bypass pagination limits.
-- A string that becomes HTML without escaping can create cross-site scripting.
-- A JSON object merged into configuration can alter prototypes if keys are not filtered.
-- A long input processed by a vulnerable regular expression can pin a CPU core.
-- A default value can accidentally grant access when missing data should have failed closed.
-
-## Professional Default
-
-The professional default is explicitness at boundaries and simplicity in the core. Once data is parsed and validated, internal functions can stay smaller, faster, and easier to reason about. This is not ceremony. It is how large JavaScript systems remain debuggable.
+Measure the complete request or batch with representative enabled/disabled ratios and list sizes. Repeated addition of constants says little about real validation, search, and I/O costs.

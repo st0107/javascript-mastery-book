@@ -1,67 +1,51 @@
-# Performance and Security Notes
+# Performance and Security
 
-## Performance Model
+## Parse Once at a Named Boundary
 
-Performance in Type Conversion and Coercion starts with clarity. The fastest bug is still a bug. Before optimizing, identify whether the work is constant time, linear in input size, or nested across multiple collections. Then measure the actual path under realistic data.
+Repeated Number conversion inside a loop repeats input interpretation and can repeat object conversion hooks. A boundary parser returns a stable primitive representation; downstream logic uses it without re-deciding what missing, empty, or malformed input means.
 
-The engine can optimize predictable code, but it cannot save unclear ownership, unbounded loops, repeated parsing, or accidental allocation in hot paths. Most JavaScript performance work begins with three questions:
+The pagination parser examines at most 16 characters per field. Its digit scan is O(k), with a small explicit bound on k. The two returned numeric fields and computed offset use constant output storage. Describing arbitrary numeric-string parsing as universally O(1) would hide dependence on input length.
 
-1. How many times does this execute?
-2. How much memory does each execution allocate?
-3. Does the shape or type of the data stay stable?
+BigInt parsing and arithmetic depend on digit/bit count. A huge decimal string can require substantial work and memory even though the source contains one BigInt call. Limit input size before parsing. Do not accept arbitrary-length integers simply because the type can represent them.
 
-## Complexity Checklist
+## Choose an Optimization Only After Matching Semantics
 
-- Explicit conversion with `String`, `Number`, `Boolean`, and `BigInt`: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Implicit conversion rules: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Truthy and falsy values: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Loose equality versus strict equality: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Abstract relational comparison: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Object-to-primitive conversion: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
-- Interview edge cases: identify whether the operation is constant, linear, or dependent on input size. If it allocates a new object, array, string, date, or closure, decide whether that allocation is required for correctness.
+Unary +, Number, parseInt, and bitwise truncation are not interchangeable parsers. They differ on suffixes, empty strings, BigInt, safe range, and fractions. A benchmark comparing them without matching contracts compares different computations.
 
-## Optimization Techniques
+Measure the whole boundary under representative input lengths and failure rates. Exception-heavy malformed traffic may have different costs from valid traffic. A service can use a structured validation result at its adapter if exceptions are undesirable there, but it must retain the same acceptance policy and clear failure reporting.
 
-- Move loop-invariant work outside loops.
-- Prefer one pass when validation, normalization, and selection can be combined cleanly.
-- Avoid parsing the same value repeatedly across layers.
-- Keep hot data structures shape-stable.
-- Do not allocate defensive copies in inner loops unless the copy protects a real ownership boundary.
-- Profile before and after changes so optimization does not become folklore.
+## Coercion Can Execute Application Code
 
-## Browser Performance
+```js
+let calls = 0;
+const supplied = { valueOf() { calls += 1; return 25; } };
+function requireStringNumber(raw) {
+  if (typeof raw !== 'string') throw new TypeError('string required');
+  return Number(raw);
+}
+try { requireStringNumber(supplied); }
+catch (error) { console.log(error.name); }
+console.log(calls);
+console.log(Number(supplied), calls);
 
-Browser JavaScript shares the main thread with rendering, input handling, style calculation, layout, and painting. A loop that feels acceptable in Node.js can create a frozen UI in a browser tab. For large work, consider chunking, streaming, request scheduling, virtualization, or Web Workers.
+// Expected output:
+// TypeError
+// 0
+// 25 1
+```
 
-The browser also makes memory leaks visible in a different way. A detached DOM node can stay alive if a closure or cache still references it. Event listeners, timers, observers, and global arrays should have clear cleanup paths.
+Checking the primitive source type prevents this value's numeric hook from running. It does not make arbitrary property access safe: an object containing the field may have a getter or proxy trap. These parsers assume ordinary data produced by the application's deserialization layer.
 
-## Node.js Performance
+## Ambiguous Conversion Can Cross a Policy Boundary
 
-Node.js services can handle many concurrent operations because I/O is asynchronous, but CPU-heavy JavaScript still blocks the main event loop. A synchronous loop over a huge payload can delay unrelated HTTP requests. For expensive work, consider batching, streaming, worker threads, native services, or queue-based processing.
+Boolean('false') can accidentally enable a feature. Loose equality can equate differently represented identifiers. Unsafe Number conversion can merge distinct integer IDs. Those are concrete reasons to specify source types and representations before comparing permissions, flags, or identifiers.
 
-In server code, performance and reliability meet at backpressure. A service that parses and stores unlimited input without limits is both slow and unsafe.
+Keep identity opaque when arithmetic is unnecessary. Keep externally supplied flags separate from trusted authorization facts. A validly parsed "true" means the sender requested something; it does not establish that the sender may perform it.
 
-## Security Model
+## Resource Limits Belong at Multiple Layers
 
-Security for Type Conversion and Coercion is mostly boundary discipline. Values from users, URLs, headers, cookies, local storage, environment variables, files, databases, and third-party services are not trustworthy just because they look friendly in development.
+The page-size cap bounds the result size requested by this helper; it does not bound the incoming HTTP body or make large database offsets cheap. Reject oversized requests before parsing, limit counts at the API boundary, and choose a pagination strategy suited to the storage layer.
 
-Security-sensitive JavaScript should:
+Error messages should name the schema field and violated rule without echoing secrets or entire payloads. Defaults should apply only to permitted absence. Replacing every conversion error with a success-shaped default hides malformed traffic and configuration mistakes.
 
-- Validate type, shape, range, and allowed values.
-- Avoid dynamic code execution such as `eval` and string-built functions.
-- Keep secrets out of browser-delivered code.
-- Treat serialization formats as untrusted input.
-- Avoid prototype pollution by rejecting dangerous keys such as `__proto__`, `constructor`, and `prototype` when merging objects.
-- Log enough context for diagnosis without leaking personal data or secrets.
-
-## Threat Examples
-
-- A query parameter that becomes a number without validation can bypass pagination limits.
-- A string that becomes HTML without escaping can create cross-site scripting.
-- A JSON object merged into configuration can alter prototypes if keys are not filtered.
-- A long input processed by a vulnerable regular expression can pin a CPU core.
-- A default value can accidentally grant access when missing data should have failed closed.
-
-## Professional Default
-
-The professional default is explicitness at boundaries and simplicity in the core. Once data is parsed and validated, internal functions can stay smaller, faster, and easier to reason about. This is not ceremony. It is how large JavaScript systems remain debuggable.
+Use [safe-integer checks](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger) and the [BigInt reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) to review representation limits before optimizing.

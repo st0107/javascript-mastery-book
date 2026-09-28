@@ -1,52 +1,58 @@
-# Interview Perspective
+# Strings, Numbers, and Dates: Interview Perspective
 
-## How To Answer Confidently
+## Beginner: What Is a Character?
 
-Start with the plain-language rule. Give a small example. Explain what the engine or host does internally. Then name the practical trade-off. This four-step answer pattern works for almost every JavaScript fundamentals question:
+A useful answer separates storage from display: JavaScript indexes UTF-16 code units, its string iterator advances by code point, and user-facing text often needs grapheme clusters. Ask which unit the product limit means before writing a truncation helper.
 
-1. Observable behavior.
-2. Why the rule exists.
-3. Internal model.
-4. Production implication.
+```js
+const value = 'e\u0301';
+console.log(value.length, Array.from(value).length);
+console.log(Array.from(new Intl.Segmenter('en', { granularity: 'grapheme' }).segment(value)).length);
+// Expected output:
+// 2 2
+// 1
+```
 
-## Beginner Questions
+Follow-up: ?Would NFC normalization always make length a user-visible count?? No. It can combine some canonically equivalent sequences, but it does not turn all grapheme clusters into single code units.
 
-- What is String methods and template literals, and when would you use it?
-- What is Unicode and user-visible text, and when would you use it?
-- What is Regular expression basics, and when would you use it?
-- What is Number and Math objects, and when would you use it?
+## Intermediate: Why Are Integer Cents Useful?
 
-## Intermediate Questions
+They make the unit explicit and allow exact integer addition inside a checked range. They do not automatically solve percentage rounding, unsafe totals, currencies with different minor-unit scales, or fractional-cent allocation.
 
-- What bugs can appear when a developer misunderstands Regular expression basics?
-- What bugs can appear when a developer misunderstands Number and Math objects?
-- What bugs can appear when a developer misunderstands BigInt for integer precision?
-- What bugs can appear when a developer misunderstands Floating-point precision?
+A strong design answer names the accepted bound, validates the calculated total, and defines where rounding occurs. ?Use toFixed everywhere? only changes presentation. ?Use BigInt? still needs a scale and rounding policy.
 
-## Senior Questions
+## Output Prediction: A Date Alias
 
-- How would you teach this topic to a team that keeps shipping bugs in this area?
-- Which trade-offs would you document in a shared utility or style guide?
-- How would you design tests that prove edge cases are handled?
+```js
+const first = new Date('2026-01-01T00:00:00.000Z');
+const second = first;
+second.setUTCFullYear(2027);
+console.log(first === second);
+console.log(first.getUTCFullYear());
+// Expected output:
+// true
+// 2027
+```
 
-## FAANG Questions
+Both variables refer to one mutable Date. A separate `new Date(first.getTime())` creates a snapshot of its numeric time value. It does not store a time zone.
 
-- Predict the output of a short program and explain every step.
-- Refactor a brittle implementation into a readable production version.
-- Explain browser and Node.js differences without mixing host APIs with language rules.
-- Identify which values live in local bindings, heap objects, or preserved lexical environments.
+## Senior: Review an Expiry Check
 
-## Whiteboard Prompt
+Suppose code parses a request timestamp and tests `now < start + duration`. Identify four missing decisions:
 
-Draw the flow from source code to execution. Include parsing, scope creation, evaluation, memory references, and the relevant host environment.
+1. Which timestamp grammar and zone are accepted?
+2. Are now and duration validated Numbers with explicit units and bounds?
+3. Is calendar overflow rejected after parsing?
+4. Are the start and end inclusive or exclusive?
 
-## Follow-up Questions
+Then explain the operational boundary: the server clock is authoritative for access enforcement. A browser countdown is a display aid. A local recurring appointment needs named-zone calendar rules beyond an elapsed UTC interval.
 
-- What changes if this code runs in strict mode?
-- What changes if the value arrives from a form, URL, database, or environment variable?
-- What would you measure before optimizing this code?
-- What security issue appears if the input is controlled by an attacker?
+## Design Challenge: Imports With Large IDs
 
-## Interviewer Expectations
+A service receives a 20-digit identifier. Keeping it as a string is sufficient if the service only compares or transmits it. Use BigInt when integer arithmetic is genuinely required, constructing it from validated text. Specify the JSON representation and input-length cap.
 
-Interviewers expect precise vocabulary, not theatrical detail. Use terms like binding, reference, primitive value, object, execution context, iterable, truthy, falsy, and host API accurately. If you do not remember a corner case, say the rule you do know and reason from it.
+This answer avoids unnecessary conversion, protects precision, and bounds resource use. It also distinguishes an identifier from a measured quantity or price.
+
+## What a Complete Answer Contains
+
+State the input contract, predict one normal result, demonstrate a failing boundary, and explain the representation that causes it. Use the [production examples](04-production-examples.md) for concrete implementations and the [exercises](06-exercises-coding-challenges.md) for practice.

@@ -1,0 +1,10 @@
+flowchart TD
+  Entry[Select entry and execution mode] --> Parse[Parse module source]
+  Parse --> Resolve[Resolve and load dependencies]
+  Resolve --> Link[Link imported and exported bindings]
+  Link --> Evaluate[Evaluate dependencies and entry]
+  Evaluate --> Call[Call explicit application startup]
+  Parse --> Failure[Report syntax or loading failure]
+  Resolve --> Failure
+  Link --> Failure
+  Evaluate --> Failure

@@ -1,0 +1,8 @@
+flowchart LR
+  A["raw binding"] --> B["String value: 25"]
+  C["parsed binding"] --> D["Number value: 25"]
+  B -->|"Number conversion"| D
+  E["record binding"] --> F["Object with conversion method"]
+  G["alias binding"] --> F
+  F -->|"Conversion invokes method"| H["Primitive result"]
+  H --> I["Original object remains reachable"]
