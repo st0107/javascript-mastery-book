@@ -30,7 +30,7 @@ O(1) work and storage. Test NaN, infinity, fractions, zero, the maximum safe int
 
 ## 2. Return a JSON Parse Result
 
-Accept primitive text of at most 1,024 code units. Return { ok: true, value } for valid JSON or { ok: false, code: "INVALID_JSON" } for syntax failure. Wrong types and excessive length still throw.
+Accept primitive text of at most 1,024 code units. Return `{ ok: true, value }` for valid JSON or `{ ok: false, code: "INVALID_JSON" }` for syntax failure. Wrong types and excessive length still throw.
 
 **Hint:** Keep the catch around parsing and rethrow unexpected errors.
 
@@ -192,4 +192,3 @@ console.log(state.busy);
 ```
 
 Wrapper time and space are O(1). Under the ordinary mutable-object contract, restoring the flag succeeds. This is a local state invariant, not a rollback of other callback effects.
-

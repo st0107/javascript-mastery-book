@@ -25,7 +25,7 @@ A follow-up may introduce a nested address object. Spreading each record once st
 
 ## Why Does Array(3).map Produce No Mapped Values?
 
-Array(3) creates a length-three array with absent positions. map skips those positions. Array.from({length: 3}, mapper) instead visits each generated position and creates a dense array. Storing undefined explicitly also creates a present element that map will visit.
+`Array(3)` creates a length-three array with absent positions. map skips those positions. `Array.from({length: 3}, mapper)` instead visits each generated position and creates a dense array. Storing undefined explicitly also creates a present element that map will visit.
 
 ## Which Method Expresses the Desired Question?
 

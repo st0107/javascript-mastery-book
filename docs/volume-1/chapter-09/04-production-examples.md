@@ -79,7 +79,7 @@ Companion: `code/volume-1/chapter-09/example-01-order-summary.js`. It also asser
 
 ## Build a Team-to-Member Index
 
-A membership report receives at most 1000 dense events. Each event contains a team string of length 1?40 and a member string of length 1?64. Values are case-sensitive opaque labels; the function does not trim or normalize identities.
+A membership report receives at most 1000 dense events. Each event contains a team string of length 1 through 40 and a member string of length 1 through 64. Values are case-sensitive opaque labels; the function does not trim or normalize identities.
 
 The result is a new Map from team to a new Set of member IDs. Teams and members retain first-seen order. Duplicate membership events are intentionally idempotent. No input event object is retained.
 

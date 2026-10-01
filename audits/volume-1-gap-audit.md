@@ -1,5 +1,7 @@
 # Volume 1 Gap Audit
 
+**Historical audit:** the source and curriculum findings below were addressed in the [2026-10-01 resolution report](volume-1-gap-resolution.md), which records the final inventory, validation results, and remaining rendering limitations. The original findings and counts are preserved below.
+
 Reviewed: 2026-09-27. Scope: the six multi-file Volume 1 chapters, their 12 companion scripts, the separate execution-model chapter, book production requirements, navigation, and export source discovery.
 
 **Verdict: the chapter structure exists, but Volume 1 is not content-complete against the repository's own standard.** The main problem is generic instructional scaffolding presented under specific topic headings. The current README's description of these chapters as drafts is appropriate.

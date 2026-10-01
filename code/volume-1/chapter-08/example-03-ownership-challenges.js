@@ -34,7 +34,7 @@ function applyNotePatch(current, patch) {
   if (patch === null || typeof patch !== 'object' || Array.isArray(patch)) {
     throw new TypeError('patch record required');
   }
-  for (const key of Object.keys(patch)) {
+  for (const key of Reflect.ownKeys(patch)) {
     if (key !== 'note') throw new TypeError('unknown patch field');
   }
   const next = { ...current };
@@ -53,6 +53,7 @@ assert.equal(current.note, 'ring bell');
 assert.notEqual(cleared, current);
 assert.throws(() => applyNotePatch(current, { note: undefined }), TypeError);
 assert.throws(() => applyNotePatch(current, { admin: true }), TypeError);
+assert.throws(() => applyNotePatch(current, { [Symbol('extra')]: true }), TypeError);
 assert.throws(() => applyNotePatch(current, null), TypeError);
 console.log(current.note, Object.hasOwn(cleared, 'note'));
 

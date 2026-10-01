@@ -65,7 +65,7 @@ D. It treats Number 1 and BigInt 1n as equal
 
 **Answer: C.** Object.is uses same-value semantics while still comparing objects by identity.
 
-## 8. What is '12' < '3'?
+## 8. What is `'12' < '3'`?
 
 A. false because 12 exceeds 3
 B. TypeError because both operands are strings
@@ -79,7 +79,7 @@ D. true because the comparison is lexicographic
 A. null == 0
 B. null >= 0
 C. undefined >= 0
-D. undefined < 0
+D. `undefined < 0`
 
 **Answer: B.** Relational conversion turns null into zero. The equality and undefined cases follow different rules.
 

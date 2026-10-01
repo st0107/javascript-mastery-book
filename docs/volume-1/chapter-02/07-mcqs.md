@@ -32,7 +32,7 @@ Choose one answer for each question. Predict the binding state and value type be
 ## 4. Which value has primitive Null type?
 
 - A. null
-- B. {}
+- B. `{}`
 - C. []
 - D. undefined
 
@@ -137,7 +137,7 @@ Choose one answer for each question. Predict the binding state and value type be
 
 **Answer: A.** Symbol descriptions help diagnostics; they do not merge distinct directly created symbols.
 
-## 16. Why construct a new {id, email} record from validated strings?
+## 16. Why construct a new `{id, email}` record from validated strings?
 
 - A. To guarantee that the input has no getters in every possible JavaScript object
 - B. To authorize the user automatically

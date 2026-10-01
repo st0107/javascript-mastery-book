@@ -11,7 +11,7 @@
 | What happens after throw? | Remaining protected statements are skipped and propagation begins |
 | Does catch roll back mutations? | No |
 | What should an unexpected caught failure do? | Propagate unless the boundary has a deliberate policy |
-| What does cause preserve? | The original value by reference |
+| What does cause preserve? | The original value, including identity for an object |
 | Does finally run before a return exits? | Yes, during normal language control flow |
 | Why avoid return in finally? | It replaces the pending result or failure |
 | Can cleanup hide the original error? | Yes, unless the failure policy preserves it |

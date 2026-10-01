@@ -39,7 +39,7 @@ Yes. `object.count ??= 1` skips the write when count is present. `object.count =
 
 ### Is a Chained Comparison a Range Check?
 
-No. `0 < count < 10` first produces a boolean, then compares that boolean with 10 after conversion. Use two comparisons joined with &&. Ask whether the bounds are inclusive, then choose <= or < deliberately.
+No. `0 < count < 10` first produces a boolean, then compares that boolean with 10 after conversion. Use two comparisons joined with `&&`. Ask whether the bounds are inclusive, then choose `<=` or `<` deliberately.
 
 ### Why Is a Bitwise Shortcut Dangerous for Counts?
 

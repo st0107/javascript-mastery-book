@@ -2,7 +2,16 @@
 
 All notable changes to this book repository are documented here.
 
-## Unreleased - 2026-09-27
+## Unreleased - 2026-10-01
+
+- Rewrote all eleven sections of Volume 1 Chapters 1–6 with concrete explanations, execution traces, production contracts, distinct exercises, varied MCQs, prerequisites, and primary references.
+- Added five complete foundation chapters: Functions and Callbacks, Objects and Data Ownership, Arrays and Collections, Errors and Debugging, and Modules and Execution Modes. Volume 1 now contains 121 main chapter sections, 66 exercises, and 176 MCQs.
+- Corrected feature-gate, numeric parsing, bounded money, UTC date-window, job-processing, and snapshot-ownership examples, with assertions for invalid inputs and boundary behavior.
+- Reworked the execution-model companion, preserved its existing URL, and integrated it and the preface into navigation and PDF/EPUB source lists. Linked every Volume 1 section from both navigation systems, the volume summary, and the table of contents.
+- Added synchronized Mermaid sources and runnable assertion companions, including explicit ES module and CommonJS examples.
+- Fixed native exit-code handling in the example validator and export scripts. Added validator regression checks and `npm run docs:examples:test` for exact snippet output, chapter coverage, navigation, links, and diagram-source checks.
+
+## 2026-09-27
 
 - Added Volume 2, Chapter 4: Classes and Object Creation Patterns across eleven sections, including initialization order, fields and private state, invariants, factories, composition, interviews, six exercises with solutions, and sixteen MCQs.
 - Added five runnable assertion programs covering the class model, reservation state, injected notification behavior, creation challenges, and edge cases.

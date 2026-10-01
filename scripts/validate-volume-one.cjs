@@ -97,10 +97,15 @@ function expectedOutput(source, location) {
 let snippetCount = 0;
 let linkCount = 0;
 let diagramCount = 0;
+let currentGroup;
 for (const file of files) {
   const source = fs.readFileSync(file, 'utf8');
   const relative = path.relative(root, file);
   const chapter = path.basename(path.dirname(file));
+  if (chapter !== currentGroup) {
+    currentGroup = chapter;
+    console.log(`Checking ${chapter}...`);
+  }
   const exampleDirectory = chapter.startsWith('chapter-') ?
     path.join(root, 'code', 'volume-1', chapter) : path.join(root, 'code', 'chapter-01');
   const blocks = [...source.matchAll(/^```(js|javascript)\s*\r?\n([\s\S]*?)^```\s*$/gm)];

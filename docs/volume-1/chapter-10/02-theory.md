@@ -102,7 +102,7 @@ The function uses a fallback only for syntax failure. In a larger API, an explic
 
 ## Add Context Without Destroying the Cause
 
-Use `new Error(message, { cause })` when a boundary adds useful context. The cause is a reference to the original thrown value; it can be any value, not only an Error. Rethrow the original object when no extra context is needed. [Error.cause](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause).
+Use `new Error(message, { cause })` when a boundary adds useful context. The cause property holds the original thrown value; for an object, it preserves that object's identity. It can hold any value, not only an Error. Rethrow the original value when no extra context is needed. [Error.cause](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause).
 
 ```js
 const original = new TypeError('Invalid quantity.');

@@ -1,12 +1,20 @@
 [CmdletBinding()]
 param(
-  [string]$ExamplesPath = (Join-Path $PSScriptRoot "../code")
+  [string]$ExamplesPath
 )
 
 $ErrorActionPreference = "Stop"
 
+# Windows PowerShell 5.1 can evaluate parameter defaults before PSScriptRoot is set.
+if (-not $PSBoundParameters.ContainsKey("ExamplesPath")) {
+  $ExamplesPath = Join-Path $PSScriptRoot "../code"
+}
+
 $examples = @(Get-ChildItem -LiteralPath $ExamplesPath -File -Recurse |
-  Where-Object { $_.Extension -in @(".js", ".mjs", ".cjs") } |
+  Where-Object {
+    $_.Extension -in @(".js", ".mjs", ".cjs") -and
+    $_.Name -notlike ".book-snippet-*"
+  } |
   Sort-Object FullName)
 
 if ($examples.Count -eq 0) {

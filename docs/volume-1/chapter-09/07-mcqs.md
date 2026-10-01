@@ -47,7 +47,7 @@ D. It returns an empty array
 
 **Answer: A.** There is no first present element to use as the accumulator.
 
-## 6. Which method best expresses ?does any value match?? without constructing every match?
+## 6. Which method tests whether any value matches without constructing every match?
 
 A. filter
 B. map
@@ -101,7 +101,7 @@ D. 2
 
 **Answer: D.** SameValueZero equates NaN with NaN and positive zero with negative zero.
 
-## 12. What does new Set([{id: 1}, {id: 1}]).size return?
+## 12. What does `new Set([{id: 1}, {id: 1}]).size` return?
 
 A. 1
 B. 2
@@ -115,7 +115,7 @@ D. TypeError
 A. map.set(key, value)
 B. map[key] = value
 C. map.key = value
-D. Object.assign(map, {[key]: value})
+D. `Object.assign(map, {[key]: value})`
 
 **Answer: A.** Map entries use set/get/has; ordinary property assignment does not populate the entry collection.
 

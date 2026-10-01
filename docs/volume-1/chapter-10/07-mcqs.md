@@ -61,7 +61,7 @@ D. Convert it to false
 A. Only formatted stack text
 B. A cloned request
 C. Only the original message
-D. The supplied original value by reference
+D. The exact supplied original value
 
 **Answer: D.** The cause can be any value, including the original Error object.
 
@@ -145,4 +145,3 @@ C. It contains only public data
 D. It replaces the error message
 
 **Answer: A.** Use stack text for diagnosis, not as an unfiltered public response or portable protocol.
-

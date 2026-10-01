@@ -50,7 +50,7 @@ The copies own their sequence slots, not the objects stored in those slots. Chan
 
 ## 2. Deduplicate IDs in First-Seen Order
 
-**Problem:** Accept at most 1000 dense string IDs, each with length 1?64. Return a new array containing the first occurrence of each ID. Matching is exact and case-sensitive. Reject invalid items instead of coercing them.
+**Problem:** Accept at most 1000 dense string IDs, each with length 1 through 64. Return a new array containing the first occurrence of each ID. Matching is exact and case-sensitive. Reject invalid items instead of coercing them.
 
 **Hint:** Set iteration already preserves insertion order.
 

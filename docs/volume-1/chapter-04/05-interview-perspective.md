@@ -2,7 +2,7 @@
 
 ## Explain Conversion Before Quoting an Output
 
-An answer is strongest when it identifies input types, names the operation, traces its requested conversions, and only then states the result. This gives you a method when an interviewer changes [] to {} or a Number to a BigInt.
+An answer is strongest when it identifies input types, names the operation, traces its requested conversions, and only then states the result. This gives you a method when an interviewer changes `[]` to `{}` or a Number to a BigInt.
 
 ## Does Explicit Conversion Validate an Input?
 
@@ -55,7 +55,7 @@ console.log(undefined >= 0);
 // false
 ```
 
-Undefined converts to NaN for these relational comparisons. That also explains why >= is not universally equivalent to negating <.
+Undefined converts to NaN for these relational comparisons. That also explains why `>=` is not universally equivalent to negating `<`.
 
 ## Does Strict Equality Mean Every Value Equals Itself?
 

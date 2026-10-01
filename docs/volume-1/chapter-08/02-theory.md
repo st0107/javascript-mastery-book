@@ -72,7 +72,7 @@ console.log(copy[token], Object.hasOwn(copy, 'hidden'));
 // 2 false
 ```
 
-For ordinary own keys, integer-index-like string keys come first in numeric order, followed by other string keys in insertion order, then symbols in insertion order. Do not use an object's enumeration order as a business priority list. Keep an explicit ordered array when order is part of the contract. Details and operation differences are documented in [MDN enumerability and ownership](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Enumerability_and_ownership_of_properties).
+For ordinary own keys, array-index string keys (canonical nonnegative integers below 2^32 - 1) come first in numeric order, followed by other string keys in insertion order, then symbols in insertion order. A key such as `01` or `4294967295` is in the ordinary string group. Do not use an object's enumeration order as a business priority list. Keep an explicit ordered array when order is part of the contract. Details and operation differences are documented in [MDN enumerability and ownership](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Enumerability_and_ownership_of_properties).
 
 ## A Property Descriptor Is More Than a Value
 

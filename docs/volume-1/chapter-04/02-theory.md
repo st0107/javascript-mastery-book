@@ -23,9 +23,9 @@ The following table uses default built-ins and ordinary objects. Quoted entries 
 | [] | "" | 0 | true |
 | [7] | "7" | 7 | true |
 | [7, 8] | "7,8" | NaN | true |
-| {} | "[object Object]" | NaN | true |
+| `{}` | "[object Object]" | NaN | true |
 
-Object rows depend on their conversion methods; they are not universal results for every object. String conversion is also distinct from JSON serialization. String({id: 1}) does not serialize the object's fields into JSON.
+Object rows depend on their conversion methods; they are not universal results for every object. String conversion is also distinct from JSON serialization. `String({id: 1})` does not serialize the object's fields into JSON.
 
 ```js
 console.log(Number(''), Number('  '), Number(null));
@@ -166,7 +166,7 @@ For [] == false: false becomes 0; the array becomes the empty string; that strin
 
 ## Relational Comparison Is Not Equality With Ordering
 
-When both resulting primitives are strings, relational comparison orders UTF-16 code units lexicographically. Otherwise it follows numeric comparison rules, including special handling for BigInt. NaN produces an unordered comparison: both < and >= can be false. Consequently >= is not always equivalent to negating <.
+When both resulting primitives are strings, relational comparison orders UTF-16 code units lexicographically. Otherwise it follows numeric comparison rules, including special handling for BigInt. NaN produces an unordered comparison: both `<` and `>=` can be false. Consequently `>=` is not always equivalent to negating `<`.
 
 ```js
 console.log('12' < '3');

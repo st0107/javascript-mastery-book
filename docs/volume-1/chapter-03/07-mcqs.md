@@ -112,10 +112,10 @@ D. The expanded form cannot write properties
 
 ## 13. Which condition correctly checks an exclusive range?
 
-A. 0 < n < 10
-B. 0 < n && n < 10
-C. n > (0 && n) < 10
-D. 0 < (n < 10)
+A. `0 < n < 10`
+B. `0 < n && n < 10`
+C. `n > (0 && n) < 10`
+D. `0 < (n < 10)`
 
 **Answer: B.** Each comparison must inspect n. A chained comparison instead compares an intermediate boolean.
 
