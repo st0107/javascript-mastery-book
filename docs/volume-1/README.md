@@ -38,4 +38,8 @@ The first command runs every companion, the second checks the validator's failur
 
 ## Publishing
 
-All chapter sections, the preface, and the execution-model companion are included in both site navigation systems and the PDF/EPUB source lists. Build the website with `npm run docs:build`. PDF and EPUB generation additionally require Pandoc; PDF generation also requires a suitable LaTeX engine.
+All chapter sections, the preface, and the execution-model companion are included in both site navigation systems and the standalone Volume One books. Build the website with `npm run docs:build`.
+
+Run `npm run volume1:build` to generate `pdf/javascript-mastery-volume-1.pdf` and `epub/javascript-mastery-volume-1.epub`. This build uses an installed Chrome, Chromium, or Edge browser; set `BOOK_BROWSER_PATH` when it is not in a standard location. It renders all 24 diagrams into offline images, preserves internal links, and generates a table of contents. Pandoc and LaTeX are not needed for these standalone exports.
+
+With Python 3, install the PDF validation dependency using `python -m pip install -r scripts/requirements-export-validation.txt`, then run `npm run volume1:exports:test` to check the generated books' structure, EPUB source coverage, images, and links. The export includes 124 source documents; its generated contents replace `SUMMARY.md`. The complete repository check is `npm run build:all`.

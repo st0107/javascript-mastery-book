@@ -29,7 +29,8 @@ The book is produced chapter by chapter. Volume 1 has eleven chapters with all e
 | Volume 2, Chapter 5: Descriptors, Immutability, and Proxies | Next planned chapter |
 | Remaining Volume 2 chapters and Volumes 3–6 | Planned |
 | Executable examples and Mermaid diagrams | Available alongside authored material |
-| PDF/EPUB/website scripts | Ready |
+| Volume 1 PDF/EPUB exports | Standalone books generated, with offline diagrams and internal links |
+| Website | Production build and desktop/mobile visual checks available |
 
 ## Volumes
 
@@ -86,6 +87,18 @@ Build all publishable formats:
 ```bash
 npm run build:all
 ```
+
+The default PDF and EPUB builds produce **Volume One only**. They use a locally installed Chrome, Chromium, or Edge browser and need no Pandoc or LaTeX. Set `BOOK_BROWSER_PATH` if your browser is installed outside the usual locations. Export structure checks require Python 3 and the small PDF validation dependency below.
+
+```bash
+python -m pip install -r scripts/requirements-export-validation.txt
+npm run volume1:build
+npm run volume1:exports:test
+```
+
+Outputs: [Volume One PDF](pdf/javascript-mastery-volume-1.pdf) and [Volume One EPUB](epub/javascript-mastery-volume-1.epub). `npm run pdf:build` and `npm run epub:build` rebuild one format. The optional legacy Pandoc collection scripts remain available as `pdf:collection` and `epub:collection`; they include the authored parts of Volume Two and are separate from the completed Volume One release.
+
+See the [Volume One release check](audits/volume-1-release-check.md) for the completed repairs, validation evidence, and review scope.
 
 ## Writing Rule
 

@@ -15,5 +15,7 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run examples:test
+      - run: npm run examples:validator:test
+      - run: npm run docs:examples:test
       - run: npm run docs:build
 

@@ -43,7 +43,7 @@ The label calculation uses language features. `write` is an adapter that perform
 
 **Answer:** A process-like object neither proves that a writer exists nor that its destination is writable. Node can run under restricted permissions. Accept an explicit writer dependency, check its callable shape, and handle its operation result.
 
-**Follow-up:** Does `typeof writer === 'function'` guarantee success? It establishes only that the value can be called. The call can still throw, reject if asynchronous, or report an application failure.
+**Follow-up:** Does `typeof writer === 'function'` guarantee success? It establishes only a function-valued shape. A class also passes this check but throws when called without `new`. A trusted writer operation can still throw, reject if asynchronous, or report an application failure.
 
 ## Design Question: Share a Checkout Rule
 

@@ -60,7 +60,7 @@ A transpiler can rewrite a syntax construct before delivery. A polyfill is itsel
 
 A browser worker runs JavaScript but has no page DOM. A Node process may offer familiar web APIs. An embedded runtime may expose a carefully restricted subset of host features. Therefore, `window exists` is not a universal test for "JavaScript running in a browser," and `fetch exists` does not prove a browser page.
 
-Prefer asking the narrow question that the operation needs. For an injected adapter, check that its operation is callable:
+Prefer asking the narrow question that the operation needs. For an injected adapter, check that its operation is function-valued:
 
 ```js
 'use strict';
@@ -79,7 +79,7 @@ console.log(hasWriter({ writeText: true }), hasWriter(null));
 // false false
 ```
 
-This is a capability-shape check on trusted adapters, not a permission probe or a guarantee that a later write will succeed. An adapter can throw because a file is unavailable, a permission is denied, or its implementation fails. Handle operation outcomes as well as presence.
+This is a capability-shape check on trusted adapters, not a permission probe or a guarantee that a later write will succeed. Even a class has `typeof` result `'function'`, but calling it without `new` throws. The trusted adapter contract must supply an ordinary write operation. An adapter can also throw because a file is unavailable, a permission is denied, or its implementation fails. Handle operation outcomes as well as presence. See the [typeof reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) for the function/class distinction.
 
 ## Browser Pages, Workers, and Node
 

@@ -2,6 +2,8 @@
 
 Reviewed: 2026-10-01. This report closes the source, curriculum, example-contract, and integration findings in the [2026-09-27 audit](volume-1-gap-audit.md). The original audit is retained as a historical record; its old counts and line numbers describe the pre-repair state.
 
+**Completion update, 2026-10-25:** the remaining export and visual-review work is recorded in the [Volume One release check](volume-1-release-check.md). Standalone PDF and EPUB artifacts are now generated; the limits below describe the earlier October 1 review.
+
 ## Delivered Scope
 
 All eleven sections of Chapters 1–6 were rewritten with actual language rules, execution traces, concrete failure cases, production contracts, worked practice, and revision material. Five foundation chapters now supply prerequisites previously assumed by Volume 2:
@@ -70,7 +72,7 @@ npm run docs:build
 
 The permanent [Volume 1 validator](../scripts/validate-volume-one.cjs) executes actual temporary `.cjs` or `.mjs` files beside their chapter dependencies and removes only files it created. A focused chapter run is available with `npm run docs:examples:test -- --chapter 11`.
 
-## Verification Limits
+## Historical Verification Limits (2026-10-01)
 
 Pandoc is not installed, so this work does not claim newly generated or visually reviewed PDF/EPUB artifacts. Source inclusion and failure reporting are checked separately from real export rendering.
 

@@ -51,8 +51,8 @@ Save it as `counter.mjs` to reproduce the theory's live-binding program. The rep
 ## Execution Trace
 
 1. Node selects ESM for `example-00-module-model.mjs`.
-2. The loader resolves `./counter.mjs` beside the entry and connects the named exports.
-3. Evaluation initializes count to zero and creates the function value.
+2. The loader resolves `./counter.mjs` beside the entry and connects the named exports. During module instantiation, the function declaration initializes `increment` with its function value; `count` remains uninitialized.
+3. Evaluation runs `let count = 0`, initializing that binding to zero before the entry body runs.
 4. The entry saves the current primitive in a local variable.
 5. Calling increment assigns a new number to the exported binding.
 6. Reading count through the import sees one; reading the saved local still sees zero.

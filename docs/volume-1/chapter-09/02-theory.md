@@ -2,7 +2,7 @@
 
 ## Arrays Are Objects With Indexed Sequence Behavior
 
-Array indices start at zero. The length is one greater than the largest present array index, unless it has been increased explicitly. Increasing length creates absent positions; reducing it removes elements beyond the new boundary. Reading an absent index ordinarily returns undefined, which does not prove that an element exists there.
+Array indices start at zero. The length is a nonnegative integer greater than every present own array index; it is not a count of present elements. Increasing length creates absent positions. Deleting the final element leaves length unchanged, so an array can also have trailing holes without an explicit length increase. Reducing length removes ordinary configurable elements beyond the new boundary. Reading an absent index ordinarily returns undefined, which does not prove that an element exists there.
 
 Array.isArray(value) distinguishes arrays from other objects. Array elements can hold different types, but a collection with a clear item schema is easier to validate and process.
 
@@ -15,12 +15,15 @@ console.log(items[2], Object.hasOwn(items, 2));
 console.log(items.at(-1), items[-1]);
 items.length = 2;
 console.log(items.join(','), items.length);
+delete items[1];
+console.log(items.length, Object.hasOwn(items, 1));
 
 // Expected output:
 // 5 0,1,4,label
 // undefined false
 // e undefined
 // a,b 2
+// 2 false
 ```
 
 A named property such as label is not a sequence element and does not affect length. at(-1) requests the last element; bracket access with -1 requests the property named "-1". Avoid using arrays as arbitrary-key dictionaries. [Array reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).

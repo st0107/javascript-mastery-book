@@ -39,7 +39,7 @@ The companion `code/volume-1/chapter-01/example-02-shared-validation.js` checks 
 
 ## Report Required Capabilities, Not Permission Guesses
 
-Suppose an export workflow receives a trusted adapter with optional `writeText` and `showStatus` operations. Report whether those exact operations are callable. The adapter is constructed by application code; it is not an arbitrary proxy or an untrusted object containing getters.
+Suppose an export workflow receives a trusted adapter with optional `writeText` and `showStatus` operations. Report whether those properties are function-valued. The application constructs the adapter and supplies ordinary operations rather than class constructors; it is not an arbitrary proxy or an untrusted object containing getters.
 
 ```js
 'use strict';

@@ -17,3 +17,24 @@ pre {
   border-radius: 8px;
 }
 
+.book-diagram {
+  margin-block: 1.5rem;
+}
+
+.book-diagram__viewport {
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.book-diagram__viewport:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+
+.book-diagram__hint {
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.875rem;
+}
+

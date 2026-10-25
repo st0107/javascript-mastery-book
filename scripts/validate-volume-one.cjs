@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const { spawnSync } = require('node:child_process');
+const snippetTimeoutMs = 10000;
 
 const root = path.resolve(__dirname, '..');
 const volume = path.join(root, 'docs', 'volume-1');
@@ -122,9 +123,15 @@ for (const file of files) {
       fs.writeFileSync(temporary, program, { flag: 'wx' });
       created = true;
       const result = spawnSync(process.execPath, ['--preserve-symlinks-main', temporary], {
-        encoding: 'utf8', cwd: exampleDirectory, windowsHide: true, timeout: 10000
+        encoding: 'utf8', cwd: exampleDirectory, windowsHide: true, timeout: snippetTimeoutMs
       });
-      if (result.error) throw result.error;
+      if (result.error) {
+        const reason = result.error.code === 'ETIMEDOUT' ?
+          `exceeded the ${snippetTimeoutMs} ms execution limit` :
+          `could not execute (${result.error.code || result.error.message})`;
+        const output = [result.stdout, result.stderr].filter(Boolean).join('\n');
+        throw new Error(`${location}: ${reason}${output ? `\n${output}` : ''}`, { cause: result.error });
+      }
       assert.equal(result.status, 0, `${location}: execution failed\n${result.stderr}`);
       assert.equal(normalize(result.stderr), '', `${location}: unexpected stderr`);
       assert.equal(normalize(result.stdout), expected, `${location}: stdout differs`);

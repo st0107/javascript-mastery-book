@@ -2,6 +2,13 @@
 
 All notable changes to this book repository are documented here.
 
+## Unreleased - 2026-10-25
+
+- Completed standalone Volume One PDF and EPUB export support using the authored Markdown and a local browser, including rendered diagrams, internal links, navigation, and a source manifest. Default export commands now build Volume One; the legacy combined-volume Pandoc commands remain explicitly available.
+- Added export structure and source-coverage validation. Expanded the documentation validator's timeout/process-launch diagnostics and failure-cleanup regression checks without relaxing the execution limit.
+- Clarified callable checks versus class constructors, lone-surrogate behavior in string iteration, array length after deleting the last element, and ES module function initialization timing.
+- Made wide website Mermaid diagrams readable on mobile through an accessible scroll region and completed website and book rendering checks.
+
 ## Unreleased - 2026-10-01
 
 - Rewrote all eleven sections of Volume 1 Chapters 1–6 with concrete explanations, execution traces, production contracts, distinct exercises, varied MCQs, prerequisites, and primary references.

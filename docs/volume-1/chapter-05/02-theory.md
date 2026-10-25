@@ -23,10 +23,10 @@ console.log(clean.slice(-3), clean.includes('invoice'));
 | Unit | Example operation | Appropriate use |
 | --- | --- | --- |
 | UTF-16 code unit | `text.length`, `text[i]` | JavaScript indexing and offsets |
-| Unicode code point | `Array.from(text)`, `for...of` | Processing Unicode scalar-sized pieces |
+| Unicode code point | `Array.from(text)`, `for...of` | Traversal without splitting valid surrogate pairs |
 | Grapheme cluster | `Intl.Segmenter` with `granularity: 'grapheme'` | User-visible cursor or truncation units |
 
-A combining accent can be a separate code point while displaying as part of one grapheme. Emoji sequences can contain several code points. Neither `length` nor spread guarantees the count a user perceives. [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter) supplies segmentation.
+A combining accent can be a separate code point while displaying as part of one grapheme. Emoji sequences can contain several code points. String iteration preserves lone surrogates in ill-formed strings; it is not Unicode validation. Neither `length` nor spread guarantees the count a user perceives. [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter) supplies segmentation.
 
 ```js
 const text = 'e\u0301\u{1F680}';

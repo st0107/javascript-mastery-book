@@ -67,6 +67,39 @@ try {
   assert.equal(defaultRoot.status, 0, defaultRoot.output);
   assert.match(defaultRoot.output, /DEFAULT_ROOT_OK/);
   assert.match(defaultRoot.output, /All 1 JavaScript examples ran successfully/);
+
+  // A process-launch failure must identify the actual documentation block, not
+  // only its random temporary filename. Exercise the production failure path.
+  const documentationValidator = path.join(__dirname, 'validate-volume-one.cjs');
+  const preloadDirectory = directory('preloads');
+  for (const code of ['ETIMEDOUT', 'EACCES']) {
+    const preloadName = `${code}.cjs`;
+    fixture(preloadDirectory, preloadName, `
+      require('node:child_process').spawnSync = (executable, args) => {
+        console.log('CREATED_SNIPPET=' + args[1]);
+        return {
+          error: Object.assign(new Error('fixture process failure'), { code: '${code}' }),
+          status: null, stdout: 'PARTIAL_OUTPUT', stderr: 'PROCESS_DIAGNOSTIC'
+        };
+      };
+    `);
+    const result = spawnSync(process.execPath, [
+      '--require', path.join(preloadDirectory, preloadName),
+      documentationValidator, '--chapter', '02'
+    ], { encoding: 'utf8', cwd: fixtureRoot, windowsHide: true, timeout: 30000 });
+    if (result.error) throw result.error;
+    const output = result.stdout + result.stderr;
+    assert.notEqual(result.status, 0, output);
+    assert.match(output, /chapter-02[\\/]01-introduction\.md, JavaScript block 1/);
+    assert.match(output, code === 'ETIMEDOUT' ?
+      /exceeded the 10000 ms execution limit/ : /could not execute \(EACCES\)/);
+    assert.match(output, /PARTIAL_OUTPUT/);
+    assert.match(output, /PROCESS_DIAGNOSTIC/);
+    assert.doesNotMatch(output, /Volume 1 validation passed/);
+    const createdSnippet = /CREATED_SNIPPET=([^\r\n]+)/.exec(result.stdout);
+    assert.ok(createdSnippet, 'Missing fixture snippet path');
+    assert.equal(fs.existsSync(createdSnippet[1]), false, 'Failed snippet was not cleaned up');
+  }
   console.log('Example validator regression checks passed.');
 } finally {
   // Remove only the exact files and empty directories created by this test.

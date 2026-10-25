@@ -10,24 +10,37 @@
     "examples:test": "powershell -ExecutionPolicy Bypass -File scripts/validate-examples.ps1",
     "examples:validator:test": "node scripts/test-example-validator.cjs",
     "docs:examples:test": "node scripts/validate-volume-one.cjs",
-    "pdf:build": "powershell -ExecutionPolicy Bypass -File scripts/build-pdf.ps1",
-    "epub:build": "powershell -ExecutionPolicy Bypass -File scripts/build-epub.ps1",
-    "build:all": "npm run examples:test && npm run docs:build && npm run pdf:build && npm run epub:build"
+    "pdf:build": "node scripts/build-volume-one.mjs pdf",
+    "epub:build": "node scripts/build-volume-one.mjs epub",
+    "volume1:build": "node scripts/build-volume-one.mjs all",
+    "volume1:exports:test": "python scripts/validate-volume-one-exports.py",
+    "pdf:collection": "powershell -ExecutionPolicy Bypass -File scripts/build-pdf.ps1",
+    "epub:collection": "powershell -ExecutionPolicy Bypass -File scripts/build-epub.ps1",
+    "build:all": "npm run examples:test && npm run examples:validator:test && npm run docs:examples:test && npm run docs:build && npm run volume1:build && npm run volume1:exports:test"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",
     "@docusaurus/preset-classic": "3.10.1",
     "@docusaurus/theme-mermaid": "3.10.1",
     "@easyops-cn/docusaurus-search-local": "0.55.2",
-    "@mermaid-js/layout-elk": "0.1.9",
     "@mdx-js/react": "3.1.1",
+    "@mermaid-js/layout-elk": "0.1.9",
     "open-ask-ai": "0.7.3",
     "prism-react-renderer": "2.4.1",
     "react": "19.2.7",
     "react-dom": "19.2.7"
   },
   "devDependencies": {
-    "eslint": "9.9.0"
+    "eslint": "9.9.0",
+    "fflate": "0.8.2",
+    "github-slugger": "1.5.0",
+    "mermaid": "11.16.0",
+    "puppeteer-core": "24.37.5",
+    "rehype-stringify": "10.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "remark-rehype": "11.1.2",
+    "unified": "11.0.5"
   },
   "overrides": {
     "serialize-javascript": "7.0.7",
