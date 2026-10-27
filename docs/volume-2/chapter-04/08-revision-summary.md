@@ -83,4 +83,4 @@ The [production examples](04-production-examples.md) combine these responsibilit
 - [MDN: super](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/super) for constructor delegation and method lookup.
 - [V8: Faster initialization of instances with new class features](https://v8.dev/blog/faster-class-features) for a historical account of implementation and optimization.
 
-Next planned chapter: **Descriptors, Immutability, and Proxies**. It will extend these ownership and access rules with property descriptors, controlled mutation, integrity levels, and intercepted object operations.
+Continue with [Descriptors, Immutability, and Proxies](../chapter-05/01-introduction.md). It extends these ownership and access rules with property descriptors, controlled mutation, integrity levels, and intercepted object operations.

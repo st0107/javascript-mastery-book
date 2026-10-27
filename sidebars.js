@@ -273,6 +273,23 @@ const sidebars = {
             'volume-2/chapter-04/performance-security',
             'volume-2/chapter-04/professional-field-guide'
           ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 05: Descriptors, Immutability, and Proxies',
+          items: [
+            'volume-2/chapter-05/introduction',
+            'volume-2/chapter-05/theory',
+            'volume-2/chapter-05/internal-working',
+            'volume-2/chapter-05/production-examples',
+            'volume-2/chapter-05/interview-perspective',
+            'volume-2/chapter-05/exercises-coding-challenges',
+            'volume-2/chapter-05/mcqs',
+            'volume-2/chapter-05/revision-summary',
+            'volume-2/chapter-05/edge-cases-debugging',
+            'volume-2/chapter-05/performance-security',
+            'volume-2/chapter-05/professional-field-guide'
+          ]
         }
       ]
     },

@@ -51,6 +51,7 @@ for (const record of records) {
 // req-a started
 // req-b started
 // req-a completed
+
 // Per log call: O(1) record construction, excluding the sink.
 // This demo's collecting sink retains O(n) records for n calls.
 ```
@@ -163,6 +164,7 @@ console.log(`current ${preferences.read()}`);
 // Expected output:
 // panel light -> dark
 // current dark
+
 // A changed update uses O(s) bookkeeping time and temporary space
 // for s subscriptions, plus the work performed by the listeners.
 ```

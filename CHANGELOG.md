@@ -2,6 +2,12 @@
 
 All notable changes to this book repository are documented here.
 
+## Unreleased - 2026-10-27
+
+- Added Volume 2 Chapter 5: Descriptors, Immutability, and Proxies across eleven sections, with two production contracts, six worked exercises, sixteen MCQs, five assertion companions, and two synchronized diagrams.
+- Integrated Chapter 5 into both website navigation systems and both contents lists; advanced the next planned chapter to Iterators and Generators.
+- Added exact-output documentation validation for authored Volume 2 chapters and filled Chapter 1's practice set to six exercises and sixteen MCQs.
+
 ## Unreleased - 2026-10-25
 
 - Completed standalone Volume One PDF and EPUB export support using the authored Markdown and a local browser, including rendered diagrams, internal links, navigation, and a source manifest. Default export commands now build Volume One; the legacy combined-volume Pandoc commands remain explicitly available.

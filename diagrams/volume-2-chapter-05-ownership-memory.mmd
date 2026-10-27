@@ -1,0 +1,8 @@
+flowchart LR
+  Config["config binding"] --> Root["Object A: frozen own name and options properties"]
+  View["view binding"] --> Proxy["Proxy object P"]
+  Proxy -->|target| Root
+  Proxy -->|handler| Handler["Handler object H: get trap"]
+  Root -->|options value| Child["Object B: maxRows 200"]
+  Options["options binding"] --> Child
+  Alias["alias binding"] --> Child

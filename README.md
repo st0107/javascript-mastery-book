@@ -13,7 +13,7 @@ This repository is designed as a real book project, not a notes dump. The source
 
 ## Current Writing Status
 
-The book is produced chapter by chapter. Volume 1 has eleven chapters with all eleven sections, through Modules and Execution Modes. Volume 2 now has four chapters with all eleven sections. The latest is [Chapter 4: Classes and Object Creation Patterns](docs/volume-2/chapter-04/01-introduction.md). The next planned chapter is **Descriptors, Immutability, and Proxies**.
+The book is produced chapter by chapter. Volume 1 has eleven chapters with all eleven sections, through Modules and Execution Modes. Volume 2 now has five chapters with all eleven sections. The latest is [Chapter 5: Descriptors, Immutability, and Proxies](docs/volume-2/chapter-05/01-introduction.md). The next planned chapter is **Iterators and Generators**.
 
 | Area | Status |
 | --- | --- |
@@ -26,7 +26,8 @@ The book is produced chapter by chapter. Volume 1 has eleven chapters with all e
 | Volume 2, Chapter 2: `this`, Call, Apply, and Bind | All eleven sections authored |
 | Volume 2, Chapter 3: Prototypes and Inheritance | All eleven sections authored |
 | Volume 2, Chapter 4: Classes and Object Creation Patterns | All eleven sections authored |
-| Volume 2, Chapter 5: Descriptors, Immutability, and Proxies | Next planned chapter |
+| Volume 2, Chapter 5: Descriptors, Immutability, and Proxies | All eleven sections authored |
+| Volume 2, Chapter 6: Iterators and Generators | Next planned chapter |
 | Remaining Volume 2 chapters and Volumes 3–6 | Planned |
 | Executable examples and Mermaid diagrams | Available alongside authored material |
 | Volume 1 PDF/EPUB exports | Standalone books generated, with offline diagrams and internal links |
@@ -80,6 +81,7 @@ Validate JavaScript examples:
 npm run examples:test
 npm run examples:validator:test
 npm run docs:examples:test
+npm run docs:volume2:test
 ```
 
 Build all publishable formats:
@@ -99,6 +101,8 @@ npm run volume1:exports:test
 Outputs: [Volume One PDF](pdf/javascript-mastery-volume-1.pdf) and [Volume One EPUB](epub/javascript-mastery-volume-1.epub). `npm run pdf:build` and `npm run epub:build` rebuild one format. The optional legacy Pandoc collection scripts remain available as `pdf:collection` and `epub:collection`; they include the authored parts of Volume Two and are separate from the completed Volume One release.
 
 See the [Volume One release check](audits/volume-1-release-check.md) for the completed repairs, validation evidence, and review scope.
+
+See the [Volume Two Chapter 5 completion check](audits/volume-2-chapter-05-completion.md) for the latest chapter and validation of all five authored Volume Two chapters.
 
 ## Writing Rule
 

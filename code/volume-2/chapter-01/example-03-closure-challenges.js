@@ -207,3 +207,81 @@ assert.notStrictEqual(tokenA(), tokenB());
 assert.equal(independentCalls, 2);
 console.log('Once-successful contracts: passed');
 console.log('All closure challenge assertions passed.');
+
+// Additional exercise 5: independent solution and assertions.
+{
+  'use strict';
+  const assert = require('node:assert/strict');
+  function createSignal() {
+    const registrations = new Set();
+    return {
+      subscribe(callback) {
+        if (typeof callback !== 'function') throw new TypeError('Expected a callback');
+        const registration = { callback };
+        registrations.add(registration);
+        let active = true;
+        return () => {
+          if (!active) return false;
+          active = false;
+          registrations.delete(registration);
+          return true;
+        };
+      },
+      emit(value) {
+        for (const { callback } of [...registrations]) callback(value);
+      }
+    };
+  }
+  const signal = createSignal();
+  const events = [];
+  let stopSecond;
+  const stopFirst = signal.subscribe(value => { events.push(`A${value}`); stopSecond(); });
+  stopSecond = signal.subscribe(value => events.push(`B${value}`));
+  signal.emit(1);
+  signal.emit(2);
+  assert.deepEqual(events, ['A1', 'B1', 'A2']);
+  console.log(events.join(','));
+  console.log(stopFirst(), stopFirst(), stopSecond());
+  createSignal().emit(3);
+  signal.emit(4);
+  assert.equal(events.length, 3);
+  // Expected output:
+  // A1,B1,A2
+  // true false false
+}
+
+// Additional exercise 6: independent solution and assertions.
+{
+  'use strict';
+  const assert = require('node:assert/strict');
+  function memoizeLastNumber(operation) {
+    let ready = false;
+    let previousInput;
+    let previousResult;
+    return input => {
+      if (!Number.isFinite(input)) throw new TypeError('Expected a finite Number');
+      if (ready && Object.is(input, previousInput)) return previousResult;
+      const result = operation(input);
+      if (!Number.isFinite(result)) throw new TypeError('Expected a finite result');
+      previousInput = input;
+      previousResult = result;
+      ready = true;
+      return result;
+    };
+  }
+  let calls = 0;
+  const double = memoizeLastNumber(value => {
+    calls += 1;
+    if (value < 0) throw new RangeError('Negative input');
+    return value * 2;
+  });
+  console.log(double(0), double(0), calls);
+  assert.throws(() => double(-1), RangeError);
+  assert.throws(() => double('0'), TypeError);
+  console.log(double(0), calls);
+  console.log(double(2), calls);
+  // Expected output:
+  // 0 0 1
+  // 0 2
+  // 4 3
+}

@@ -103,6 +103,7 @@ console.log(`listeners after cleanup ${source.listenerCount('shipped')}`);
 // added 2; total 5
 // shipment total 5
 // listeners after cleanup 0
+
 // Each accepted event: O(1) counter work and space, excluding the sink.
 // Removal may scan O(l) listeners registered for this event.
 ```
@@ -237,6 +238,7 @@ console.log(`calls ${counts.calls} returned ${counts.returned} threw ${counts.th
 // north reserved 3
 // south reserved 2
 // calls 3 returned 2 threw 1
+
 // O(k) argument collection per invocation for k arguments, plus target work.
 // The monitor retains O(1) counters and one target reference.
 ```

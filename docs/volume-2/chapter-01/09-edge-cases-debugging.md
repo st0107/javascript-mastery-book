@@ -85,6 +85,7 @@ console.log(callbacks.map(callback => callback()).join(', '));
 
 // Expected output:
 // 0:done, 1:done
+
 // For n callbacks: O(n) construction and invocation time; O(n) storage.
 ```
 

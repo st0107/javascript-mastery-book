@@ -1,6 +1,6 @@
 # Table of Contents
 
-Volume 1 has eleven chapters with all eleven sections. Volume 2, Chapters 1–4 are authored across all eleven sections; its remaining chapters and Volumes 3–6 are planned.
+Volume 1 has eleven chapters with all eleven sections. Volume 2, Chapters 1–5 are authored across all eleven sections; its remaining chapters and Volumes 3–6 are planned.
 
 ## Volume 1: JavaScript Fundamentals
 
@@ -191,7 +191,18 @@ Volume 1 has eleven chapters with all eleven sections. Volume 2, Chapters 1–4 
    - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-04/09-edge-cases-debugging.md)
    - [Performance and Security Notes](volume-2/chapter-04/10-performance-security.md)
    - [Professional Field Guide](volume-2/chapter-04/11-professional-field-guide.md)
-5. Descriptors, Immutability, and Proxies
+5. [Descriptors, Immutability, and Proxies](volume-2/chapter-05/01-introduction.md)
+   - [Introduction](volume-2/chapter-05/01-introduction.md)
+   - [Theory](volume-2/chapter-05/02-theory.md)
+   - [Internal Working](volume-2/chapter-05/03-internal-working.md)
+   - [Production Examples](volume-2/chapter-05/04-production-examples.md)
+   - [Interview Perspective](volume-2/chapter-05/05-interview-perspective.md)
+   - [Exercises and Coding Challenges](volume-2/chapter-05/06-exercises-coding-challenges.md)
+   - [MCQs](volume-2/chapter-05/07-mcqs.md)
+   - [Revision Sheet and Chapter Summary](volume-2/chapter-05/08-revision-summary.md)
+   - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-05/09-edge-cases-debugging.md)
+   - [Performance and Security Notes](volume-2/chapter-05/10-performance-security.md)
+   - [Professional Field Guide](volume-2/chapter-05/11-professional-field-guide.md)
 6. Iterators and Generators
 7. Functional Programming in JavaScript
 8. Memory Management and Garbage Collection

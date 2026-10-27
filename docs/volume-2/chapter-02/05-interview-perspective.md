@@ -143,6 +143,7 @@ console.log(ids.map(callback).join(', '));
 // task-3, task-4
 // task-3, task-4
 // task-3, task-4
+
 // For n IDs: O(n) calls and O(n) result elements, plus string storage.
 ```
 

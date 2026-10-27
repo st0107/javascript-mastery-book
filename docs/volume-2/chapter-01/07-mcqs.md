@@ -206,3 +206,69 @@ A `onceSuccessful` wrapper retries after thrown exceptions. Its operation change
 - D. Another attempt is allowed; preventing duplicate external effects requires a separate design.
 
 **Answer: D.** The wrapper's state only tracks whether its operation returned normally. It does not undo effects performed before an exception. A retry contract must fit the operation being wrapped.
+
+## 11. Shadowing a Captured Name
+
+A returned function closes over a factory parameter named `region`. Its caller declares another `region`. Which binding does the returned function resolve?
+
+- A. The caller's binding, because it is most recently active.
+- B. Whichever binding holds the longer string.
+- C. The factory binding determined by the function's lexical environment.
+- D. A newly created global binding.
+
+**Answer: C.** Lookup follows the retained lexical environment chain, not the calling function's local names. Passing a parameter or rebinding an existing captured variable would be a different operation.
+
+## 12. Snapshotting a Primitive
+
+A factory assigns `const saved = input.count` and returns `() => saved`. Count is a number. What happens if another alias later changes `input.count`?
+
+- A. The closure still returns the earlier number.
+- B. The closure automatically reads the updated property.
+- C. The const declaration freezes input.
+- D. The function becomes invalid.
+
+**Answer: A.** The closure reads saved, which holds the copied primitive value. A closure returning `input.count` would instead read the property on each call. Capturing a binding and capturing an expression's earlier result are different designs.
+
+## 13. Two Registrations of One Callback
+
+A signal stores a distinct registration object for each subscription, even if callback functions are equal. Why?
+
+- A. It forces garbage collection after each emission.
+- B. It gives each subscription independent removal identity and lifecycle state.
+- C. It changes the callback's lexical environment.
+- D. It prevents the callback from throwing.
+
+**Answer: B.** Independent registrations can share one function value while retaining different unsubscribe state. Storing only the callback in a Set would collapse repeated subscriptions of that same function.
+
+## 14. Removal During a Snapshot Emission
+
+A signal first copies its current registrations, then invokes that snapshot. Callback A unsubscribes callback B before B's turn. What is the stated contract?
+
+- A. B must disappear from every previously created array automatically.
+- B. The current emission is always cancelled.
+- C. A closure cannot remove B.
+- D. B remains selected for this emission; later emissions omit it.
+
+**Answer: D.** The registry and snapshot are separate containers. Unsubscribe changes future selection; it does not erase a registration reference already copied into the active snapshot.
+
+## 15. A Failed Memoized Operation
+
+A last-successful-result cache computes and validates a candidate before replacing cache fields. The operation throws. Which statement is correct?
+
+- A. The earlier successful cache remains intact.
+- B. The thrown value must become a successful cached result.
+- C. Every closure created by the factory is destroyed.
+- D. All external effects are rolled back.
+
+**Answer: A.** Cache publication happens after successful computation and validation. That ordering preserves the prior cache; it does not provide rollback for effects inside the operation.
+
+## 16. Caching and External State
+
+A function takes an amount but also reads a changing captured tax rate. Is a cache keyed only by amount necessarily correct?
+
+- A. Yes, because capturing state makes it immutable.
+- B. Yes, because same arguments always imply same results in JavaScript.
+- C. No; include the rate/version in the key or invalidate when that dependency changes.
+- D. No closure may ever be memoized.
+
+**Answer: C.** Closure state can change. A cache needs a model of every result dependency. Pure or deliberately invalidated closure-based functions can still be cached correctly.

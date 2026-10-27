@@ -1,6 +1,6 @@
 # Exercises and Coding Challenges
 
-Work through these four exercises in order. First predict the output and draw the relevant bindings. Then write your implementation before comparing it with the solution. Each JavaScript block below is independently runnable; intentional failures are caught so the rest of the example completes.
+Work through these six exercises in order. First predict the output and draw the relevant bindings. Then write your implementation before comparing it with the solution. Each JavaScript block below is independently runnable; intentional failures are caught so the rest of the example completes.
 
 The matching assertion-based program is [`example-03-closure-challenges.js`](../../../code/volume-2/chapter-01/example-03-closure-challenges.js). Run it from the repository root with `node code/volume-2/chapter-01/example-03-closure-challenges.js`.
 
@@ -232,3 +232,99 @@ The recursive-call guard also has an explicit meaning: a nested call cannot star
 **Alternative:** A “once attempted” wrapper can set its completed flag before invoking the operation, preventing retries after failure. That is a different contract and must define what later calls return or throw. Neither version guarantees exactly-once external side effects: an operation can perform an effect and then fail before returning. Use this wrapper only when its retry policy matches the operation's behavior.
 
 **Additional checks:** The companion script verifies thrown-value identity, cached falsy values, argument forwarding, independence, and successful recovery after an uncaught recursive-call error. These are observable contracts; implementation-specific environment allocation is not part of the assertions.
+
+## Exercise 5: Give Each Subscription Its Own Release State
+
+**Requirements:** Implement a synchronous signal with `subscribe(callback)` and `emit(value)`. Each subscription returns an idempotent unsubscribe function: true on its first removal, false thereafter. An emission takes a snapshot of current registrations, so removal during a callback affects later emissions, not the current snapshot. Each signal owns its own registry. Callbacks are trusted synchronous ordinary functions; thrown errors propagate and stop that emission.
+
+**Hint:** Keep the shared registry in the signal factory's environment and an independent active flag in each subscribe invocation. Store a distinct registration object so subscribing the same function twice remains two subscriptions.
+
+```js
+'use strict';
+const assert = require('node:assert/strict');
+function createSignal() {
+  const registrations = new Set();
+  return {
+    subscribe(callback) {
+      if (typeof callback !== 'function') throw new TypeError('Expected a callback');
+      const registration = { callback };
+      registrations.add(registration);
+      let active = true;
+      return () => {
+        if (!active) return false;
+        active = false;
+        registrations.delete(registration);
+        return true;
+      };
+    },
+    emit(value) {
+      for (const { callback } of [...registrations]) callback(value);
+    }
+  };
+}
+const signal = createSignal();
+const events = [];
+let stopSecond;
+const stopFirst = signal.subscribe(value => { events.push(`A${value}`); stopSecond(); });
+stopSecond = signal.subscribe(value => events.push(`B${value}`));
+signal.emit(1);
+signal.emit(2);
+assert.deepEqual(events, ['A1', 'B1', 'A2']);
+console.log(events.join(','));
+console.log(stopFirst(), stopFirst(), stopSecond());
+createSignal().emit(3);
+signal.emit(4);
+assert.equal(events.length, 3);
+// Expected output:
+// A1,B1,A2
+// true false false
+```
+
+**Why it works:** Unsubscribe closes over one registration and its active flag, while every registration for the signal shares the same registry. Copying the registry for emit defines the removal semantics explicitly. An active emission retains its snapshot until it finishes, so unsubscribe is not a guarantee of immediate collection or cancellation of an already-selected callback.
+
+**Complexity:** An emission with `n` selected registrations uses `O(n)` time and temporary space plus callback work. The registry retains active callbacks and what they capture. Expected constant-time Set operations are a useful implementation model, not a required worst-case language guarantee.
+
+## Exercise 6: Cache Only the Last Successful Numeric Result
+
+**Requirements:** Implement a last-input memoizer for a trusted synchronous numeric operation. Accept finite Number inputs and require finite Number results. Repeating the same input under `Object.is` reuses the last successful result, including zero. If the operation throws or returns an invalid result, keep the prior cache unchanged. Document that correctness requires the operation's result to depend on its argument rather than changing external state.
+
+**Hint:** A separate flag distinguishes no cache from a cached falsy value. Compute and validate the candidate before updating any cache fields.
+
+```js
+'use strict';
+const assert = require('node:assert/strict');
+function memoizeLastNumber(operation) {
+  let ready = false;
+  let previousInput;
+  let previousResult;
+  return input => {
+    if (!Number.isFinite(input)) throw new TypeError('Expected a finite Number');
+    if (ready && Object.is(input, previousInput)) return previousResult;
+    const result = operation(input);
+    if (!Number.isFinite(result)) throw new TypeError('Expected a finite result');
+    previousInput = input;
+    previousResult = result;
+    ready = true;
+    return result;
+  };
+}
+let calls = 0;
+const double = memoizeLastNumber(value => {
+  calls += 1;
+  if (value < 0) throw new RangeError('Negative input');
+  return value * 2;
+});
+console.log(double(0), double(0), calls);
+assert.throws(() => double(-1), RangeError);
+assert.throws(() => double('0'), TypeError);
+console.log(double(0), calls);
+console.log(double(2), calls);
+// Expected output:
+// 0 0 1
+// 0 2
+// 4 3
+```
+
+**Why it works:** The returned function retains three cache bindings in its own factory invocation. Failed evaluation cannot overwrite the previously successful pair. Different memoizer calls get independent caches. An operation that reads a changing tax rate or exchange rate would need that dependency in the key or an explicit invalidation rule.
+
+**Complexity:** Constant retained numeric state and constant wrapper work per call, plus the operation's cost on a miss. This is not an unbounded lookup table and does not make an impure operation safe to cache. The [closure reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures) explains the retained lexical environment used by these factories.

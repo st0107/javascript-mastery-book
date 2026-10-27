@@ -1,0 +1,11 @@
+flowchart TD
+  Start["Read proxy key with receiver"] --> Active{"Proxy still active?"}
+  Active -->|no| Revoked["Throw TypeError"]
+  Active -->|yes| Trap{"get trap present?"}
+  Trap -->|no| Delegate["Target Get with same receiver"]
+  Trap -->|yes| Invoke["Call trap with target, key, receiver"]
+  Invoke --> Result["Trap returns a value"]
+  Result --> Check{"Value obeys target descriptor invariants?"}
+  Check -->|no| Invalid["Throw TypeError"]
+  Check -->|yes| Return["Return value to caller"]
+  Delegate --> Return

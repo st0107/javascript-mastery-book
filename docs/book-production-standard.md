@@ -62,7 +62,7 @@ Every code example must:
 
 Module lessons may use a self-contained group of files when the boundary between files is the concept being taught. Name the required files and runtime mode, keep the dependencies in the chapter's code directory, and provide an executable entry that imports and tests the actual library. Library-only examples must explicitly mark their expected output as `(none)`.
 
-Volume 1's `js` fences are checked by `npm run docs:examples:test` in fresh Node processes. ES module fences carry the comment `// Runtime: Node.js ES module`. Each expected-output block ends before a blank line; complexity and explanatory comments follow that blank line. Mermaid sources are checked against the embedded blocks by the same command.
+Volume 1's `js` fences are checked by `npm run docs:examples:test`; authored Volume 2 chapters are checked by `npm run docs:volume2:test`. Both execute examples in fresh Node processes. ES module fences carry the comment `// Runtime: Node.js ES module`. Each expected-output block ends before a blank line; complexity and explanatory comments follow that blank line. Mermaid sources are checked against the embedded blocks by the same command.
 
 ## Diagram Contract
 

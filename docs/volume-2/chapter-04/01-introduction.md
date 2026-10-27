@@ -66,7 +66,7 @@ By the end of this chapter, you should be able to:
 
 You should understand [closures](../chapter-01/01-introduction.md), [call receivers](../chapter-02/01-introduction.md), and [prototype relationships](../chapter-03/01-introduction.md). The examples use arrays, validation, exceptions, and own-property inspection from earlier chapters.
 
-This chapter introduces descriptors and proxies only where they affect class behavior. The next chapter, **Descriptors, Immutability, and Proxies**, will develop their full APIs and invariants. No decorator syntax, transpiler, framework, or TypeScript knowledge is required.
+This chapter introduces descriptors and proxies only where they affect class behavior. The next chapter, [Descriptors, Immutability, and Proxies](../chapter-05/01-introduction.md), develops their full APIs and invariants. No decorator syntax, transpiler, framework, or TypeScript knowledge is required.
 
 ## Reading and Running the Chapter
 
