@@ -1,0 +1,11 @@
+flowchart TD
+  Start["for of obtains an iterator"] --> Next["Call next"]
+  Next --> Step{"Valid result without a thrown error?"}
+  Step -->|no| Failure["Propagate failure without automatic return"]
+  Step -->|yes| Done{"done is truthy?"}
+  Done -->|yes| End["Finish normal traversal"]
+  Done -->|no| Body["Use value in loop body"]
+  Body --> Exit{"Consumer exits this loop early?"}
+  Exit -->|no| Next
+  Exit -->|yes| Close["Call optional return and validate its result"]
+  Close --> Finish["Complete exit or propagate applicable error"]

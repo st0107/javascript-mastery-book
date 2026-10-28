@@ -55,7 +55,7 @@ The root cannot replace its nested property, but the nested object can change. A
 
 The useful question is not simply whether an object is “read-only.” Ask which identity exposes which operation over which state. A frozen owned configuration provides stable values for a bounded schema. A frozen accessor interface may still manage mutable closure state. A revocable view can limit ongoing operations while leaving previously copied values intact. Those are different contracts, and each can be correct when its scope is explicit.
 
-The [exercises](06-exercises-coding-challenges.md) practice property metadata, shallow descriptor copies, accessor state, receiver forwarding, key invariants, and revocation. The [field guide](11-professional-field-guide.md) applies the same questions to reviews. Next planned chapter: **Iterators and Generators**, where objects expose another explicit operation protocol.
+The [exercises](06-exercises-coding-challenges.md) practice property metadata, shallow descriptor copies, accessor state, receiver forwarding, key invariants, and revocation. The [field guide](11-professional-field-guide.md) applies the same questions to reviews. Continue with [Iterators and Generators](../chapter-06/01-introduction.md), where objects expose another explicit operation protocol.
 
 ## References
 

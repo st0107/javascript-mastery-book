@@ -2,6 +2,12 @@
 
 All notable changes to this book repository are documented here.
 
+## Unreleased - 2026-10-28
+
+- Added Volume 2 Chapter 6: Iterators and Generators across eleven sections, including two production examples, six solved exercises, sixteen MCQs, five assertion companions, and two synchronized diagrams.
+- Covered repeatable and single-use traversal, generator state and feedback, delegation, ownership, bounded pulls, and cleanup on normal and exceptional exits.
+- Integrated every section into both navigation systems and contents lists, updated the website reading path, and advanced the next planned chapter to Functional Programming in JavaScript.
+
 ## Unreleased - 2026-10-27
 
 - Added Volume 2 Chapter 5: Descriptors, Immutability, and Proxies across eleven sections, with two production contracts, six worked exercises, sixteen MCQs, five assertion companions, and two synchronized diagrams.

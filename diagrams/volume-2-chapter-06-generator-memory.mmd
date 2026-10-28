@@ -1,0 +1,10 @@
+flowchart LR
+  A["first binding"] --> GA["Generator A: suspended at yield"]
+  B["second binding"] --> GB["Generator B: suspended at yield"]
+  GA --> EA["Context A: index 0 and records reference"]
+  GB --> EB["Context B: index 0 and records reference"]
+  EA --> Rows["Shared array: two record references"]
+  EB --> Rows
+  Source["source binding"] --> Rows
+  Rows --> R0["Record 0: label queued"]
+  Rows --> R1["Record 1: label done"]

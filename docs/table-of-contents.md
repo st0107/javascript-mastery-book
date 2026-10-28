@@ -203,7 +203,18 @@ Volume 1 has eleven chapters with all eleven sections. Volume 2, Chapters 1–5 
    - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-05/09-edge-cases-debugging.md)
    - [Performance and Security Notes](volume-2/chapter-05/10-performance-security.md)
    - [Professional Field Guide](volume-2/chapter-05/11-professional-field-guide.md)
-6. Iterators and Generators
+6. [Iterators and Generators](volume-2/chapter-06/01-introduction.md)
+   - [Introduction](volume-2/chapter-06/01-introduction.md)
+   - [Theory](volume-2/chapter-06/02-theory.md)
+   - [Internal Working](volume-2/chapter-06/03-internal-working.md)
+   - [Production Examples](volume-2/chapter-06/04-production-examples.md)
+   - [Interview Perspective](volume-2/chapter-06/05-interview-perspective.md)
+   - [Exercises and Coding Challenges](volume-2/chapter-06/06-exercises-coding-challenges.md)
+   - [MCQs](volume-2/chapter-06/07-mcqs.md)
+   - [Revision Sheet and Chapter Summary](volume-2/chapter-06/08-revision-summary.md)
+   - [Edge Cases, Debugging, and Failure Modes](volume-2/chapter-06/09-edge-cases-debugging.md)
+   - [Performance and Security Notes](volume-2/chapter-06/10-performance-security.md)
+   - [Professional Field Guide](volume-2/chapter-06/11-professional-field-guide.md)
 7. Functional Programming in JavaScript
 8. Memory Management and Garbage Collection
 9. V8 Pipeline and Optimization

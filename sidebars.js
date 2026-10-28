@@ -290,6 +290,23 @@ const sidebars = {
             'volume-2/chapter-05/performance-security',
             'volume-2/chapter-05/professional-field-guide'
           ]
+        },
+        {
+          type: 'category',
+          label: 'Chapter 06: Iterators and Generators',
+          items: [
+            'volume-2/chapter-06/introduction',
+            'volume-2/chapter-06/theory',
+            'volume-2/chapter-06/internal-working',
+            'volume-2/chapter-06/production-examples',
+            'volume-2/chapter-06/interview-perspective',
+            'volume-2/chapter-06/exercises-coding-challenges',
+            'volume-2/chapter-06/mcqs',
+            'volume-2/chapter-06/revision-summary',
+            'volume-2/chapter-06/edge-cases-debugging',
+            'volume-2/chapter-06/performance-security',
+            'volume-2/chapter-06/professional-field-guide'
+          ]
         }
       ]
     },

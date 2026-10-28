@@ -13,7 +13,7 @@ This repository is designed as a real book project, not a notes dump. The source
 
 ## Current Writing Status
 
-The book is produced chapter by chapter. Volume 1 has eleven chapters with all eleven sections, through Modules and Execution Modes. Volume 2 now has five chapters with all eleven sections. The latest is [Chapter 5: Descriptors, Immutability, and Proxies](docs/volume-2/chapter-05/01-introduction.md). The next planned chapter is **Iterators and Generators**.
+The book is produced chapter by chapter. Volume 1 has eleven chapters with all eleven sections, through Modules and Execution Modes. Volume 2 now has six chapters with all eleven sections. The latest is [Chapter 6: Iterators and Generators](docs/volume-2/chapter-06/01-introduction.md). The next planned chapter is **Functional Programming in JavaScript**.
 
 | Area | Status |
 | --- | --- |
@@ -27,7 +27,8 @@ The book is produced chapter by chapter. Volume 1 has eleven chapters with all e
 | Volume 2, Chapter 3: Prototypes and Inheritance | All eleven sections authored |
 | Volume 2, Chapter 4: Classes and Object Creation Patterns | All eleven sections authored |
 | Volume 2, Chapter 5: Descriptors, Immutability, and Proxies | All eleven sections authored |
-| Volume 2, Chapter 6: Iterators and Generators | Next planned chapter |
+| Volume 2, Chapter 6: Iterators and Generators | All eleven sections authored |
+| Volume 2, Chapter 7: Functional Programming in JavaScript | Next planned chapter |
 | Remaining Volume 2 chapters and Volumes 3–6 | Planned |
 | Executable examples and Mermaid diagrams | Available alongside authored material |
 | Volume 1 PDF/EPUB exports | Standalone books generated, with offline diagrams and internal links |
@@ -102,7 +103,7 @@ Outputs: [Volume One PDF](pdf/javascript-mastery-volume-1.pdf) and [Volume One E
 
 See the [Volume One release check](audits/volume-1-release-check.md) for the completed repairs, validation evidence, and review scope.
 
-See the [Volume Two Chapter 5 completion check](audits/volume-2-chapter-05-completion.md) for the latest chapter and validation of all five authored Volume Two chapters.
+See the [Volume Two Chapter 6 completion check](audits/volume-2-chapter-06-completion.md) for the latest chapter and validation of all six authored Volume Two chapters.
 
 ## Writing Rule
 

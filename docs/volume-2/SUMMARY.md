@@ -72,8 +72,22 @@
 - [Performance and Security Notes](chapter-05/10-performance-security.md)
 - [Professional Field Guide](chapter-05/11-professional-field-guide.md)
 
+### Chapter 6: Iterators and Generators
+
+- [Introduction](chapter-06/01-introduction.md)
+- [Theory](chapter-06/02-theory.md)
+- [Internal Working](chapter-06/03-internal-working.md)
+- [Production Examples](chapter-06/04-production-examples.md)
+- [Interview Perspective](chapter-06/05-interview-perspective.md)
+- [Exercises and Coding Challenges](chapter-06/06-exercises-coding-challenges.md)
+- [MCQs](chapter-06/07-mcqs.md)
+- [Revision Sheet and Chapter Summary](chapter-06/08-revision-summary.md)
+- [Edge Cases, Debugging, and Failure Modes](chapter-06/09-edge-cases-debugging.md)
+- [Performance and Security Notes](chapter-06/10-performance-security.md)
+- [Professional Field Guide](chapter-06/11-professional-field-guide.md)
+
 ### Next Planned Chapter
 
-Chapter 6: Iterators and Generators.
+Chapter 7: Functional Programming in JavaScript.
 
 See the [volume overview](index.md) for prerequisites and the [book table of contents](../table-of-contents.md) for the remaining planned chapters.

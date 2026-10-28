@@ -11,14 +11,15 @@ This volume covers closures, `this`, prototypes, classes, descriptors, generator
 3. [Prototypes and Inheritance](chapter-03/01-introduction.md) — all eleven sections are authored, covering property lookup, shared behavior, state ownership, constructor relationships, and safe data handling.
 4. [Classes and Object Creation Patterns](chapter-04/01-introduction.md) — all eleven sections are authored, covering initialization, private state, creation contracts, factories, composition, and validated hydration.
 5. [Descriptors, Immutability, and Proxies](chapter-05/01-introduction.md) — all eleven sections are authored, covering descriptor rules, owned snapshots, integrity levels, receiver forwarding, proxy invariants, and revocation.
+6. [Iterators and Generators](chapter-06/01-introduction.md) — all eleven sections are authored, covering iterable contracts, suspended execution, delegation, bounded consumption, owned batches, and deterministic cleanup.
 
-Use the [section-by-section summary](SUMMARY.md) to navigate the chapters. Runnable examples live in `code/volume-2/chapter-01`, `code/volume-2/chapter-02`, `code/volume-2/chapter-03`, `code/volume-2/chapter-04`, and `code/volume-2/chapter-05`.
+Use the [section-by-section summary](SUMMARY.md) to navigate the chapters. Runnable examples live in `code/volume-2/chapter-01`, `code/volume-2/chapter-02`, `code/volume-2/chapter-03`, `code/volume-2/chapter-04`, `code/volume-2/chapter-05`, and `code/volume-2/chapter-06`.
 
-Run `npm run docs:volume2:test` to execute the documented JavaScript examples and check source diagrams, local links, chapter coverage, and navigation. A focused run uses `npm run docs:volume2:test -- --chapter 05`.
+Run `npm run docs:volume2:test` to execute the documented JavaScript examples and check source diagrams, local links, chapter coverage, and navigation. A focused run uses `npm run docs:volume2:test -- --chapter 06`.
 
 ## Next Chapter
 
-Chapter 6: **Iterators and Generators** is next in the writing sequence. The remaining chapters are planned in the [book table of contents](../table-of-contents.md).
+Chapter 7: **Functional Programming in JavaScript** is next in the writing sequence. The remaining chapters are planned in the [book table of contents](../table-of-contents.md).
 
 ## Prerequisites
 

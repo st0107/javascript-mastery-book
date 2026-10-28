@@ -6,7 +6,7 @@ The goal is simple: when an interviewer asks what happens when JavaScript runs a
 
 ## Reading Path
 
-Start with [Volume 1: JavaScript Fundamentals](volume-1/README.md) for the foundation, then continue with [Lexical Scope and Closures](volume-2/chapter-01/01-introduction.md), [`this`, Call, Apply, and Bind](volume-2/chapter-02/01-introduction.md), [Prototypes and Inheritance](volume-2/chapter-03/01-introduction.md), and [Classes and Object Creation Patterns](volume-2/chapter-04/01-introduction.md) in Volume 2. Each authored chapter includes interview material; Volume 5 is planned as a dedicated interview preparation volume.
+Start with [Volume 1: JavaScript Fundamentals](volume-1/README.md), then follow the [Volume 2 reading order](volume-2/SUMMARY.md) from closures through iterators and generators. Each authored chapter includes interview material; Volume 5 is planned as a dedicated interview preparation volume.
 
 ## What Makes This Book Different
 
@@ -18,6 +18,6 @@ Start with [Volume 1: JavaScript Fundamentals](volume-1/README.md) for the found
 
 ## Current Writing Status
 
-Volume 1 has eleven chapters with all eleven sections, including functions, object ownership, collections, errors, and modules. Volume 2 has five chapters with all eleven sections: **Lexical Scope and Closures**, **`this`, Call, Apply, and Bind**, **Prototypes and Inheritance**, **Classes and Object Creation Patterns**, and **Descriptors, Immutability, and Proxies**, including internals, production patterns, debugging, exercises, and revision.
+Volume 1 has eleven chapters with all eleven sections, including functions, object ownership, collections, errors, and modules. Volume 2 has six chapters with all eleven sections: **Lexical Scope and Closures**, **`this`, Call, Apply, and Bind**, **Prototypes and Inheritance**, **Classes and Object Creation Patterns**, **Descriptors, Immutability, and Proxies**, and **Iterators and Generators**, including internals, production patterns, debugging, exercises, and revision.
 
-Continue with the [latest chapter](volume-2/chapter-04/01-introduction.md), or choose a section from the [volume summary](volume-2/SUMMARY.md). The next planned chapter is **Descriptors, Immutability, and Proxies**.
+Continue with the [latest chapter](volume-2/chapter-06/01-introduction.md), or choose a section from the [volume summary](volume-2/SUMMARY.md). The next planned chapter is **Functional Programming in JavaScript**.

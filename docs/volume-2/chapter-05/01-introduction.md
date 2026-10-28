@@ -65,4 +65,4 @@ node code/volume-2/chapter-05/example-04-edge-cases.js
 npm run docs:volume2:test -- --chapter 05
 ```
 
-The chapter's boundaries are local JavaScript contracts. Freezing and proxying do not provide a separate execution realm, remote authorization, or a sandbox for arbitrary code. The next chapter, **Iterators and Generators**, will build on explicit operation protocols and stateful objects.
+The chapter's boundaries are local JavaScript contracts. Freezing and proxying do not provide a separate execution realm, remote authorization, or a sandbox for arbitrary code. Continue with [Iterators and Generators](../chapter-06/01-introduction.md), which builds on explicit operation protocols and stateful objects.

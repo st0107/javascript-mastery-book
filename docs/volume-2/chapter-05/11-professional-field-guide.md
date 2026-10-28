@@ -47,4 +47,4 @@ The checklist is complete only when the code and prose agree. “Frozen,” “p
 
 Review [ValidateAndApplyPropertyDescriptor](https://tc39.es/ecma262/multipage/ordinary-and-exotic-objects-behaviours.html#sec-validateandapplypropertydescriptor) when reasoning about one-way descriptor transitions. Use the [Proxy handler reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy) to check each trap's invariants instead of extrapolating from `get` to every operation.
 
-Continue with **Iterators and Generators**, the next planned chapter. The same discipline applies there: identify the protocol operations, the state they retain, their completion behavior, and what happens when a consumer stops early.
+Continue with [Iterators and Generators](../chapter-06/01-introduction.md). The same discipline applies there: identify the protocol operations, the state they retain, their completion behavior, and what happens when a consumer stops early.
